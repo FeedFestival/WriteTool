@@ -1,20 +1,28 @@
 ﻿using Assets.Scripts.Utils;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ElementsController : MonoBehaviour
 {
+    private static ElementsController _elementsController;
+    public static ElementsController Instance { get { return _elementsController; } }
+
     public List<Element> Elements;
     public List<IPrefabComponent> _elementsPool;
 
     public GameObject AddNewButton;
     public InLineSelection InLineSelection;
 
+    private int? currentMaxId;
+
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
+        _elementsController = this;
+
         foreach (Transform child in transform)
         {
             child.gameObject.SetActive(false);
@@ -22,14 +30,33 @@ public class ElementsController : MonoBehaviour
 
         AddNewButton.SetActive(true);
         InLineSelection.gameObject.SetActive(false);
-
-        Init();
     }
 
     public void OnAddNewElement()
     {
         AddNewButton.SetActive(false);
         InLineSelection.gameObject.SetActive(true);
+
+        var options = FilterElementTypes();
+        InLineSelection.Filter(options);
+    }
+
+    private List<int> FilterElementTypes()
+    {
+        var currentIndex = Elements.Count;
+        var lastElementType = Elements[currentIndex - 1].ElementType;
+
+        var options = new List<int>();
+        int i = 0;
+        foreach (ElementType elementType in (ElementType[])System.Enum.GetValues(typeof(ElementType)))
+        {
+            if (GameService.Instance.FilterNewElements(elementType, lastElementType))
+            {
+                options.Add(i);
+            }
+            i++;
+        }
+        return options;
     }
 
     /*
@@ -41,9 +68,15 @@ public class ElementsController : MonoBehaviour
         AddNewButton.SetActive(true);
         InLineSelection.gameObject.SetActive(false);
 
+        if (currentMaxId.HasValue == false)
+        {
+            currentMaxId = Elements.Max(e => { return e.id; });
+        }
+        currentMaxId += 1;
+
         var element = new Element()
         {
-            id = Elements.Count,
+            id = currentMaxId.Value,
             Text = "Text",
             ElementType = elementType,
             Index = Elements.Count,
@@ -53,44 +86,13 @@ public class ElementsController : MonoBehaviour
         AddElementInPool(element);
     }
 
-    public void Init()
+    public void Init(List<Element> elements)
     {
         InitDropdown();
 
 
 
-        InitTestElements(new List<Element>() {
-                new Element() {
-                    id = 1,
-                    ElementType = ElementType.SceneHeading,
-                    Text = "Scene Heading"
-                },
-                new Element() {
-                    id = 2,
-                    ElementType = ElementType.Action,
-                    Text = "Action"
-                },
-                new Element() {
-                    id = 3,
-                    ElementType = ElementType.Character,
-                    Text = "Character"
-                },
-                new Element() {
-                    id = 4,
-                    ElementType = ElementType.Dialog,
-                    Text = "Dialog"
-                },
-                new Element() {
-                    id = 5,
-                    ElementType = ElementType.Character,
-                    Text = "Character 2"
-                },
-                new Element() {
-                    id = 6,
-                    ElementType = ElementType.Dialog,
-                    Text = "Dialog 2"
-                }
-            });
+        InitElements(elements);
     }
 
     private void InitDropdown()
@@ -108,7 +110,7 @@ public class ElementsController : MonoBehaviour
         AddNewElement(((ElementType[])System.Enum.GetValues(typeof(ElementType)))[value]);
     }
 
-    public void InitTestElements(List<Element> elements)
+    public void InitElements(List<Element> elements)
     {
         Elements = elements;
 
@@ -120,10 +122,20 @@ public class ElementsController : MonoBehaviour
             }
         }
 
-        foreach (Element element in Elements)
+        //foreach (Element element in Elements)
+        //{
+        //    AddElementInPool(element);
+        //}
+
+        GameService.Instance.AsyncForEach(0.05f, Elements.Count, (int i) =>
         {
-            AddElementInPool(element);
-        }
+            AddElementInPool(Elements[i]);  
+        });
+
+        //GameService.Instance.InternalWait(1f, () =>
+        //{
+        //    Canvas.ForceUpdateCanvases();
+        //});
     }
 
     private void AddElementInPool(Element element)
@@ -147,11 +159,5 @@ public class ElementsController : MonoBehaviour
         {
             _elementsPool.Add(el);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }

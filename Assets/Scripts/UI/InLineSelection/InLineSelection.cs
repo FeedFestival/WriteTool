@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -56,6 +57,21 @@ public class InLineSelection : MonoBehaviour
             if (wasNull)
             {
                 _itemsPool.Add(el);
+            }
+        }
+    }
+
+    internal void Filter(List<int> options)
+    {
+        foreach (IPrefabComponent item in _itemsPool)
+        {
+            if (options.Contains(item.Id))
+            {
+                item.GameObject.SetActive(true);
+            }
+            else
+            {
+                item.GameObject.SetActive(false);
             }
         }
     }
