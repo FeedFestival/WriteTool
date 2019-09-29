@@ -18,25 +18,47 @@ public class GameService : MonoBehaviour
     private float _seconds;
     private int _lenght;
     private int _index;
+    private bool _waitOneFrame;
 
-    public void InternalWait(float seconds, InternalWaitCallback internalWait)
+    public void InternalWait(InternalWaitCallback internalWait, float? seconds = null)
     {
-        _seconds = seconds;
+        if (seconds == null)
+        {
+            _waitOneFrame = true;
+        }
+        else
+        {
+            _seconds = seconds.Value;
+        }
         _internalWait = internalWait;
         StartCoroutine(InternalWaitFunction());
     }
 
     public IEnumerator InternalWaitFunction()
     {
-        yield return new WaitForSeconds(_seconds);
+        if (_waitOneFrame)
+        {
+            _waitOneFrame = false;
+            yield return 0;
+        }
+        else
+        {
+            yield return new WaitForSeconds(_seconds);
+        }
         _internalWait();
     }
 
-    public void AsyncForEach(float seconds, int length, AsyncForEachCallback asyncForEach)
+    public void AsyncForEach(int length, AsyncForEachCallback asyncForEach, float? seconds = null)
     {
-        _seconds = seconds;
+        if (seconds == null)
+        {
+            _waitOneFrame = true;
+        }
+        else
+        {
+            _seconds = seconds.Value;
+        }
         _lenght = length;
-        //Debug.Log(_lenght);
         _asyncForEach = asyncForEach;
         _index = 0;
         StartCoroutine(DoAsyncIteration());
@@ -44,12 +66,20 @@ public class GameService : MonoBehaviour
 
     IEnumerator DoAsyncIteration()
     {
-        yield return new WaitForSeconds(_seconds);
+        if (_waitOneFrame)
+        {
+            _waitOneFrame = false;
+            yield return 0;
+        }
+        else
+        {
+            yield return new WaitForSeconds(_seconds);
+        }
 
         _asyncForEach(_index);
-        if (_index < _lenght - 1) {
+        if (_index < _lenght - 1)
+        {
             _index++;
-            //Debug.Log(_index);
             StartCoroutine(DoAsyncIteration());
         }
     }

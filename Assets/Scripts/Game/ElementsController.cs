@@ -28,8 +28,16 @@ public class ElementsController : MonoBehaviour
             child.gameObject.SetActive(false);
         }
 
+        InitHotkeys();
+
         AddNewButton.SetActive(true);
         InLineSelection.gameObject.SetActive(false);
+    }
+
+    public void Init(List<Element> elements)
+    {
+        InitDropdown();
+        InitElements(elements);
     }
 
     public void OnAddNewElement()
@@ -43,9 +51,17 @@ public class ElementsController : MonoBehaviour
 
     private List<int> FilterElementTypes()
     {
-        var currentIndex = Elements.Count;
-        var lastElementType = Elements[currentIndex - 1].ElementType;
+        if (Elements == null)
+        {
+            Init(new List<Element>());
+        }
 
+        if (Elements.Count == 0)
+        {
+            return new List<int>() { 0 };
+        }
+
+        var lastElementType = Elements[Elements.Count - 1].ElementType;
         var options = new List<int>();
         int i = 0;
         foreach (ElementType elementType in (ElementType[])System.Enum.GetValues(typeof(ElementType)))
@@ -65,18 +81,21 @@ public class ElementsController : MonoBehaviour
      */
     public void AddNewElement(ElementType elementType)
     {
+        if (Elements.Count > 0)
+        {
+            var lastElementType = Elements[Elements.Count - 1].ElementType;
+            if (GameService.Instance.FilterNewElements(elementType, lastElementType) == false)
+                return;
+        }
+
         AddNewButton.SetActive(true);
         InLineSelection.gameObject.SetActive(false);
 
-        if (currentMaxId.HasValue == false)
-        {
-            currentMaxId = Elements.Max(e => { return e.id; });
-        }
-        currentMaxId += 1;
+        DetermineCurrentMaxId();
 
         var element = new Element()
         {
-            id = currentMaxId.Value,
+            Id = currentMaxId.Value,
             Text = "Text",
             ElementType = elementType,
             Index = Elements.Count,
@@ -84,15 +103,28 @@ public class ElementsController : MonoBehaviour
         };
         Elements.Add(element);
         AddElementInPool(element);
+
+        GameService.Instance.InternalWait(() =>
+        {
+            LayoutRebuilder.ForceRebuildLayoutImmediate(transform.GetComponent<RectTransform>());
+            LayoutRebuilder.ForceRebuildLayoutImmediate(transform.parent.GetComponent<RectTransform>());
+        });
     }
 
-    public void Init(List<Element> elements)
+    private void DetermineCurrentMaxId()
     {
-        InitDropdown();
-
-
-
-        InitElements(elements);
+        if (currentMaxId.HasValue == false)
+        {
+            if (Elements.Count == 0)
+            {
+                currentMaxId = 0;
+            }
+            else
+            {
+                currentMaxId = Elements.Max(e => { return e.Id; });
+            }
+        }
+        currentMaxId += 1;
     }
 
     private void InitDropdown()
@@ -122,35 +154,37 @@ public class ElementsController : MonoBehaviour
             }
         }
 
-        //foreach (Element element in Elements)
-        //{
-        //    AddElementInPool(element);
-        //}
+        if (Elements.Count == 0)
+            return;
 
-        GameService.Instance.AsyncForEach(0.05f, Elements.Count, (int i) =>
+        GameService.Instance.AsyncForEach(Elements.Count, (int i) =>
         {
-            AddElementInPool(Elements[i]);  
-        });
+            AddElementInPool(Elements[i]);
 
-        //GameService.Instance.InternalWait(1f, () =>
-        //{
-        //    Canvas.ForceUpdateCanvases();
-        //});
+            if (i >= Elements.Count - 1)
+            {
+                GameService.Instance.InternalWait(() =>
+                {
+                    LayoutRebuilder.ForceRebuildLayoutImmediate(transform.GetComponent<RectTransform>());
+                    LayoutRebuilder.ForceRebuildLayoutImmediate(transform.parent.GetComponent<RectTransform>());
+                });
+            }
+        });
     }
 
     private void AddElementInPool(Element element)
     {
         var prefab = GameHiddenOptions.Instance.GetPrefabElement(element.ElementType);
         var wasNull = UsefullUtils.CheckInPool(
-            element.id,
+            element.Id,
             prefab,
             transform,
             out IPrefabComponent el,
             ref _elementsPool
             );
 
-        el.Id = element.id;
-        el.GameObject.name = element.id + "_" + element.ElementType.ToString();
+        el.Id = element.Id;
+        el.GameObject.name = element.Id + "_" + element.ElementType.ToString();
 
         var elementComponent = (el as ITextComponent);
         elementComponent.SetText(element.Text);
@@ -159,5 +193,26 @@ public class ElementsController : MonoBehaviour
         {
             _elementsPool.Add(el);
         }
+    }
+
+    private void InitHotkeys()
+    {
+        HotkeyController.Instance.AddAsComponent("NewWrite", OnAddNewElement);
+        HotkeyController.Instance.AddAsComponent("NewWrite_SceneHeading", () =>
+        {
+            AddNewElement(ElementType.SceneHeading);
+        });
+        HotkeyController.Instance.AddAsComponent("NewWrite_Action", () =>
+        {
+            AddNewElement(ElementType.Action);
+        });
+        HotkeyController.Instance.AddAsComponent("NewWrite_Character", () =>
+        {
+            AddNewElement(ElementType.Character);
+        });
+        HotkeyController.Instance.AddAsComponent("NewWrite_Dialog", () =>
+        {
+            AddNewElement(ElementType.Dialog);
+        });
     }
 }

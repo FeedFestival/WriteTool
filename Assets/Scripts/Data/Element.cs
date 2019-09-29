@@ -1,10 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
+using SQLite4Unity3d;
 
 public class Element
 {
-    public int id;
-    public int TypeId;
+    [PrimaryKey, AutoIncrement]
+    public int Id { get; set; }
+    public int StoryId { get; set; }
+    public int TypeId { get; set; }
+
+    [Ignore]
     public ElementType ElementType
     {
         set
@@ -16,10 +21,12 @@ public class Element
             return (ElementType)TypeId;
         }
     }
-    public string Text;
-    public byte base64Text;
 
-    public int Index;
+    public string Text { get; set; }
+    public string EncodedText { get; set; }
+
+    public int Index { get; set; }
+
     public bool IsNew;
 }
 

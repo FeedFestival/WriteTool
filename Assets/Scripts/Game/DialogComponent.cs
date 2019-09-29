@@ -9,10 +9,15 @@ public class DialogComponent : MonoBehaviour, IPrefabComponent, ITextComponent
     public int Id { get { return _id; } set { _id = value; } }
     public GameObject GameObject { get { return this.gameObject; } }
 
-    public Text Text;
+    public ScalableText ScalableText;
 
     public void SetText(string text)
     {
-        Text.text = text;
+        ScalableText.SetText(text);
+    }
+
+    public void Edit()
+    {
+
     }
 }

@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Assets.Scripts.Utils;
 
 public class ElementData : MonoBehaviour
 {
@@ -13,55 +15,54 @@ public class ElementData : MonoBehaviour
     }
 
     public delegate void OnElementsLoaded(List<Element> elements);
-    private OnElementsLoaded OnElementsLoadedCallback;
+    private OnElementsLoaded _onElementsLoadedCallback;
+    public delegate void OnElementLoaded(Element element);
+    private OnElementLoaded _onElementLoaded;
+
+    private int _storyId;
 
     public void GetElementsByStory(int storyId, OnElementsLoaded onElementsLoadedCallback)
     {
-        OnElementsLoadedCallback = onElementsLoadedCallback;
-        StartCoroutine(WaitForElements());
+        _onElementsLoadedCallback = onElementsLoadedCallback;
+        _storyId = storyId;
+
+        var result = DomainLogic.DB.SqlConn().Table<Element>().Where(x => x.StoryId == _storyId);
+        if (result != null && result.Count() > 0)
+        {
+            List<Element> elements = result.ToList();
+            _onElementsLoadedCallback(elements);
+        }
+        //StartCoroutine(WaitForElements());
+    }
+
+    public void GetElement(int elementId, OnElementLoaded onElementLoaded)
+    {
+        _onElementLoaded = onElementLoaded;
+
+        var element = DomainLogic.DB.SqlConn().Table<Element>().Where(p => p.Id == elementId).FirstOrDefault();
+        element.Text = DataUtils.DecodeTextFromBytes(element.EncodedText);
+        _onElementLoaded(element);
+    }
+
+    public void SaveElement(Element element)
+    {
+        element.EncodedText = DataUtils.EncodeTextInBytes(element.Text);
+        if (element.IsNew == false)
+        {
+            DomainLogic.DB.SqlConn().Update(element);
+        }
+        else
+        {
+            DomainLogic.DB.SqlConn().Insert(element);
+        }
     }
 
     IEnumerator WaitForElements()
     {
-        yield return new WaitForSeconds(0.2f);
+        List<Element> elements = DomainLogic.DB.SqlConn().Table<Element>().Where(x => x.StoryId == _storyId).ToList();
 
-        OnElementsLoadedCallback(new List<Element>() {
-                new Element() {
-                    id = 1,
-                    Index = 0,
-                    ElementType = ElementType.SceneHeading,
-                    Text = "Scene Heading"
-                },
-                new Element() {
-                    id = 2,
-                    Index = 1,
-                    ElementType = ElementType.Action,
-                    Text = "Action"
-                },
-                new Element() {
-                    id = 3,
-                    Index = 2,
-                    ElementType = ElementType.Character,
-                    Text = "Character"
-                },
-                new Element() {
-                    id = 4,
-                    Index = 3,
-                    ElementType = ElementType.Dialog,
-                    Text = "Dialog"
-                },
-                new Element() {
-                    id = 5,
-                    Index = 4,
-                    ElementType = ElementType.Character,
-                    Text = "Character 2"
-                },
-                new Element() {
-                    id = 6,
-                    Index = 5,
-                    ElementType = ElementType.Dialog,
-                    Text = "Dialog 2"
-                }
-            });
+        yield return 0;
+
+        _onElementsLoadedCallback(elements);
     }
 }
