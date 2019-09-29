@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Utils;
+using System;
 
 public class ElementData : MonoBehaviour
 {
@@ -44,16 +45,16 @@ public class ElementData : MonoBehaviour
         _onElementLoaded(element);
     }
 
-    public void SaveElement(Element element)
+    public int SaveElement(Element element)
     {
         element.EncodedText = DataUtils.EncodeTextInBytes(element.Text);
         if (element.IsNew == false)
         {
-            DomainLogic.DB.SqlConn().Update(element);
+            return DomainLogic.DB.SqlConn().Update(element);
         }
         else
         {
-            DomainLogic.DB.SqlConn().Insert(element);
+            return DomainLogic.DB.SqlConn().Insert(element);
         }
     }
 
@@ -64,5 +65,10 @@ public class ElementData : MonoBehaviour
         yield return 0;
 
         _onElementsLoadedCallback(elements);
+    }
+
+    internal void DeleteElement(int elementId)
+    {
+        DomainLogic.DB.SqlConn().Delete<Element>(elementId);
     }
 }

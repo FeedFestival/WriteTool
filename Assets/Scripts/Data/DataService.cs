@@ -75,6 +75,15 @@ public class DataService
         return _connection;
     }
 
+    internal void RecreatePageTable()
+    {
+        _connection.DropTable<Page>();
+        _connection.CreateTable<Page>();
+
+        Debug.Log("Created PAGE TABLE");
+    }
+
+
     internal void RecreateStoryTable()
     {
         _connection.DropTable<Story>();

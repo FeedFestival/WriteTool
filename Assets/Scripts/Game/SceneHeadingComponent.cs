@@ -3,16 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SceneHeadingComponent : MonoBehaviour, IPrefabComponent, ITextComponent
+public class SceneHeadingComponent : MonoBehaviour, IPrefabComponent, ITextComponent, IElementComponent
 {
     private int _id;
     public int Id { get { return _id; } set { _id = value; } }
     public GameObject GameObject { get { return this.gameObject; } }
 
-    public Text Text;
+    private int _typeId;
+    public int TypeId { get { return _typeId; } set { _typeId = value; } }
+
+    public InputField InputField;
 
     public void SetText(string text)
     {
-        Text.text = text.ToUpper();
+        InputField.text = text.ToUpper();
+        InputField.Select();
+        InputField.ActivateInputField();
     }
 }

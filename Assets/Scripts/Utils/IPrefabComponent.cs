@@ -13,3 +13,8 @@ public interface ITextComponent
 {
     void SetText(string text);
 }
+
+public interface IElementComponent
+{
+    int TypeId { get; set; }
+}

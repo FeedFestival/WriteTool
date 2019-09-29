@@ -48,4 +48,9 @@ public class DomainLogic : MonoBehaviour
     {
         DataService.RecreateElementTable();
     }
+
+    public void RecreatePageTable()
+    {
+        DataService.RecreatePageTable();
+    }
 }

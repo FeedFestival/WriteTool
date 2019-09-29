@@ -14,7 +14,7 @@ public class DomainLogicEditor : Editor
     private bool _setupConfirm;
     public enum InspectorButton
     {
-        RecreateUserTable, RecreateStoryTable, RecreateElementTable
+        RecreateUserTable, RecreateStoryTable, RecreatePageTable, RecreateElementTable
     }
     private InspectorButton _actionTool;
     private InspectorButton _action
@@ -44,6 +44,9 @@ public class DomainLogicEditor : Editor
 
         if (GUILayout.Button("Recreate Story Table"))
             _action = InspectorButton.RecreateStoryTable;
+
+        if (GUILayout.Button("Recreate Page Table"))
+            _action = InspectorButton.RecreatePageTable;
 
         if (GUILayout.Button("Recreate Element Table"))
             _action = InspectorButton.RecreateElementTable;
@@ -105,6 +108,11 @@ public class DomainLogicEditor : Editor
             case InspectorButton.RecreateStoryTable:
 
                 _myScript.RecreateStoryTable();
+                break;
+
+            case InspectorButton.RecreatePageTable:
+
+                _myScript.RecreatePageTable();
                 break;
 
             case InspectorButton.RecreateElementTable:

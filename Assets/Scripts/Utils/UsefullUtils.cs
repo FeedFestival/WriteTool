@@ -66,7 +66,9 @@ namespace Assets.Scripts.Utils
             return go;
         }
 
-        public static bool CheckInPool(int id, GameObject prefab, Transform parent, out IPrefabComponent component, ref List<IPrefabComponent> pool)
+        public delegate bool PoolCheck(IPrefabComponent component);
+
+        public static bool CheckInPool(PoolCheck poolCheck, GameObject prefab, Transform parent, out IPrefabComponent component, ref List<IPrefabComponent> pool)
         {
             var wasNull = false;
             component = null;
@@ -78,10 +80,10 @@ namespace Assets.Scripts.Utils
             }
             else
             {
-                wasNull = pool.Count(c => c.Id == id) == 0;
+                wasNull = pool.Count(c => poolCheck(c)) == 0;
                 if (wasNull == false)
                 {
-                    component = pool.FirstOrDefault(c => c.Id == id);
+                    component = pool.FirstOrDefault(c => poolCheck(c));
                     component.GameObject.SetActive(true);
                 }
             }

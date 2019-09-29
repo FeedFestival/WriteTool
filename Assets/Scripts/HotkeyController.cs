@@ -44,10 +44,10 @@ public class HotkeyController : MonoBehaviour
             HotkeyComponents["NewWrite"]();
         }
 
-        if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.S))
-        {
-            HotkeyComponents["NewWrite_SceneHeading"]();
-        }
+        //if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.S))
+        //{
+        //    HotkeyComponents["NewWrite_SceneHeading"]();
+        //}
         if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.A))
         {
             HotkeyComponents["NewWrite_Action"]();
@@ -59,6 +59,11 @@ public class HotkeyController : MonoBehaviour
         if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.D))
         {
             HotkeyComponents["NewWrite_Dialog"]();
+        }
+
+        if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.S))
+        {
+            HotkeyComponents["Save"]();
         }
     }
 

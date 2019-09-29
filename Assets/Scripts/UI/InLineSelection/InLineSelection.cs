@@ -44,7 +44,9 @@ public class InLineSelection : MonoBehaviour
         foreach (ItemOption item in Items)
         {
             var wasNull = UsefullUtils.CheckInPool(
-                item.Value,
+                (component) => {
+                    return component.Id == item.Value;
+                },
                 ItemPrefab,
                 transform,
                 out IPrefabComponent el,

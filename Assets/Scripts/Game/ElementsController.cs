@@ -95,8 +95,7 @@ public class ElementsController : MonoBehaviour
 
         var element = new Element()
         {
-            Id = currentMaxId.Value,
-            Text = "Text",
+            Text = GetDefaultText(elementType),
             ElementType = elementType,
             Index = Elements.Count,
             IsNew = true
@@ -109,6 +108,13 @@ public class ElementsController : MonoBehaviour
             LayoutRebuilder.ForceRebuildLayoutImmediate(transform.GetComponent<RectTransform>());
             LayoutRebuilder.ForceRebuildLayoutImmediate(transform.parent.GetComponent<RectTransform>());
         });
+    }
+
+    private string GetDefaultText(ElementType elementType)
+    {
+        if (elementType == ElementType.SceneHeading)
+            return "INT.";
+        return "";
     }
 
     private void DetermineCurrentMaxId()
@@ -176,7 +182,13 @@ public class ElementsController : MonoBehaviour
     {
         var prefab = GameHiddenOptions.Instance.GetPrefabElement(element.ElementType);
         var wasNull = UsefullUtils.CheckInPool(
-            element.Id,
+            (IPrefabComponent component) =>
+            {
+                var typeId = (ElementType)((component as IElementComponent).TypeId);
+                if (component.GameObject.activeSelf == false && typeId == element.ElementType)
+                    return true;
+                return false;
+            },
             prefab,
             transform,
             out IPrefabComponent el,
@@ -184,7 +196,7 @@ public class ElementsController : MonoBehaviour
             );
 
         el.Id = element.Id;
-        el.GameObject.name = element.Id + "_" + element.ElementType.ToString();
+        el.GameObject.name = element.Index + "_[" + element.Id + "]_" + element.ElementType.ToString();
 
         var elementComponent = (el as ITextComponent);
         elementComponent.SetText(element.Text);
@@ -193,6 +205,24 @@ public class ElementsController : MonoBehaviour
         {
             _elementsPool.Add(el);
         }
+    }
+
+    private void SaveElements()
+    {
+        foreach (Element element in Elements)
+        {
+            if (element.ToDelete)
+            {
+                ElementData.Instance.DeleteElement(element.Id);
+            }
+            else
+            {
+                element.Id = ElementData.Instance.SaveElement(element);
+                element.IsNew = false;
+            }
+        }
+
+        Elements.RemoveAll((e) => { return e.ToDelete; });
     }
 
     private void InitHotkeys()
@@ -214,5 +244,7 @@ public class ElementsController : MonoBehaviour
         {
             AddNewElement(ElementType.Dialog);
         });
+
+        HotkeyController.Instance.AddAsComponent("Save", SaveElements);
     }
 }

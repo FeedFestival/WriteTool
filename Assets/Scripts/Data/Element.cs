@@ -7,6 +7,7 @@ public class Element
     [PrimaryKey, AutoIncrement]
     public int Id { get; set; }
     public int StoryId { get; set; }
+    public int PageId { get; set; }
     public int TypeId { get; set; }
 
     [Ignore]
@@ -28,6 +29,7 @@ public class Element
     public int Index { get; set; }
 
     public bool IsNew;
+    public bool ToDelete;
 }
 
 public enum ElementType
