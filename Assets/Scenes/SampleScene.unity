@@ -1003,6 +1003,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UseHotkeys: 1
+  HotkeysImage: {fileID: 48915809}
   NewWriteIndex: 0
 --- !u!4 &996978180
 Transform:
@@ -1797,8 +1798,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 330366649}
   m_HandleRect: {fileID: 330366648}
   m_Direction: 2
-  m_Value: 1.0000015
-  m_Size: 0.9498682
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2036,16 +2037,16 @@ MonoBehaviour:
   ServerURL: http://127.0.0.1:8080
   IconColor:
     serializedVersion: 2
-    rgba: 0
+    rgba: 4280361249
   LabelColor:
     serializedVersion: 2
     rgba: 0
   DisabledTextColor:
     serializedVersion: 2
-    rgba: 0
+    rgba: 4291480266
   NormalTextColor:
     serializedVersion: 2
-    rgba: 0
+    rgba: 4280361249
   SceneHeadingPrefab: {fileID: 1487084634649272166, guid: 52eb85cd199fba84da3ace64a588786b,
     type: 3}
   ActionPrefab: {fileID: 5245566519413019136, guid: 09be31c6c824a24459a08d4a6c8769d8,

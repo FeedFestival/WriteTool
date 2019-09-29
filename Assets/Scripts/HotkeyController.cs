@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
+using UnityEngine.UI;
 
 public class HotkeyController : MonoBehaviour
 {
@@ -9,8 +11,14 @@ public class HotkeyController : MonoBehaviour
 
     public bool UseHotkeys;
 
+    public Image HotkeysImage;
+
+    private bool _canUseHotkeys;
+
     public delegate void OnHotkeyPress();
     private Dictionary<string, OnHotkeyPress> HotkeyComponents;
+    private OnHotkeyPress _enterOnHotkeyPress;
+    private OnHotkeyPress _escapeOnHotkeyPress;
 
     private void Awake()
     {
@@ -65,14 +73,44 @@ public class HotkeyController : MonoBehaviour
         {
             HotkeyComponents["Save"]();
         }
+
+        if (Input.GetKeyUp(KeyCode.KeypadEnter) || Input.GetKeyUp(KeyCode.Return))
+        {
+            _enterOnHotkeyPress?.Invoke();
+        }
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            _escapeOnHotkeyPress?.Invoke();
+        }
     }
 
+    internal void RegisterForEnterKey(OnHotkeyPress enterOnHotkeyPress)
+    {
+        _canUseHotkeys = (enterOnHotkeyPress == null);
+        _enterOnHotkeyPress = enterOnHotkeyPress;
+
+        if (_canUseHotkeys)
+        {
+            HotkeysImage.color = GameHiddenOptions.Instance.NormalTextColor;
+        }
+        else
+        {
+            HotkeysImage.color = GameHiddenOptions.Instance.DisabledTextColor;
+        }
+    }
+
+    internal void RegisterForEscapeKey(OnHotkeyPress escapeOnHotkeyPress)
+    {
+        _escapeOnHotkeyPress = escapeOnHotkeyPress;
+    }
+    
     void Init()
     {
         StartCoroutine(Interval());
     }
 
-    IEnumerator Interval() {
+    IEnumerator Interval()
+    {
 
         yield return new WaitForSeconds(1f);
         NewWriteIndex = 0;

@@ -17,7 +17,39 @@ public class SceneHeadingComponent : MonoBehaviour, IPrefabComponent, ITextCompo
     public void SetText(string text)
     {
         InputField.text = text.ToUpper();
+
         InputField.Select();
         InputField.ActivateInputField();
+
+        InputField.onValueChanged = new InputField.OnChangeEvent();
+        InputField.onValueChanged.AddListener(OnChange);
+    }
+
+    public void OnFocus()
+    {
+        GameService.Instance.Debounce(Focussed, 0.1f);
+    }
+
+    private void Focussed()
+    {
+        HotkeyController.Instance.RegisterForEnterKey(() =>
+        {
+            ElementsController.Instance.AddNewElement(ElementType.Action);
+        });
+        HotkeyController.Instance.RegisterForEscapeKey(() =>
+        {
+            InputField.DeactivateInputField();
+            OnBlur();
+        });
+    }
+
+    public void OnBlur()
+    {
+        HotkeyController.Instance.RegisterForEnterKey(null);
+    }
+
+    public void OnChange(string value)
+    {
+        InputField.text = InputField.text.ToUpper();
     }
 }

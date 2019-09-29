@@ -13,6 +13,7 @@ public class GameService : MonoBehaviour
 
     public delegate void InternalWaitCallback();
     private InternalWaitCallback _internalWait;
+    private InternalWaitCallback _debounceWait;
     public delegate void AsyncForEachCallback(int index);
     private AsyncForEachCallback _asyncForEach;
     private float _seconds;
@@ -34,7 +35,7 @@ public class GameService : MonoBehaviour
         StartCoroutine(InternalWaitFunction());
     }
 
-    public IEnumerator InternalWaitFunction()
+    private IEnumerator InternalWaitFunction()
     {
         if (_waitOneFrame)
         {
@@ -46,6 +47,26 @@ public class GameService : MonoBehaviour
             yield return new WaitForSeconds(_seconds);
         }
         _internalWait();
+    }
+
+    public void Debounce(InternalWaitCallback debounceWait, float seconds)
+    {
+        _debounceWait = debounceWait;
+        StartCoroutine(DebounceFunction(seconds));
+    }
+
+    private IEnumerator DebounceFunction(float seconds)
+    {
+        if (_waitOneFrame)
+        {
+            _waitOneFrame = false;
+            yield return 0;
+        }
+        else
+        {
+            yield return new WaitForSeconds(seconds);
+        }
+        _debounceWait();
     }
 
     public void AsyncForEach(int length, AsyncForEachCallback asyncForEach, float? seconds = null)
@@ -83,6 +104,8 @@ public class GameService : MonoBehaviour
             StartCoroutine(DoAsyncIteration());
         }
     }
+
+
 
     public bool CanAddNewElement(ElementType elementType, ElementType lastElementType)
     {
