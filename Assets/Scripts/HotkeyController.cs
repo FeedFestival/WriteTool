@@ -30,32 +30,16 @@ public class HotkeyController : MonoBehaviour
         Init();
     }
 
-    private KeyCode[] NewWrite = { KeyCode.LeftControl, KeyCode.LeftShift, KeyCode.W };
-    public int NewWriteIndex = 0;
-
     // Update is called once per frame
     void Update()
     {
-        if (UseHotkeys == false)
+        if (UseHotkeys == false || _canUseHotkeys == false)
             return;
 
-        if (NewWriteIndex < NewWrite.Length)
+        if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.S))
         {
-            if (Input.GetKeyDown(NewWrite[NewWriteIndex]))
-            {
-                NewWriteIndex++;
-            }
+            HotkeyComponents["NewWrite_SceneHeading"]();
         }
-        else
-        {
-            NewWriteIndex = 0;
-            HotkeyComponents["NewWrite"]();
-        }
-
-        //if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.S))
-        //{
-        //    HotkeyComponents["NewWrite_SceneHeading"]();
-        //}
         if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.A))
         {
             HotkeyComponents["NewWrite_Action"]();
@@ -82,6 +66,15 @@ public class HotkeyController : MonoBehaviour
         {
             _escapeOnHotkeyPress?.Invoke();
         }
+
+        if (Input.GetKeyUp(KeyCode.UpArrow))
+        {
+            ElementsController.Instance.MoveCarret(false);
+        }
+        if (Input.GetKeyUp(KeyCode.DownArrow))
+        {
+            ElementsController.Instance.MoveCarret();
+        }
     }
 
     internal void RegisterForEnterKey(OnHotkeyPress enterOnHotkeyPress)
@@ -106,15 +99,7 @@ public class HotkeyController : MonoBehaviour
     
     void Init()
     {
-        StartCoroutine(Interval());
-    }
-
-    IEnumerator Interval()
-    {
-
-        yield return new WaitForSeconds(1f);
-        NewWriteIndex = 0;
-        StartCoroutine(Interval());
+        
     }
 
     public void AddAsComponent(string key, OnHotkeyPress value)

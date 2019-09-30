@@ -10,13 +10,13 @@ public class ElementsController : MonoBehaviour
     private static ElementsController _elementsController;
     public static ElementsController Instance { get { return _elementsController; } }
 
+    public GameObject Carret;
+
     public List<Element> Elements;
     public List<IPrefabComponent> _elementsPool;
 
     public GameObject AddNewButton;
     public InLineSelection InLineSelection;
-
-    private int? currentMaxId;
 
     // Start is called before the first frame update
     void Awake()
@@ -25,8 +25,13 @@ public class ElementsController : MonoBehaviour
 
         foreach (Transform child in transform)
         {
-            child.gameObject.SetActive(false);
+            if (child.gameObject.name != "Carret")
+            {
+                Destroy(child.gameObject);
+            }
         }
+
+        Carret.gameObject.SetActive(true);
 
         InitHotkeys();
 
@@ -75,10 +80,46 @@ public class ElementsController : MonoBehaviour
         return options;
     }
 
-    /*
-     * var currentIndex = transform.GetSiblingIndex();
-        transform.SetSiblingIndex(currentIndex + 1);
-     */
+    private int GetCarretIndex()
+    {
+        return Carret.transform.GetSiblingIndex();
+    }
+
+    public void MoveCarret(bool down = true)
+    {
+        var currentIndex = GetCarretIndex();
+        var newIndex = currentIndex + 1;
+        if (down == false)
+        {
+            newIndex = currentIndex - 1;
+        }
+
+        Debug.Log(Elements.Count);
+
+        if (newIndex == 0 || newIndex == Elements.Count + 1)
+        {
+            return;
+        }
+        
+        Carret.transform.SetSiblingIndex(newIndex);
+        Carret.name = newIndex + "_Carret";
+
+    }
+
+    private void RecalculateIndexes()
+    {
+        var currentIndex = Carret.transform.GetSiblingIndex();
+        var newIndex = currentIndex + 1;
+        for (var i = 0; i < Elements.Count; i++)
+        {
+            if (Elements[i].Index >= newIndex)
+            {
+                Elements[i].Index = i;
+                _elementsPool[i].GameObject.name = GetElementName(Elements[i]);
+            }
+        }
+    }
+
     public void AddNewElement(ElementType elementType)
     {
         if (Elements.Count > 0)
@@ -91,17 +132,21 @@ public class ElementsController : MonoBehaviour
         AddNewButton.SetActive(true);
         InLineSelection.gameObject.SetActive(false);
 
-        DetermineCurrentMaxId();
+        var currentIndex = GetCarretIndex();
+        var weNeedToShiftElements = Elements.Count != currentIndex;
 
         var element = new Element()
         {
             Text = GetDefaultText(elementType),
             ElementType = elementType,
-            Index = Elements.Count,
+            Index = currentIndex,
             IsNew = true
         };
         Elements.Add(element);
         AddElementInPool(element);
+
+        //if (weNeedToShiftElements)
+        MoveCarret();
 
         GameService.Instance.InternalWait(() =>
         {
@@ -115,22 +160,6 @@ public class ElementsController : MonoBehaviour
         if (elementType == ElementType.SceneHeading)
             return "INT.";
         return "";
-    }
-
-    private void DetermineCurrentMaxId()
-    {
-        if (currentMaxId.HasValue == false)
-        {
-            if (Elements.Count == 0)
-            {
-                currentMaxId = 0;
-            }
-            else
-            {
-                currentMaxId = Elements.Max(e => { return e.Id; });
-            }
-        }
-        currentMaxId += 1;
     }
 
     private void InitDropdown()
@@ -196,7 +225,7 @@ public class ElementsController : MonoBehaviour
             );
 
         el.Id = element.Id;
-        el.GameObject.name = element.Index + "_[" + element.Id + "]_" + element.ElementType.ToString();
+        el.GameObject.name = GetElementName(element);
 
         var elementComponent = (el as ITextComponent);
         elementComponent.SetText(element.Text);
@@ -205,6 +234,11 @@ public class ElementsController : MonoBehaviour
         {
             _elementsPool.Add(el);
         }
+    }
+
+    private string GetElementName(Element element)
+    {
+        return element.Index + "_[" + element.Id + "]_" + element.ElementType.ToString();
     }
 
     private void SaveElements()
