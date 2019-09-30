@@ -19,6 +19,7 @@ public class HotkeyController : MonoBehaviour
     private Dictionary<string, OnHotkeyPress> HotkeyComponents;
     private OnHotkeyPress _enterOnHotkeyPress;
     private OnHotkeyPress _escapeOnHotkeyPress;
+    private OnHotkeyPress _backspaceOnHotkeyPress;
 
     private void Awake()
     {
@@ -82,6 +83,10 @@ public class HotkeyController : MonoBehaviour
         {
             _escapeOnHotkeyPress?.Invoke();
         }
+        if (Input.GetKeyUp(KeyCode.Backspace))
+        {
+            _backspaceOnHotkeyPress?.Invoke();
+        }
     }
 
     internal void RegisterForEnterKey(OnHotkeyPress enterOnHotkeyPress)
@@ -103,7 +108,12 @@ public class HotkeyController : MonoBehaviour
     {
         _escapeOnHotkeyPress = escapeOnHotkeyPress;
     }
-    
+
+    internal void RegisterBackspaceKey(OnHotkeyPress backspaceOnHotkeyPress)
+    {
+        _backspaceOnHotkeyPress = backspaceOnHotkeyPress;
+    }
+
     void Init()
     {
         StartCoroutine(Interval());

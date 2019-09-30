@@ -19,6 +19,11 @@ public class DialogComponent : MonoBehaviour, IPrefabComponent, ITextComponent, 
         ScalableText.SetText(text);
     }
 
+    public string GetText()
+    {
+        return ScalableText.InputField.text;
+    }
+
     public void Edit()
     {
 

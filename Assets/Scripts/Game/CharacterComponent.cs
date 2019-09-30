@@ -18,4 +18,8 @@ public class CharacterComponent : MonoBehaviour, IPrefabComponent, ITextComponen
     {
         InputField.text = text.ToUpper();
     }
+    public string GetText()
+    {
+        return InputField.text;
+    }
 }

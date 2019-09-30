@@ -28,14 +28,14 @@ public class ElementsController : MonoBehaviour
             child.gameObject.SetActive(false);
         }
 
-        InitHotkeys();
-
         AddNewButton.SetActive(true);
         InLineSelection.gameObject.SetActive(false);
     }
 
     public void Init(List<Element> elements)
     {
+        InitHotkeys();
+
         InitDropdown();
         InitElements(elements);
     }
@@ -195,7 +195,8 @@ public class ElementsController : MonoBehaviour
             ref _elementsPool
             );
 
-        el.Id = element.Id;
+        // need to determine index here
+        el.Id = GetElementUniqueId(element);
         el.GameObject.name = element.Index + "_[" + element.Id + "]_" + element.ElementType.ToString();
 
         var elementComponent = (el as ITextComponent);
@@ -207,22 +208,34 @@ public class ElementsController : MonoBehaviour
         }
     }
 
+    private int GetElementUniqueId(Element element)
+    {
+        return element.Id + element.Index + (int)element.ElementType;
+    }
+
     private void SaveElements()
     {
         foreach (Element element in Elements)
         {
-            if (element.ToDelete)
-            {
-                ElementData.Instance.DeleteElement(element.Id);
-            }
-            else
-            {
-                element.Id = ElementData.Instance.SaveElement(element);
-                element.IsNew = false;
-            }
+            element.StoryId = StoryService.Instance.Story.Id;
+            var el = _elementsPool.FirstOrDefault(e => e.Id == GetElementUniqueId(element));
+            element.Text = (el as ITextComponent).GetText();
+            element.Id = ElementData.Instance.SaveElement(element);
+            element.IsNew = false;
         }
+    }
 
-        Elements.RemoveAll((e) => { return e.ToDelete; });
+    public void DeleteElement(int uniqueId)
+    {
+        int index = Elements.FindIndex(e => GetElementUniqueId(e) == uniqueId);
+        if (Elements[index].IsNew == false)
+        {
+            ElementData.Instance.DeleteElement(Elements[index].Id);
+        }
+        Elements.RemoveAt(index);
+        index = _elementsPool.FindIndex(e => e.Id == uniqueId);
+        Destroy(_elementsPool[index].GameObject);
+        _elementsPool.RemoveAt(index);
     }
 
     private void InitHotkeys()

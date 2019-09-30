@@ -12,6 +12,7 @@ public interface IPrefabComponent
 public interface ITextComponent
 {
     void SetText(string text);
+    string GetText();
 }
 
 public interface IElementComponent
