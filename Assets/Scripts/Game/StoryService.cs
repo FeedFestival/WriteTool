@@ -7,6 +7,8 @@ public class StoryService : MonoBehaviour
     private static StoryService _storyService;
     public static StoryService Instance { get { return _storyService; } }
 
+    public Story Story;
+
     private void Awake()
     {
         _storyService = this;
@@ -19,7 +21,13 @@ public class StoryService : MonoBehaviour
 
     public void Init()
     {
-        ElementData.Instance.GetElementsByStory(1, (List<Element> elements) =>
+        Story = new Story()
+        {
+            Id = 1,
+            Name = "Test Story"
+        };
+
+        ElementData.Instance.GetElementsByStory(Story.Id, (List<Element> elements) =>
         {
             ElementsController.Instance.Init(elements);
         });

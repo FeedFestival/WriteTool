@@ -25,6 +25,11 @@ public class SceneHeadingComponent : MonoBehaviour, IPrefabComponent, ITextCompo
         InputField.onValueChanged.AddListener(OnChange);
     }
 
+    public string GetText()
+    {
+        return InputField.text;
+    }
+
     public void OnFocus()
     {
         GameService.Instance.Debounce(Focussed, 0.1f);

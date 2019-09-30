@@ -14,8 +14,52 @@ public class ActionComponent : MonoBehaviour, IPrefabComponent, ITextComponent, 
 
     public ScalableText ScalableText;
 
+    private int _backspaceClick = 0;
+
     public void SetText(string text)
     {
         ScalableText.SetText(text);
+    }
+    public string GetText()
+    {
+        return ScalableText.InputField.text;
+    }
+
+    public void OnFocus()
+    {
+        GameService.Instance.Debounce(Focussed, 0.1f);
+    }
+
+    private void Focussed()
+    {
+        _backspaceClick = 0;
+
+        HotkeyController.Instance.RegisterForEnterKey(() =>
+        {
+            ElementsController.Instance.OnAddNewElement();
+        });
+        HotkeyController.Instance.RegisterForEscapeKey(() =>
+        {
+            ScalableText.InputField.DeactivateInputField();
+            OnBlur();
+        });
+        HotkeyController.Instance.RegisterBackspaceKey(() =>
+        {
+            if (string.IsNullOrEmpty(ScalableText.InputField.text))
+            {
+                _backspaceClick++;
+                if (_backspaceClick > 1)
+                {
+                    ScalableText.InputField.DeactivateInputField();
+                    OnBlur();
+                    ElementsController.Instance.DeleteElement(Id);
+                }
+            }
+        });
+    }
+
+    public void OnBlur()
+    {
+        HotkeyController.Instance.RegisterForEnterKey(null);
     }
 }
