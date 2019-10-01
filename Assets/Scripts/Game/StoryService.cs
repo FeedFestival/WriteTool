@@ -27,9 +27,11 @@ public class StoryService : MonoBehaviour
             Name = "Test Story"
         };
 
+        ElementsController.Instance.Init();
+
         ElementData.Instance.GetElementsByStory(Story.Id, (List<Element> elements) =>
         {
-            ElementsController.Instance.Init(elements);
+            ElementsController.Instance.InitElements(elements);
         });
     }
 }

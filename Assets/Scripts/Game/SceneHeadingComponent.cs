@@ -14,6 +14,8 @@ public class SceneHeadingComponent : MonoBehaviour, IPrefabComponent, ITextCompo
 
     public InputField InputField;
 
+    private int _backspaceClick;
+
     public void SetText(string text)
     {
         InputField.text = text.ToUpper();
@@ -37,6 +39,7 @@ public class SceneHeadingComponent : MonoBehaviour, IPrefabComponent, ITextCompo
 
     private void Focussed()
     {
+        _backspaceClick = 0;
         HotkeyController.Instance.RegisterForEnterKey(() =>
         {
             ElementsController.Instance.AddNewElement(ElementType.Action);
@@ -45,6 +48,19 @@ public class SceneHeadingComponent : MonoBehaviour, IPrefabComponent, ITextCompo
         {
             InputField.DeactivateInputField();
             OnBlur();
+        });
+        HotkeyController.Instance.RegisterBackspaceKey(() =>
+        {
+            if (string.IsNullOrEmpty(InputField.text))
+            {
+                _backspaceClick++;
+                if (_backspaceClick > 1)
+                {
+                    InputField.DeactivateInputField();
+                    OnBlur();
+                    ElementsController.Instance.DeleteElement(Id);
+                }
+            }
         });
     }
 

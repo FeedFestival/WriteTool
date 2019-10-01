@@ -37,16 +37,16 @@ public class ElementsController : MonoBehaviour
         InLineSelection.gameObject.SetActive(false);
     }
 
-    public void Init(List<Element> elements)
+    public void Init()
     {
         InitHotkeys();
-
-        InitDropdown();
-        InitElements(elements);
+        InitInlineSelection();
     }
 
     public void OnAddNewElement()
     {
+        HotkeyController.Instance.CanUseTools = true;
+
         AddNewButton.SetActive(false);
         InLineSelection.gameObject.SetActive(true);
 
@@ -58,7 +58,7 @@ public class ElementsController : MonoBehaviour
     {
         if (Elements == null)
         {
-            Init(new List<Element>());
+            InitElements(new List<Element>());
         }
 
         if (Elements.Count == 0)
@@ -171,14 +171,36 @@ public class ElementsController : MonoBehaviour
         return "";
     }
 
-    private void InitDropdown()
+    private void InitInlineSelection()
     {
         List<string> options = new List<string>();
         foreach (ElementType elementType in (ElementType[])System.Enum.GetValues(typeof(ElementType)))
         {
-            options.Add(elementType.ToString());
+            var buttonName = elementType.ToString() + GetButtonHotkey(elementType);
+            options.Add(buttonName);
         }
         InLineSelection.Init(options, OnElementTypeSelected);
+    }
+
+    private string GetButtonHotkey(ElementType? elementType)
+    {
+        if (elementType.HasValue)
+        {
+            switch (elementType.Value)
+            {
+                case ElementType.SceneHeading:
+                    return " [<b><color=red>S</color></b>]";
+                case ElementType.Action:
+                    return " [<b><color=red>A</color></b>]";
+                case ElementType.Character:
+                    return " [<b><color=red>C</color></b>]";
+                case ElementType.Dialog:
+                    return " [<b><color=red>D</color></b>]";
+                default:
+                    break;
+            }
+        }
+        return string.Empty;
     }
 
     public void OnElementTypeSelected(int value)

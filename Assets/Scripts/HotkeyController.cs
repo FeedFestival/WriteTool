@@ -9,11 +9,12 @@ public class HotkeyController : MonoBehaviour
     public static HotkeyController _hotkeyController;
     public static HotkeyController Instance { get { return _hotkeyController; } }
 
-    public bool UseHotkeys;
+    public bool UseHotkeys = true;
 
     public Image HotkeysImage;
 
-    private bool _canUseHotkeys;
+    public bool CanUseTools;
+    private bool _canUseHotkeys = true;
 
     public delegate void OnHotkeyPress();
     private Dictionary<string, OnHotkeyPress> HotkeyComponents;
@@ -34,31 +35,6 @@ public class HotkeyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (UseHotkeys == false || _canUseHotkeys == false)
-            return;
-
-        if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.S))
-        {
-            HotkeyComponents["NewWrite_SceneHeading"]();
-        }
-        if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.A))
-        {
-            HotkeyComponents["NewWrite_Action"]();
-        }
-        if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.C))
-        {
-            HotkeyComponents["NewWrite_Character"]();
-        }
-        if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.D))
-        {
-            HotkeyComponents["NewWrite_Dialog"]();
-        }
-
-        if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) && Input.GetKeyDown(KeyCode.S))
-        {
-            HotkeyComponents["Save"]();
-        }
-
         if (Input.GetKeyUp(KeyCode.KeypadEnter) || Input.GetKeyUp(KeyCode.Return))
         {
             _enterOnHotkeyPress?.Invoke();
@@ -68,6 +44,49 @@ public class HotkeyController : MonoBehaviour
             _escapeOnHotkeyPress?.Invoke();
         }
 
+        if (Input.GetKeyUp(KeyCode.Backspace))
+        {
+            _backspaceOnHotkeyPress?.Invoke();
+        }
+
+        if (UseHotkeys == false || _canUseHotkeys == false)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            HotkeyComponents["NewWrite"]();
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            
+        }
+
+        if (CanUseTools)
+        {
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                NewWrite("NewWrite_SceneHeading");
+            }
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                NewWrite("NewWrite_Action");
+            }
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                NewWrite("NewWrite_Character");
+            }
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                NewWrite("NewWrite_Dialog");
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            HotkeyComponents["Save"]();
+        }
+
         if (Input.GetKeyUp(KeyCode.UpArrow))
         {
             ElementsController.Instance.MoveCarret(false);
@@ -75,11 +94,6 @@ public class HotkeyController : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.DownArrow))
         {
             ElementsController.Instance.MoveCarret();
-        }
-    
-        if (Input.GetKeyUp(KeyCode.Backspace))
-        {
-            _backspaceOnHotkeyPress?.Invoke();
         }
     }
 
@@ -110,7 +124,13 @@ public class HotkeyController : MonoBehaviour
 
     void Init()
     {
-        
+
+    }
+
+    private void NewWrite(string key)
+    {
+        CanUseTools = false;
+        HotkeyComponents[key]();
     }
 
     public void AddAsComponent(string key, OnHotkeyPress value)
