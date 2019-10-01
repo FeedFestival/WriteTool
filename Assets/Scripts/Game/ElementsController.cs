@@ -33,8 +33,6 @@ public class ElementsController : MonoBehaviour
 
         Carret.gameObject.SetActive(true);
 
-        InitHotkeys();
-
         AddNewButton.SetActive(true);
         InLineSelection.gameObject.SetActive(false);
     }
@@ -87,9 +85,18 @@ public class ElementsController : MonoBehaviour
         return Carret.transform.GetSiblingIndex();
     }
 
-    public void MoveCarret(bool down = true)
+    public void MoveCarret(bool down = true, int? atPos = null)
     {
-        var currentIndex = GetCarretIndex();
+        int currentIndex;
+        if (atPos.HasValue)
+        {
+            currentIndex = atPos.Value;
+        }
+        else
+        {
+            currentIndex = GetCarretIndex();
+        }
+
         var newIndex = currentIndex + 1;
         if (down == false)
         {
@@ -102,7 +109,7 @@ public class ElementsController : MonoBehaviour
         {
             return;
         }
-        
+
         Carret.transform.SetSiblingIndex(newIndex);
         Carret.name = newIndex + "_Carret";
 
@@ -197,6 +204,8 @@ public class ElementsController : MonoBehaviour
         GameService.Instance.AsyncForEach(Elements.Count, (int i) =>
         {
             AddElementInPool(Elements[i]);
+
+            MoveCarret(true, Elements.Count - 1);
 
             if (i >= Elements.Count - 1)
             {
