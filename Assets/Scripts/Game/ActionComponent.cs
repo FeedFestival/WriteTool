@@ -33,7 +33,7 @@ public class ActionComponent : MonoBehaviour, IPrefabComponent, ITextComponent, 
     private void Focussed()
     {
         _backspaceClick = 0;
-
+        
         HotkeyController.Instance.RegisterForEnterKey(() =>
         {
             ElementsController.Instance.OnAddNewElement();
