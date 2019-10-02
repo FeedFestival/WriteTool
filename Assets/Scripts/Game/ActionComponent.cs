@@ -27,11 +27,13 @@ public class ActionComponent : MonoBehaviour, IPrefabComponent, ITextComponent, 
 
     public void OnFocus()
     {
+        Debug.Log("Focus");
         GameService.Instance.Debounce(Focussed, 0.1f);
     }
 
     private void Focussed()
     {
+        Debug.Log("Focus");
         _backspaceClick = 0;
         
         HotkeyController.Instance.RegisterForEnterKey(() =>
