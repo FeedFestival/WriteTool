@@ -15,7 +15,10 @@ public class ElementsController : MonoBehaviour
     public List<Element> Elements;
     public List<IPrefabComponent> _elementsPool;
 
+    public GameObject FileMainButtons;
+    public GameObject FileOptionsButton;
     public GameObject AddNewButton;
+    public GameObject FileOptionsSelection;
     public InLineSelection InLineSelection;
 
     // Start is called before the first frame update
@@ -33,7 +36,10 @@ public class ElementsController : MonoBehaviour
 
         Carret.gameObject.SetActive(true);
 
+        FileMainButtons.SetActive(true);
         AddNewButton.SetActive(true);
+        FileOptionsButton.SetActive(true);
+        FileOptionsSelection.SetActive(false);
         InLineSelection.gameObject.SetActive(false);
     }
 
@@ -47,11 +53,35 @@ public class ElementsController : MonoBehaviour
     {
         HotkeyController.Instance.CanUseTools = true;
 
-        AddNewButton.SetActive(false);
+        FileMainButtons.SetActive(false);
+        //AddNewButton.SetActive(false);
+        //FileOptionsButton.SetActive(false);
+        FileOptionsSelection.SetActive(false);
         InLineSelection.gameObject.SetActive(true);
 
         var options = FilterElementTypes();
         InLineSelection.Filter(options);
+    }
+
+    private void ToggleFileOptions()
+    {
+        HotkeyController.Instance.ShowFileOptions = !HotkeyController.Instance.ShowFileOptions;
+
+        if (HotkeyController.Instance.ShowFileOptions)
+        {
+            FileMainButtons.SetActive(false);
+            //FileOptionsButton.SetActive(false);
+            //AddNewButton.SetActive(false);
+            FileOptionsSelection.SetActive(true);
+        }
+        else
+        {
+            FileMainButtons.SetActive(true);
+            //FileOptionsButton.SetActive(true);
+            //AddNewButton.SetActive(true);
+            FileOptionsSelection.SetActive(false);
+        }
+        InLineSelection.gameObject.SetActive(false);
     }
 
     private List<int> FilterElementTypes()
@@ -138,7 +168,7 @@ public class ElementsController : MonoBehaviour
                 return;
         }
 
-        AddNewButton.SetActive(true);
+        FileMainButtons.SetActive(true);
         InLineSelection.gameObject.SetActive(false);
 
         var currentIndex = GetCarretIndex();
@@ -292,20 +322,6 @@ public class ElementsController : MonoBehaviour
         }
 
         ToggleFileOptions();
-    }
-
-    private void ToggleFileOptions()
-    {
-        HotkeyController.Instance.ShowFileOptions = !HotkeyController.Instance.ShowFileOptions;
-
-        if (HotkeyController.Instance.ShowFileOptions)
-        {
-            AddNewButton.SetActive(false);
-        }
-        else
-        {
-            AddNewButton.SetActive(true);
-        }
     }
 
     public void DeleteElement(int uniqueId)
