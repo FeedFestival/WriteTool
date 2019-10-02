@@ -16,6 +16,8 @@ public class HotkeyController : MonoBehaviour
     public bool CanUseTools;
     private bool _canUseHotkeys = true;
 
+    public bool ShowFileOptions;
+
     public delegate void OnHotkeyPress();
     private Dictionary<string, OnHotkeyPress> HotkeyComponents;
     private OnHotkeyPress _enterOnHotkeyPress;
@@ -59,10 +61,18 @@ public class HotkeyController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            
+            HotkeyComponents["ShowFileOptons"]();
         }
 
-        if (CanUseTools)
+        if (ShowFileOptions && !CanUseTools)
+        {
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                HotkeyComponents["Save"]();
+            }
+        }
+
+        if (CanUseTools && !ShowFileOptions)
         {
             if (Input.GetKeyDown(KeyCode.S))
             {
@@ -80,11 +90,6 @@ public class HotkeyController : MonoBehaviour
             {
                 NewWrite("NewWrite_Dialog");
             }
-        }
-
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            HotkeyComponents["Save"]();
         }
 
         if (Input.GetKeyUp(KeyCode.UpArrow))

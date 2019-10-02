@@ -290,6 +290,22 @@ public class ElementsController : MonoBehaviour
             element.Id = ElementData.Instance.SaveElement(element);
             element.IsNew = false;
         }
+
+        ToggleFileOptions();
+    }
+
+    private void ToggleFileOptions()
+    {
+        HotkeyController.Instance.ShowFileOptions = !HotkeyController.Instance.ShowFileOptions;
+
+        if (HotkeyController.Instance.ShowFileOptions)
+        {
+            AddNewButton.SetActive(false);
+        }
+        else
+        {
+            AddNewButton.SetActive(true);
+        }
     }
 
     public void DeleteElement(int uniqueId)
@@ -326,5 +342,6 @@ public class ElementsController : MonoBehaviour
         });
 
         HotkeyController.Instance.AddAsComponent("Save", SaveElements);
+        HotkeyController.Instance.AddAsComponent("ShowFileOptons", ToggleFileOptions);
     }
 }
