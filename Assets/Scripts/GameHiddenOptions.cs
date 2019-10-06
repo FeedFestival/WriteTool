@@ -38,6 +38,8 @@ public class GameHiddenOptions : MonoBehaviour
     public Color32 LabelColor;
     public Color32 DisabledTextColor;
     public Color32 NormalTextColor;
+    public Color32 CarretColor;
+    public Color32 TransparentColor;
 
     [Header("Prefabs")]
     public GameObject SceneHeadingPrefab;

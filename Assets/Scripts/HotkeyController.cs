@@ -11,8 +11,6 @@ public class HotkeyController : MonoBehaviour
 
     public bool UseHotkeys = true;
 
-    public Image HotkeysImage;
-
     public bool CanUseTools;
     private bool _canUseHotkeys = true;
 
@@ -109,11 +107,11 @@ public class HotkeyController : MonoBehaviour
 
         if (_canUseHotkeys)
         {
-            HotkeysImage.color = GameHiddenOptions.Instance.NormalTextColor;
+            ElementsController.Instance.CarretImage.color = GameHiddenOptions.Instance.CarretColor;
         }
         else
         {
-            HotkeysImage.color = GameHiddenOptions.Instance.DisabledTextColor;
+            ElementsController.Instance.CarretImage.color = GameHiddenOptions.Instance.TransparentColor;
         }
     }
 

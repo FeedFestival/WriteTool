@@ -1157,6 +1157,7 @@ MonoBehaviour:
   AddNewButton: {fileID: 1003669068}
   FileOptionsSelection: {fileID: 1200332479}
   InLineSelection: {fileID: 37796228}
+  CarretImage: {fileID: 5147068553175168804}
 --- !u!1 &677896717
 GameObject:
   m_ObjectHideFlags: 0
@@ -1420,7 +1421,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UseHotkeys: 1
-  HotkeysImage: {fileID: 48915809}
   CanUseTools: 0
   ShowFileOptions: 0
 --- !u!4 &996978180
@@ -2641,6 +2641,12 @@ MonoBehaviour:
   NormalTextColor:
     serializedVersion: 2
     rgba: 4280361249
+  CarretColor:
+    serializedVersion: 2
+    rgba: 4294943626
+  TransparentColor:
+    serializedVersion: 2
+    rgba: 0
   SceneHeadingPrefab: {fileID: 1487084634649272166, guid: 52eb85cd199fba84da3ace64a588786b,
     type: 3}
   ActionPrefab: {fileID: 5245566519413019136, guid: 09be31c6c824a24459a08d4a6c8769d8,

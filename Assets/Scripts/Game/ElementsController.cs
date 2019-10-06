@@ -21,6 +21,8 @@ public class ElementsController : MonoBehaviour
     public GameObject FileOptionsSelection;
     public InLineSelection InLineSelection;
 
+    public Image CarretImage;
+
     // Start is called before the first frame update
     void Awake()
     {
