@@ -58,8 +58,6 @@ public class ElementsController : MonoBehaviour
         HotkeyController.Instance.CanUseTools = true;
 
         FileMainButtons.SetActive(false);
-        //AddNewButton.SetActive(false);
-        //FileOptionsButton.SetActive(false);
         FileOptionsSelection.SetActive(false);
         InLineSelection.gameObject.SetActive(true);
 
@@ -74,15 +72,11 @@ public class ElementsController : MonoBehaviour
         if (HotkeyController.Instance.ShowFileOptions)
         {
             FileMainButtons.SetActive(false);
-            //FileOptionsButton.SetActive(false);
-            //AddNewButton.SetActive(false);
             FileOptionsSelection.SetActive(true);
         }
         else
         {
             FileMainButtons.SetActive(true);
-            //FileOptionsButton.SetActive(true);
-            //AddNewButton.SetActive(true);
             FileOptionsSelection.SetActive(false);
         }
         InLineSelection.gameObject.SetActive(false);

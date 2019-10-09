@@ -42,8 +42,8 @@ public class HotkeyController : MonoBehaviour
             _enterOnHotkeyPress?.Invoke();
         }
 
-        if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) 
-            && Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return))
+        if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl))
+            && (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return)))
         {
             Debug.Log("Forced");
             _forcedEnterOnHotkeyPress?.Invoke();
@@ -61,6 +61,19 @@ public class HotkeyController : MonoBehaviour
 
         if (UseHotkeys == false || _canUseHotkeys == false)
             return;
+
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            if (ShowFileOptions && !CanUseTools)
+            {
+                HotkeyComponents["ShowFileOptons"]();
+            }
+            else
+            {
+                ElementsController.Instance.FileMainButtons.SetActive(true);
+                ElementsController.Instance.InLineSelection.gameObject.SetActive(false);
+            }
+        }
 
         if (Input.GetKeyDown(KeyCode.W))
         {

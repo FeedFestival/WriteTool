@@ -51,7 +51,6 @@ public class GameService : MonoBehaviour
 
     public void Debounce(InternalWaitCallback debounceWait, float seconds)
     {
-        Debug.Log("debounced");
         _debounceWait = debounceWait;
         StartCoroutine(DebounceFunction(seconds));
     }
