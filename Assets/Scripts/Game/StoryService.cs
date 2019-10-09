@@ -16,6 +16,7 @@ public class StoryService : MonoBehaviour
 
     void Start()
     {
+        //EventSystemManager.currentSystem.currentInputModule.DeactivateModule();
         Init();
     }
 

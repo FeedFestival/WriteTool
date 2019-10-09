@@ -11,8 +11,6 @@ public class ScalableText : MonoBehaviour
 
     public void OnChange()
     {
-        //Debug.Log(transform.GetComponent<RectTransform>().sizeDelta);
-        //InputField.GetComponent<RectTransform>().sizeDelta = transform.GetComponent<RectTransform>().sizeDelta;
         Text.text = InputField.text;
     }
 

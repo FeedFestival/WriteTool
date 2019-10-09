@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Utils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ public class ElementsController : MonoBehaviour
     public static ElementsController Instance { get { return _elementsController; } }
 
     public GameObject Carret;
+    private int _editableIndex;
 
     public List<Element> Elements;
     public List<IPrefabComponent> _elementsPool;
@@ -112,6 +114,18 @@ public class ElementsController : MonoBehaviour
         return options;
     }
 
+    internal void ShowCarret(bool canUseHotkeys)
+    {
+        if (canUseHotkeys)
+        {
+            CarretImage.color = GameHiddenOptions.Instance.CarretColor;
+        }
+        else
+        {
+            CarretImage.color = GameHiddenOptions.Instance.TransparentColor;
+        }
+    }
+
     private int GetCarretIndex()
     {
         return Carret.transform.GetSiblingIndex();
@@ -135,16 +149,21 @@ public class ElementsController : MonoBehaviour
             newIndex = currentIndex - 1;
         }
 
-        Debug.Log(Elements.Count);
+        //Debug.Log(Elements.Count);
 
         if (newIndex == 0 || newIndex == Elements.Count + 1)
         {
             return;
         }
 
+        _editableIndex = (newIndex - 1);
         Carret.transform.SetSiblingIndex(newIndex);
         Carret.name = newIndex + "_Carret";
+    }
 
+    internal void EditElement()
+    {
+        (_elementsPool[_editableIndex] as ITextComponent).AutoSelect();
     }
 
     private void RecalculateIndexes()
@@ -184,7 +203,8 @@ public class ElementsController : MonoBehaviour
             IsNew = true
         };
         Elements.Add(element);
-        AddElementInPool(element);
+        var el = AddElementInPool(element);
+        (el as ITextComponent).AutoSelect();
 
         //if (weNeedToShiftElements)
         MoveCarret();
@@ -272,7 +292,7 @@ public class ElementsController : MonoBehaviour
         });
     }
 
-    private void AddElementInPool(Element element)
+    private IPrefabComponent AddElementInPool(Element element)
     {
         var prefab = GameHiddenOptions.Instance.GetPrefabElement(element.ElementType);
         var wasNull = UsefullUtils.CheckInPool(
@@ -300,6 +320,8 @@ public class ElementsController : MonoBehaviour
         {
             _elementsPool.Add(el);
         }
+
+        return el;
     }
 
     private string GetElementName(Element element)

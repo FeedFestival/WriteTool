@@ -14,31 +14,41 @@ public class ActionComponent : MonoBehaviour, IPrefabComponent, ITextComponent, 
 
     public ScalableText ScalableText;
 
+    private string _text;
     private int _backspaceClick = 0;
 
     public void SetText(string text)
     {
         ScalableText.SetText(text);
     }
+
     public string GetText()
     {
         return ScalableText.InputField.text;
     }
 
+    public void AutoSelect()
+    {
+        ScalableText.InputField.Select();
+        ScalableText.InputField.ActivateInputField();
+        OnFocus();
+    }
+
     public void OnFocus()
     {
-        Debug.Log("Focus");
         GameService.Instance.Debounce(Focussed, 0.1f);
     }
 
     private void Focussed()
     {
-        Debug.Log("Focus");
         _backspaceClick = 0;
-        
-        HotkeyController.Instance.RegisterForEnterKey(() =>
+
+        HotkeyController.Instance.RegisterForForcedEnterKey(() =>
         {
             ElementsController.Instance.OnAddNewElement();
+            ScalableText.InputField.DeactivateInputField();
+            SetText(_text.TrimEnd());
+            OnBlur();
         });
         HotkeyController.Instance.RegisterForEscapeKey(() =>
         {
@@ -60,8 +70,25 @@ public class ActionComponent : MonoBehaviour, IPrefabComponent, ITextComponent, 
         });
     }
 
+    public void OnEditing(string value)
+    {
+        if (!Input.GetKeyDown(KeyCode.Escape))
+        {
+            _text = ScalableText.InputField.text;
+        }
+    }
+
     public void OnBlur()
     {
-        HotkeyController.Instance.RegisterForEnterKey(null);
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ScalableText.InputField.text = _text;
+        }
+        GameService.Instance.Debounce(Blurred, 0.1f);
+    }
+
+    private void Blurred()
+    {
+        HotkeyController.Instance.RegisterForForcedEnterKey(null);
     }
 }

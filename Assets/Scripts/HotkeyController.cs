@@ -19,8 +19,10 @@ public class HotkeyController : MonoBehaviour
     public delegate void OnHotkeyPress();
     private Dictionary<string, OnHotkeyPress> HotkeyComponents;
     private OnHotkeyPress _enterOnHotkeyPress;
+    private OnHotkeyPress _forcedEnterOnHotkeyPress;
     private OnHotkeyPress _escapeOnHotkeyPress;
     private OnHotkeyPress _backspaceOnHotkeyPress;
+    private OnHotkeyPress _tabEditOnHotkeyPress;
 
     private void Awake()
     {
@@ -39,6 +41,14 @@ public class HotkeyController : MonoBehaviour
         {
             _enterOnHotkeyPress?.Invoke();
         }
+
+        if ((Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftControl)) 
+            && Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return))
+        {
+            Debug.Log("Forced");
+            _forcedEnterOnHotkeyPress?.Invoke();
+        }
+
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             _escapeOnHotkeyPress?.Invoke();
@@ -98,6 +108,11 @@ public class HotkeyController : MonoBehaviour
         {
             ElementsController.Instance.MoveCarret();
         }
+
+        if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            OnTabEdit();
+        }
     }
 
     internal void RegisterForEnterKey(OnHotkeyPress enterOnHotkeyPress)
@@ -105,14 +120,15 @@ public class HotkeyController : MonoBehaviour
         _canUseHotkeys = (enterOnHotkeyPress == null);
         _enterOnHotkeyPress = enterOnHotkeyPress;
 
-        if (_canUseHotkeys)
-        {
-            ElementsController.Instance.CarretImage.color = GameHiddenOptions.Instance.CarretColor;
-        }
-        else
-        {
-            ElementsController.Instance.CarretImage.color = GameHiddenOptions.Instance.TransparentColor;
-        }
+        ElementsController.Instance.ShowCarret(_canUseHotkeys);
+    }
+
+    internal void RegisterForForcedEnterKey(OnHotkeyPress enterOnHotkeyPress)
+    {
+        _canUseHotkeys = (enterOnHotkeyPress == null);
+        _forcedEnterOnHotkeyPress = enterOnHotkeyPress;
+
+        ElementsController.Instance.ShowCarret(_canUseHotkeys);
     }
 
     internal void RegisterForEscapeKey(OnHotkeyPress escapeOnHotkeyPress)
@@ -123,6 +139,14 @@ public class HotkeyController : MonoBehaviour
     internal void RegisterBackspaceKey(OnHotkeyPress backspaceOnHotkeyPress)
     {
         _backspaceOnHotkeyPress = backspaceOnHotkeyPress;
+    }
+
+    private void OnTabEdit()
+    {
+        _canUseHotkeys = false;
+        ElementsController.Instance.EditElement();
+
+        ElementsController.Instance.ShowCarret(_canUseHotkeys);
     }
 
     void Init()

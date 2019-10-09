@@ -12,10 +12,14 @@ public interface IPrefabComponent
 public interface ITextComponent
 {
     void SetText(string text);
+    void AutoSelect();
     string GetText();
 }
 
 public interface IElementComponent
 {
     int TypeId { get; set; }
+    void OnFocus();
+    void OnEditing(string value);
+    void OnBlur();
 }

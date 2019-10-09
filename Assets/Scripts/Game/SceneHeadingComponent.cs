@@ -14,22 +14,28 @@ public class SceneHeadingComponent : MonoBehaviour, IPrefabComponent, ITextCompo
 
     public InputField InputField;
 
+    private string _text;
     private int _backspaceClick;
 
     public void SetText(string text)
     {
-        InputField.text = text.ToUpper();
-
-        InputField.Select();
-        InputField.ActivateInputField();
+        _text = text;
+        InputField.text = _text.ToUpper();
 
         InputField.onValueChanged = new InputField.OnChangeEvent();
-        InputField.onValueChanged.AddListener(OnChange);
+        InputField.onValueChanged.AddListener(OnEditing);
     }
 
     public string GetText()
     {
         return InputField.text;
+    }
+
+    public void AutoSelect()
+    {
+        InputField.Select();
+        InputField.ActivateInputField();
+        OnFocus();
     }
 
     public void OnFocus()
@@ -64,13 +70,26 @@ public class SceneHeadingComponent : MonoBehaviour, IPrefabComponent, ITextCompo
         });
     }
 
-    public void OnBlur()
+    public void OnEditing(string value)
     {
-        HotkeyController.Instance.RegisterForEnterKey(null);
+        if (!Input.GetKeyDown(KeyCode.Escape))
+        {
+            _text = InputField.text;
+        }
+        InputField.text = InputField.text.ToUpper();
     }
 
-    public void OnChange(string value)
+    public void OnBlur()
     {
-        InputField.text = InputField.text.ToUpper();
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            InputField.text = _text;
+        }
+        GameService.Instance.Debounce(Blurred, 0.1f);
+    }
+
+    private void Blurred()
+    {
+        HotkeyController.Instance.RegisterForEnterKey(null);
     }
 }

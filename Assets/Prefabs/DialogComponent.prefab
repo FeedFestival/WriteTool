@@ -509,6 +509,53 @@ MonoBehaviour:
   ApplyHeight: 0
   HeightSizeUnit: 0
   Height: 0
+--- !u!114 &1057804348
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6905080789014469550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 10
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1425692967227044154}
+          m_MethodName: OnBlur
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1425692967227044154}
+          m_MethodName: OnFocus
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+      m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
+        Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
 --- !u!1001 &1777155528492596170
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -631,6 +678,71 @@ PrefabInstance:
       propertyPath: m_FontData.m_FontSize
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 5150569779818979430, guid: 5b991dd0b01e56a42b7dd55cd4447879,
+        type: 3}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5150569779818979430, guid: 5b991dd0b01e56a42b7dd55cd4447879,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5150569779818979430, guid: 5b991dd0b01e56a42b7dd55cd4447879,
+        type: 3}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1425692967227044154}
+    - target: {fileID: 5150569779818979430, guid: 5b991dd0b01e56a42b7dd55cd4447879,
+        type: 3}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnBlur
+      objectReference: {fileID: 0}
+    - target: {fileID: 5150569779818979430, guid: 5b991dd0b01e56a42b7dd55cd4447879,
+        type: 3}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5150569779818979430, guid: 5b991dd0b01e56a42b7dd55cd4447879,
+        type: 3}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5150569779818979430, guid: 5b991dd0b01e56a42b7dd55cd4447879,
+        type: 3}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5150569779818979430, guid: 5b991dd0b01e56a42b7dd55cd4447879,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1425692967227044154}
+    - target: {fileID: 5150569779818979430, guid: 5b991dd0b01e56a42b7dd55cd4447879,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: OnEditing
+      objectReference: {fileID: 0}
+    - target: {fileID: 5150569779818979430, guid: 5b991dd0b01e56a42b7dd55cd4447879,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5150569779818979430, guid: 5b991dd0b01e56a42b7dd55cd4447879,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5150569779818979430, guid: 5b991dd0b01e56a42b7dd55cd4447879,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5150569779818979431, guid: 5b991dd0b01e56a42b7dd55cd4447879,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5150569780547196444, guid: 5b991dd0b01e56a42b7dd55cd4447879,
         type: 3}
       propertyPath: m_FontData.m_Alignment
@@ -656,3 +768,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b069029549567443a2a78354c90db2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &6905080789014469550 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5150569779818979428, guid: 5b991dd0b01e56a42b7dd55cd4447879,
+    type: 3}
+  m_PrefabInstance: {fileID: 1777155528492596170}
+  m_PrefabAsset: {fileID: 0}
