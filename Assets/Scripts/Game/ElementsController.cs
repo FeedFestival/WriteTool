@@ -52,7 +52,7 @@ public class ElementsController : MonoBehaviour
 
     public void OnAddNewElement()
     {
-        HotkeyController.Instance.CanUseTools = true;
+        HotkeyController.Instance.AppState = AppState.NewElement;
 
         FileMainButtons.SetActive(false);
         FileOptionsSelection.SetActive(false);
@@ -62,11 +62,12 @@ public class ElementsController : MonoBehaviour
         InLineSelection.Filter(options);
     }
 
-    private void ToggleFileOptions()
+    public void ToggleFileOptions()
     {
-        HotkeyController.Instance.ShowFileOptions = !HotkeyController.Instance.ShowFileOptions;
+        HotkeyController.Instance.AppState = HotkeyController.Instance.AppState == AppState.FileOptions
+            ? AppState.MainEdit : AppState.FileOptions;
 
-        if (HotkeyController.Instance.ShowFileOptions)
+        if (HotkeyController.Instance.AppState == AppState.FileOptions)
         {
             FileMainButtons.SetActive(false);
             FileOptionsSelection.SetActive(true);
@@ -105,9 +106,11 @@ public class ElementsController : MonoBehaviour
         return options;
     }
 
-    internal void ShowCarret(bool canUseHotkeys)
+    internal void ShowCarret()
     {
-        if (canUseHotkeys)
+        if (HotkeyController.Instance.AppState == AppState.MainEdit
+            || HotkeyController.Instance.AppState == AppState.FileOptions
+            || HotkeyController.Instance.AppState == AppState.NewElement)
         {
             CarretImage.color = GameHiddenOptions.Instance.CarretColor;
         }
@@ -320,7 +323,7 @@ public class ElementsController : MonoBehaviour
         return element.Index + "_[" + element.Id + "]_" + element.ElementType.ToString();
     }
 
-    private void SaveElements()
+    public void SaveElements()
     {
         foreach (var element in Elements)
         {
@@ -351,6 +354,10 @@ public class ElementsController : MonoBehaviour
         index = _elementsPool.FindIndex(e => e.UniqueId == uniqueId);
         Destroy(_elementsPool[index].GameObject);
         _elementsPool.RemoveAt(index);
+
+        MoveCarret(true, index - 1);
+        HotkeyController.Instance.EscapeKey();
+        // ShowCarret();
     }
 
     private void InitHotkeys()
@@ -372,8 +379,5 @@ public class ElementsController : MonoBehaviour
         {
             AddNewElement(ElementType.Dialog);
         });
-
-        HotkeyController.Instance.AddAsComponent("Save", SaveElements);
-        HotkeyController.Instance.AddAsComponent("ShowFileOptons", ToggleFileOptions);
     }
 }

@@ -92,6 +92,5 @@ public class DialogComponent : MonoBehaviour, IPrefabComponent, ITextComponent, 
     private void Blurred()
     {
         HotkeyController.Instance.RegisterForForcedEnterKey(null);
-        HotkeyController.Instance.RegisterForEscapeKey(null);
     }
 }
