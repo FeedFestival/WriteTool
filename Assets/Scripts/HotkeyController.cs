@@ -52,6 +52,18 @@ public class HotkeyController : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             _escapeOnHotkeyPress?.Invoke();
+
+            if (ShowFileOptions && !CanUseTools)
+            {
+                HotkeyComponents["ShowFileOptons"]();
+            }
+            else
+            {
+                ElementsController.Instance.FileMainButtons.SetActive(true);
+                ElementsController.Instance.InLineSelection.gameObject.SetActive(false);
+                ElementsController.Instance.FileOptionsSelection.gameObject.SetActive(false);
+                ShowFileOptions = false;
+            }
         }
 
         if (Input.GetKeyUp(KeyCode.Backspace))
@@ -61,19 +73,6 @@ public class HotkeyController : MonoBehaviour
 
         if (UseHotkeys == false || _canUseHotkeys == false)
             return;
-
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-            if (ShowFileOptions && !CanUseTools)
-            {
-                HotkeyComponents["ShowFileOptons"]();
-            }
-            else
-            {
-                ElementsController.Instance.FileMainButtons.SetActive(true);
-                ElementsController.Instance.InLineSelection.gameObject.SetActive(false);
-            }
-        }
 
         if (Input.GetKeyDown(KeyCode.W))
         {

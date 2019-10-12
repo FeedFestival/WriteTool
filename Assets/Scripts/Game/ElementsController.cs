@@ -10,13 +10,10 @@ public class ElementsController : MonoBehaviour
 {
     private static ElementsController _elementsController;
     public static ElementsController Instance { get { return _elementsController; } }
-
     public GameObject Carret;
     private int _editableIndex;
-
     public List<Element> Elements;
     public List<IPrefabComponent> _elementsPool;
-
     public GameObject FileMainButtons;
     public GameObject FileOptionsButton;
     public GameObject AddNewButton;
@@ -304,7 +301,7 @@ public class ElementsController : MonoBehaviour
             );
 
         // need to determine index here
-        el.Id = GetElementUniqueId(element);
+        el.UniqueId = element.UniqueId();
         el.GameObject.name = element.Index + "_[" + element.Id + "]_" + element.ElementType.ToString();
 
         var elementComponent = (el as ITextComponent);
@@ -323,19 +320,20 @@ public class ElementsController : MonoBehaviour
         return element.Index + "_[" + element.Id + "]_" + element.ElementType.ToString();
     }
 
-    private int GetElementUniqueId(Element element)
-    {
-        return element.Id + element.Index + (int)element.ElementType;
-    }
-
     private void SaveElements()
     {
-        foreach (Element element in Elements)
+        foreach (var element in Elements)
         {
             element.StoryId = StoryService.Instance.Story.Id;
-            var el = _elementsPool.FirstOrDefault(e => e.Id == GetElementUniqueId(element));
+            var el = _elementsPool.FirstOrDefault(e => e.UniqueId == element.UniqueId());
+
+            UsefullUtils.DumpToConsole(element);
+
             element.Text = (el as ITextComponent).GetText();
+            
             element.Id = ElementData.Instance.SaveElement(element);
+            el.UniqueId = element.UniqueId();
+            
             element.IsNew = false;
         }
 
@@ -344,13 +342,13 @@ public class ElementsController : MonoBehaviour
 
     public void DeleteElement(int uniqueId)
     {
-        int index = Elements.FindIndex(e => GetElementUniqueId(e) == uniqueId);
+        int index = Elements.FindIndex(e => e.UniqueId() == uniqueId);
         if (Elements[index].IsNew == false)
         {
             ElementData.Instance.DeleteElement(Elements[index].Id);
         }
         Elements.RemoveAt(index);
-        index = _elementsPool.FindIndex(e => e.Id == uniqueId);
+        index = _elementsPool.FindIndex(e => e.UniqueId == uniqueId);
         Destroy(_elementsPool[index].GameObject);
         _elementsPool.RemoveAt(index);
     }

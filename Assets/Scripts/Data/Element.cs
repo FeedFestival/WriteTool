@@ -30,6 +30,11 @@ public class Element
 
     public bool IsNew;
     public bool ToDelete;
+
+    public int UniqueId()
+    {
+        return System.Convert.ToInt32(this.Id.ToString() + this.Index.ToString() + ((int)this.ElementType).ToString());
+    }
 }
 
 public enum ElementType

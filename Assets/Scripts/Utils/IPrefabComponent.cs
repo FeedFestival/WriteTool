@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public interface IPrefabComponent
 {
     int Id { get; set; }
+    int UniqueId { get; set; }
     GameObject GameObject { get; }
 }
 

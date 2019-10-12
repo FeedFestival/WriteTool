@@ -143,6 +143,12 @@ namespace Assets.Scripts.Utils
 #endif
             return filePath;
         }
+
+        public static void DumpToConsole(object obj)
+        {
+            var output = JsonUtility.ToJson(obj, true);
+            Debug.Log(output);
+        }
     }
 
     public enum NavbarButton

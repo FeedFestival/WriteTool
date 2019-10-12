@@ -9,7 +9,8 @@ public class InLineItemComponent : MonoBehaviour, IPrefabComponent
 {
     private int _id;
     public int Id { get { return _id; } set { _id = value; } }
-
+    private int _uniqueId;
+    public int UniqueId { get { return _uniqueId; } set { _uniqueId = value; } }
     public GameObject GameObject { get { return this.gameObject; } }
 
     //public delegate void OnSelectedItem(int value);

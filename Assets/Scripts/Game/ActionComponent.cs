@@ -7,6 +7,8 @@ public class ActionComponent : MonoBehaviour, IPrefabComponent, ITextComponent, 
 {
     private int _id;
     public int Id { get { return _id; } set { _id = value; } }
+    private int _uniqueId;
+    public int UniqueId { get { return _uniqueId; } set { _uniqueId = value; } }
     public GameObject GameObject { get { return this.gameObject; } }
 
     private int _typeId;
@@ -64,7 +66,7 @@ public class ActionComponent : MonoBehaviour, IPrefabComponent, ITextComponent, 
                 {
                     ScalableText.InputField.DeactivateInputField();
                     OnBlur();
-                    ElementsController.Instance.DeleteElement(Id);
+                    ElementsController.Instance.DeleteElement(UniqueId);
                 }
             }
         });
