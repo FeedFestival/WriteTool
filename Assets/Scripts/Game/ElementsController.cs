@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using Assets.Scripts.Data;
 
 public class ElementsController : MonoBehaviour
 {
@@ -86,29 +87,22 @@ public class ElementsController : MonoBehaviour
         {
             InitElements(new List<Element>());
         }
-
         if (Elements.Count == 0)
         {
             return new List<int>() { 0 };
         }
 
         var isLastElement = GetCarretIndex() == _elementsPool.Count;
+        var previousElementType = ElementsService.GetPreviousElementType(
+            _elementsPool, Elements,
+            _editableIndex, isLastElement
+        );
 
         var options = new List<int>();
-        ElementType previousElement;
-        if (isLastElement)
-        {
-            previousElement = Elements[Elements.Count - 1].ElementType;
-        }
-        else
-        {
-            previousElement = (ElementType)((_elementsPool[_editableIndex] as IElementComponent).TypeId);
-        }
-
         int i = 0;
         foreach (ElementType elementType in (ElementType[])System.Enum.GetValues(typeof(ElementType)))
         {
-            if (GameService.Instance.FilterNewElements(elementType, previousElement))
+            if (ElementsService.FilterNewElements(elementType, previousElementType))
             {
                 options.Add(i);
             }
@@ -171,45 +165,16 @@ public class ElementsController : MonoBehaviour
         (_elementsPool[_editableIndex] as ITextComponent).AutoSelect();
     }
 
-    private void RecalculateIndexes()
-    {
-        for (var i = 0; i < _elementsPool.Count; i++)
-        {
-            var index = Elements.FindIndex(e => { return e.UniqueId() == _elementsPool[i].UniqueId; });
-            Elements[index].Index = i;
-            _elementsPool[i].UniqueId = Elements[index].UniqueId();
-            _elementsPool[i].GameObject.name = GetElementName(Elements[index]);
-        }
-    }
-
     public void AddNewElement(ElementType elementType)
     {
         var currentIndex = GetCarretIndex();
         var isLastElement = currentIndex == _elementsPool.Count;
+        var previousElementType = ElementsService.GetPreviousElementType(
+            _elementsPool, Elements,
+            _editableIndex, isLastElement
+        );
 
-        Debug.Log("isLastElement: " + isLastElement);
-        Debug.Log("currentIndex: " + currentIndex);
-        Debug.Log("_editableIndex: " + _editableIndex);
-
-        ElementType previousElementType = ElementType.Action;
-        if (isLastElement)
-        {
-            if (Elements.Count > 0)
-            {
-                previousElementType = Elements[Elements.Count - 1].ElementType;
-            }
-        }
-        else
-        {
-            if (_elementsPool.Count > 0)
-            {
-                previousElementType = (ElementType)((_elementsPool[_editableIndex] as IElementComponent).TypeId);
-            }
-        }
-
-        Debug.Log("previousElementType: " + previousElementType);
-
-        if (GameService.Instance.FilterNewElements(elementType, previousElementType) == false)
+        if (ElementsService.FilterNewElements(elementType, previousElementType) == false)
         {
             return;
         }
@@ -219,7 +184,7 @@ public class ElementsController : MonoBehaviour
 
         var element = new Element()
         {
-            Text = GetDefaultText(elementType),
+            Text = ElementsService.GetDefaultText(elementType),
             ElementType = elementType,
             Index = currentIndex,
             IsNew = true
@@ -231,8 +196,7 @@ public class ElementsController : MonoBehaviour
         {
             var newIndex = (_editableIndex + 1);
             el.GameObject.transform.SetSiblingIndex(newIndex);
-
-            RecalculateIndexes();
+            ElementsService.RecalculateIndexes(_elementsPool, Elements);
         }
         else
         {
@@ -247,50 +211,6 @@ public class ElementsController : MonoBehaviour
                 LayoutRebuilder.ForceRebuildLayoutImmediate(transform.GetComponent<RectTransform>());
                 LayoutRebuilder.ForceRebuildLayoutImmediate(transform.parent.GetComponent<RectTransform>());
             });
-    }
-
-    private string GetDefaultText(ElementType elementType)
-    {
-        if (elementType == ElementType.SceneHeading)
-            return "INT.";
-        return "";
-    }
-
-    private void InitInlineSelection()
-    {
-        List<string> options = new List<string>();
-        foreach (ElementType elementType in (ElementType[])System.Enum.GetValues(typeof(ElementType)))
-        {
-            var buttonName = elementType.ToString() + GetButtonHotkey(elementType);
-            options.Add(buttonName);
-        }
-        InLineSelection.Init(options, OnElementTypeSelected);
-    }
-
-    private string GetButtonHotkey(ElementType? elementType)
-    {
-        if (elementType.HasValue)
-        {
-            switch (elementType.Value)
-            {
-                case ElementType.SceneHeading:
-                    return " [<b><color=red>S</color></b>]";
-                case ElementType.Action:
-                    return " [<b><color=red>A</color></b>]";
-                case ElementType.Character:
-                    return " [<b><color=red>C</color></b>]";
-                case ElementType.Dialog:
-                    return " [<b><color=red>D</color></b>]";
-                default:
-                    break;
-            }
-        }
-        return string.Empty;
-    }
-
-    public void OnElementTypeSelected(int value)
-    {
-        AddNewElement(((ElementType[])System.Enum.GetValues(typeof(ElementType)))[value]);
     }
 
     public void InitElements(List<Element> elements)
@@ -345,7 +265,7 @@ public class ElementsController : MonoBehaviour
             );
 
         el.UniqueId = element.UniqueId();
-        el.GameObject.name = GetElementName(element);
+        el.GameObject.name = ElementsService.GetElementName(element);
 
         var elementComponent = (el as ITextComponent);
         elementComponent.SetText(element.Text);
@@ -365,11 +285,6 @@ public class ElementsController : MonoBehaviour
         }
 
         return el;
-    }
-
-    private string GetElementName(Element element)
-    {
-        return element.Index + "_[" + element.Id + "]_" + element.ElementType.ToString() + " (" + element.UniqueId() + ")";
     }
 
     public void SaveElements()
@@ -407,6 +322,43 @@ public class ElementsController : MonoBehaviour
         MoveCarret(true, index - 1);
         HotkeyController.Instance.EscapeKey();
         // ShowCarret();
+    }
+
+    private void InitInlineSelection()
+    {
+        List<string> options = new List<string>();
+        foreach (ElementType elementType in (ElementType[])System.Enum.GetValues(typeof(ElementType)))
+        {
+            var buttonName = elementType.ToString() + GetButtonHotkey(elementType);
+            options.Add(buttonName);
+        }
+        InLineSelection.Init(options, OnElementTypeSelected);
+    }
+
+    private string GetButtonHotkey(ElementType? elementType)
+    {
+        if (elementType.HasValue)
+        {
+            switch (elementType.Value)
+            {
+                case ElementType.SceneHeading:
+                    return " [<b><color=red>S</color></b>]";
+                case ElementType.Action:
+                    return " [<b><color=red>A</color></b>]";
+                case ElementType.Character:
+                    return " [<b><color=red>C</color></b>]";
+                case ElementType.Dialog:
+                    return " [<b><color=red>D</color></b>]";
+                default:
+                    break;
+            }
+        }
+        return string.Empty;
+    }
+
+    public void OnElementTypeSelected(int value)
+    {
+        AddNewElement(((ElementType[])System.Enum.GetValues(typeof(ElementType)))[value]);
     }
 
     private void InitHotkeys()

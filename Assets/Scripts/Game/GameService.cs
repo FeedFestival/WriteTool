@@ -127,31 +127,4 @@ public class GameService : MonoBehaviour
                 return false;
         }
     }
-
-    public bool FilterNewElements(ElementType elementType, ElementType lastElementType)
-    {
-        switch (lastElementType)
-        {
-            case ElementType.SceneHeading:
-                if (elementType == ElementType.Dialog || elementType == ElementType.SceneHeading)
-                {
-                    return false;
-                }
-                return true;
-            case ElementType.Action:
-                if (elementType == ElementType.Dialog || elementType == ElementType.Action)
-                    return false;
-                return true;
-            case ElementType.Character:
-                if (elementType == ElementType.Dialog)
-                    return true;
-                return false;
-            case ElementType.Dialog:
-                if (elementType == ElementType.Dialog)
-                    return false;
-                return true;
-            default:
-                return false;
-        }
-    }
 }
