@@ -27,7 +27,7 @@ public class ElementData : MonoBehaviour
         _onElementsLoadedCallback = onElementsLoadedCallback;
         _storyId = storyId;
 
-        var result = DomainLogic.DB.SqlConn().Table<Element>().Where(x => x.StoryId == _storyId);
+        var result = DomainLogic.DB.SqlConn().Table<Element>().Where(x => x.StoryId == _storyId).OrderBy(e => e.Index);
         if (result != null && result.Count() > 0)
         {
             List<Element> elements = result.ToList();

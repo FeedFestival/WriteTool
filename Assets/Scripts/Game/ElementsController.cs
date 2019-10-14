@@ -133,7 +133,9 @@ public class ElementsController : MonoBehaviour
 
     private int GetCarretIndex()
     {
-        return Carret.transform.GetSiblingIndex();
+        var newIndex = Carret.transform.GetSiblingIndex();
+        _editableIndex = newIndex - 1;
+        return newIndex;
     }
 
     public void MoveCarret(bool down = true, int? atPos = null)
@@ -171,15 +173,12 @@ public class ElementsController : MonoBehaviour
 
     private void RecalculateIndexes()
     {
-        var currentIndex = Carret.transform.GetSiblingIndex();
-        var newIndex = currentIndex + 1;
-        for (var i = 0; i < Elements.Count; i++)
+        for (var i = 0; i < _elementsPool.Count; i++)
         {
-            if (Elements[i].Index >= newIndex)
-            {
-                Elements[i].Index = i;
-                _elementsPool[i].GameObject.name = GetElementName(Elements[i]);
-            }
+            var index = Elements.FindIndex(e => { return e.UniqueId() == _elementsPool[i].UniqueId; });
+            Elements[index].Index = i;
+            _elementsPool[i].UniqueId = Elements[index].UniqueId();
+            _elementsPool[i].GameObject.name = GetElementName(Elements[index]);
         }
     }
 
@@ -188,27 +187,29 @@ public class ElementsController : MonoBehaviour
         var currentIndex = GetCarretIndex();
         var isLastElement = currentIndex == _elementsPool.Count;
 
-        _editableIndex = (currentIndex - 1);
         Debug.Log("isLastElement: " + isLastElement);
         Debug.Log("currentIndex: " + currentIndex);
         Debug.Log("_editableIndex: " + _editableIndex);
 
-        ElementType previousElement = ElementType.Action;
+        ElementType previousElementType = ElementType.Action;
         if (isLastElement)
         {
             if (Elements.Count > 0)
             {
-                previousElement = Elements[Elements.Count - 1].ElementType;
+                previousElementType = Elements[Elements.Count - 1].ElementType;
             }
         }
         else
         {
             if (_elementsPool.Count > 0)
             {
-                previousElement = (ElementType)((_elementsPool[_editableIndex] as IElementComponent).TypeId);
+                previousElementType = (ElementType)((_elementsPool[_editableIndex] as IElementComponent).TypeId);
             }
         }
-        if (GameService.Instance.FilterNewElements(elementType, previousElement) == false)
+
+        Debug.Log("previousElementType: " + previousElementType);
+
+        if (GameService.Instance.FilterNewElements(elementType, previousElementType) == false)
         {
             return;
         }
@@ -225,14 +226,18 @@ public class ElementsController : MonoBehaviour
         };
         Elements.Add(element);
         var el = AddElementInPool(element);
-        
+
         if (isLastElement == false)
         {
             var newIndex = (_editableIndex + 1);
             el.GameObject.transform.SetSiblingIndex(newIndex);
-        }
 
-        // MoveCarret(true, );
+            RecalculateIndexes();
+        }
+        else
+        {
+            MoveCarret(true);
+        }
 
         GameService.Instance.InternalWait(() =>
             {
@@ -305,7 +310,9 @@ public class ElementsController : MonoBehaviour
 
         GameService.Instance.AsyncForEach(Elements.Count, (int i) =>
         {
-            AddElementInPool(Elements[i]);
+            // Debug.Log("Index: " + Elements[i].Index + ", i: " + i);
+
+            AddElementInPool(Elements[i], true);
 
             MoveCarret(true, Elements.Count - 1);
 
@@ -320,7 +327,7 @@ public class ElementsController : MonoBehaviour
         });
     }
 
-    private IPrefabComponent AddElementInPool(Element element)
+    private IPrefabComponent AddElementInPool(Element element, bool isInitializingElements = false)
     {
         var prefab = GameHiddenOptions.Instance.GetPrefabElement(element.ElementType);
         var wasNull = UsefullUtils.CheckInPool(
@@ -337,9 +344,8 @@ public class ElementsController : MonoBehaviour
             ref _elementsPool
             );
 
-        // need to determine index here
         el.UniqueId = element.UniqueId();
-        el.GameObject.name = element.Index + "_[" + element.Id + "]_" + element.ElementType.ToString();
+        el.GameObject.name = GetElementName(element);
 
         var elementComponent = (el as ITextComponent);
         elementComponent.SetText(element.Text);
@@ -348,7 +354,14 @@ public class ElementsController : MonoBehaviour
 
         if (wasNull)
         {
-            _elementsPool.Add(el);
+            if (isInitializingElements)
+            {
+                _elementsPool.Add(el);
+            }
+            else
+            {
+                _elementsPool.Insert(element.Index, el);
+            }
         }
 
         return el;
@@ -356,12 +369,12 @@ public class ElementsController : MonoBehaviour
 
     private string GetElementName(Element element)
     {
-        return element.Index + "_[" + element.Id + "]_" + element.ElementType.ToString();
+        return element.Index + "_[" + element.Id + "]_" + element.ElementType.ToString() + " (" + element.UniqueId() + ")";
     }
 
     public void SaveElements()
     {
-        foreach (var element in Elements)
+        foreach (Element element in Elements)
         {
             element.StoryId = StoryService.Instance.Story.Id;
             var el = _elementsPool.FirstOrDefault(e => e.UniqueId == element.UniqueId());
