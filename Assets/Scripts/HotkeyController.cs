@@ -58,6 +58,11 @@ public class HotkeyController : MonoBehaviour
             FileKey();
         }
 
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            CloseKey();
+        }
+
         if (Input.GetKeyDown(KeyCode.W))
         {
             HotkeyComponents["NewWrite"]();
@@ -194,6 +199,18 @@ public class HotkeyController : MonoBehaviour
         ElementsController.Instance.ToggleFileOptions();
     }
 
+    public void CloseKey()
+    {
+        if (AppState == AppState.FileOptions)
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+         Application.Quit();
+#endif
+        }
+    }
+
     public void SaveKey()
     {
         if (AppState == AppState.FileOptions)
@@ -219,6 +236,11 @@ public class HotkeyController : MonoBehaviour
 
     public void OnArrowKeys(bool goDown = true)
     {
+        if (AppState == AppState.NewElement)
+        {
+            return;
+        }
+
         if (AppState == AppState.Editing)
         {
             return;
