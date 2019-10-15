@@ -20,6 +20,8 @@ public class GameService : MonoBehaviour
     private int _lenght;
     private int _index;
     private bool _waitOneFrame;
+    private Texture2D _currentLoadedPicture;
+    private string _fileName;
 
     public void InternalWait(InternalWaitCallback internalWait, float? seconds = null)
     {
@@ -126,5 +128,41 @@ public class GameService : MonoBehaviour
             default:
                 return false;
         }
+    }
+
+    public delegate void OnPictureLoaded(Texture2D texture);
+    private OnPictureLoaded _onPictureLoaded;
+
+    public void TakePic(OnPictureLoaded onPictureLoaded)
+    {
+        _onPictureLoaded = onPictureLoaded;
+        System.Windows.Forms.OpenFileDialog openFileDialog;
+        openFileDialog = new System.Windows.Forms.OpenFileDialog()
+        {
+            InitialDirectory = @"D:\",
+            Title = "Browse Text Files",
+
+            CheckFileExists = true,
+            CheckPathExists = true,
+
+            DefaultExt = "png",
+            Filter = "png files (*.png)|*.jpg",
+            FilterIndex = 2,
+            RestoreDirectory = true,
+
+            ReadOnlyChecked = true,
+            ShowReadOnly = true
+        };
+
+        if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+        {
+            Debug.Log(openFileDialog.FileName);
+            var fileData = System.IO.File.ReadAllBytes(openFileDialog.FileName);
+            _currentLoadedPicture = new Texture2D(2, 2);
+            _currentLoadedPicture.LoadImage(fileData); //..this will auto-resize the texture dimensions.
+            _fileName = openFileDialog.SafeFileName;
+        }
+
+        _onPictureLoaded(_currentLoadedPicture);
     }
 }

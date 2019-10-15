@@ -17,6 +17,11 @@ public interface ITextComponent
     string GetText();
 }
 
+public interface IPictureComponent
+{
+    void AutoSelect();
+}
+
 public interface IElementComponent
 {
     int TypeId { get; set; }

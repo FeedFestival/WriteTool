@@ -46,6 +46,7 @@ public class GameHiddenOptions : MonoBehaviour
     public GameObject ActionPrefab;
     public GameObject CharacterPrefab;
     public GameObject DialogPrefab;
+    public GameObject PicturePrefab;
 
     [Header("Miscs")]
     public CanvasScaler CanvasScaler;
@@ -65,6 +66,8 @@ public class GameHiddenOptions : MonoBehaviour
                 return CharacterPrefab;
             case ElementType.Dialog:
                 return DialogPrefab;
+            case ElementType.Picture:
+                return PicturePrefab;
             default:
                 break;
         }

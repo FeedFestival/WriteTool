@@ -42,5 +42,6 @@ public enum ElementType
     SceneHeading,
     Action,
     Character,
-    Dialog
+    Dialog,
+    Picture
 }

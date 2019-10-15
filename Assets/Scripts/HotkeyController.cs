@@ -85,6 +85,10 @@ public class HotkeyController : MonoBehaviour
         {
             NewWrite("NewWrite_Dialog");
         }
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            NewWrite("NewWrite_Picture");
+        }
 
         if (Input.GetKeyUp(KeyCode.UpArrow))
         {

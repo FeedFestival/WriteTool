@@ -6,6 +6,29 @@ namespace Assets.Scripts.Data
 {
     public static class ElementsService
     {
+        public static string GetButtonHotkey(ElementType? elementType)
+        {
+            if (elementType.HasValue)
+            {
+                switch (elementType.Value)
+                {
+                    case ElementType.SceneHeading:
+                        return " [<b><color=red>S</color></b>]";
+                    case ElementType.Action:
+                        return " [<b><color=red>A</color></b>]";
+                    case ElementType.Character:
+                        return " [<b><color=red>C</color></b>]";
+                    case ElementType.Dialog:
+                        return " [<b><color=red>D</color></b>]";
+                    case ElementType.Picture:
+                        return " [<b><color=red>P</color></b>]";
+                    default:
+                        break;
+                }
+            }
+            return string.Empty;
+        }
+
         public static ElementType GetPreviousElementType(
             List<IPrefabComponent> elementsPool,
             List<Element> elements,
@@ -62,16 +85,16 @@ namespace Assets.Scripts.Data
             }
         }
 
-    public static void RecalculateIndexes(List<IPrefabComponent> elementsPool, List<Element> elements)
-    {
-        for (var i = 0; i < elementsPool.Count; i++)
+        public static void RecalculateIndexes(List<IPrefabComponent> elementsPool, List<Element> elements)
         {
-            var index = elements.FindIndex(e => { return e.UniqueId() == elementsPool[i].UniqueId; });
-            elements[index].Index = i;
-            elementsPool[i].UniqueId = elements[index].UniqueId();
-            elementsPool[i].GameObject.name = ElementsService.GetElementName(elements[index]);
+            for (var i = 0; i < elementsPool.Count; i++)
+            {
+                var index = elements.FindIndex(e => { return e.UniqueId() == elementsPool[i].UniqueId; });
+                elements[index].Index = i;
+                elementsPool[i].UniqueId = elements[index].UniqueId();
+                elementsPool[i].GameObject.name = ElementsService.GetElementName(elements[index]);
+            }
         }
-    }
 
         public static string GetDefaultText(ElementType elementType)
         {

@@ -205,7 +205,14 @@ public class ElementsController : MonoBehaviour
 
         GameService.Instance.InternalWait(() =>
             {
-                (el as ITextComponent).AutoSelect();
+                if (element.ElementType == ElementType.Picture)
+                {
+                    (el as IPictureComponent).AutoSelect();
+                }
+                else
+                {
+                    (el as ITextComponent).AutoSelect();
+                }
                 HotkeyController.Instance.AppState = AppState.Editing;
 
                 LayoutRebuilder.ForceRebuildLayoutImmediate(transform.GetComponent<RectTransform>());
@@ -267,8 +274,11 @@ public class ElementsController : MonoBehaviour
         el.UniqueId = element.UniqueId();
         el.GameObject.name = ElementsService.GetElementName(element);
 
-        var elementComponent = (el as ITextComponent);
-        elementComponent.SetText(element.Text);
+        if (element.ElementType != ElementType.Picture)
+        {
+            var elementComponent = (el as ITextComponent);
+            elementComponent.SetText(element.Text);
+        }
 
         (el as IElementComponent).TypeId = element.TypeId;
 
@@ -329,31 +339,10 @@ public class ElementsController : MonoBehaviour
         List<string> options = new List<string>();
         foreach (ElementType elementType in (ElementType[])System.Enum.GetValues(typeof(ElementType)))
         {
-            var buttonName = elementType.ToString() + GetButtonHotkey(elementType);
+            var buttonName = elementType.ToString() + ElementsService.GetButtonHotkey(elementType);
             options.Add(buttonName);
         }
         InLineSelection.Init(options, OnElementTypeSelected);
-    }
-
-    private string GetButtonHotkey(ElementType? elementType)
-    {
-        if (elementType.HasValue)
-        {
-            switch (elementType.Value)
-            {
-                case ElementType.SceneHeading:
-                    return " [<b><color=red>S</color></b>]";
-                case ElementType.Action:
-                    return " [<b><color=red>A</color></b>]";
-                case ElementType.Character:
-                    return " [<b><color=red>C</color></b>]";
-                case ElementType.Dialog:
-                    return " [<b><color=red>D</color></b>]";
-                default:
-                    break;
-            }
-        }
-        return string.Empty;
     }
 
     public void OnElementTypeSelected(int value)
@@ -379,6 +368,10 @@ public class ElementsController : MonoBehaviour
         HotkeyController.Instance.AddAsComponent("NewWrite_Dialog", () =>
         {
             AddNewElement(ElementType.Dialog);
+        });
+        HotkeyController.Instance.AddAsComponent("NewWrite_Picture", () =>
+        {
+            AddNewElement(ElementType.Picture);
         });
     }
 }
