@@ -52,6 +52,32 @@ namespace Assets.Scripts.Utils
             }
             return textBytes;
         }
+
+        public static string AddPathsToText(string[] paths)
+        {
+            var fullText = string.Empty;
+            int count = 0;
+            foreach (string path in paths)
+            {
+                fullText += path;
+                count++;
+                if (count != paths.Length)
+                {
+                    fullText += ";";
+                }
+            }
+            return fullText;
+        }
+
+        public static string[] GetPathsFromText(string fullText)
+        {
+            var paths = new string[2];
+            var splitString = fullText.Split(';');
+            paths[0] = splitString[0];
+            paths[1] = splitString[1];
+            return paths;
+        }
+
         public static string DecodeTextFromBytes(string text)
         {
             int count = text.Split(',').Length - 1;

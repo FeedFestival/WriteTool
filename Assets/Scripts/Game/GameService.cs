@@ -130,7 +130,7 @@ public class GameService : MonoBehaviour
         }
     }
 
-    public delegate void OnPictureLoaded(Texture2D texture);
+    public delegate void OnPictureLoaded(Texture2D texture, string path = null);
     private OnPictureLoaded _onPictureLoaded;
 
     public void TakePic(OnPictureLoaded onPictureLoaded)
@@ -157,16 +157,23 @@ public class GameService : MonoBehaviour
 
         if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
         {
-            Debug.Log(openFileDialog.FileName);
-            var fileData = System.IO.File.ReadAllBytes(openFileDialog.FileName);
-            _currentLoadedPicture = new Texture2D(2, 2);
-            _currentLoadedPicture.LoadImage(fileData); //..this will auto-resize the texture dimensions.
             _fileName = openFileDialog.SafeFileName;
-            _onPictureLoaded(_currentLoadedPicture);
+            Debug.Log("openFileDialog.FileName: " + openFileDialog.FileName + ", _fileName: " + _fileName);
+
+            ReadPicture(openFileDialog.FileName);
+            _onPictureLoaded(_currentLoadedPicture, openFileDialog.FileName);
         }
         else
         {
             _onPictureLoaded(null);
         }
+    }
+
+    public Texture2D ReadPicture(string fileName)
+    {
+        var fileData = System.IO.File.ReadAllBytes(fileName);
+        _currentLoadedPicture = new Texture2D(2, 2);
+        _currentLoadedPicture.LoadImage(fileData); //..this will auto-resize the texture dimensions.
+        return _currentLoadedPicture;
     }
 }

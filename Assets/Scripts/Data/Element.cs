@@ -30,6 +30,7 @@ public class Element
 
     public bool IsNew;
     public bool ToDelete;
+    public string[] Paths;
 
     public int UniqueId()
     {

@@ -31,9 +31,9 @@ public class ElementData : MonoBehaviour
         if (result != null && result.Count() > 0)
         {
             List<Element> elements = result.ToList();
+            elements.ForEach((el) => { SetupElement(ref el); });
             _onElementsLoadedCallback(elements);
         }
-        //StartCoroutine(WaitForElements());
     }
 
     public void GetElement(int elementId, OnElementLoaded onElementLoaded)
@@ -41,13 +41,34 @@ public class ElementData : MonoBehaviour
         _onElementLoaded = onElementLoaded;
 
         var element = DomainLogic.DB.SqlConn().Table<Element>().Where(p => p.Id == elementId).FirstOrDefault();
-        element.Text = DataUtils.DecodeTextFromBytes(element.EncodedText);
+        SetupElement(ref element);
+
         _onElementLoaded(element);
+    }
+
+    private void SetupElement(ref Element element)
+    {
+        if (element.ElementType == ElementType.Picture)
+        {
+            element.Paths = DataUtils.GetPathsFromText(element.Text);
+        }
+        else
+        {
+            element.Text = DataUtils.DecodeTextFromBytes(element.EncodedText);
+        }
     }
 
     public int SaveElement(Element element)
     {
-        element.EncodedText = DataUtils.EncodeTextInBytes(element.Text);
+        if (element.ElementType == ElementType.Picture)
+        {
+            element.Text = DataUtils.AddPathsToText(element.Paths);
+        }
+        else
+        {
+            element.EncodedText = DataUtils.EncodeTextInBytes(element.Text);
+        }
+
         if (element.IsNew == false)
         {
             return DomainLogic.DB.SqlConn().Update(element);

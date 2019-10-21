@@ -19,6 +19,33 @@ public class PictureComponent : MonoBehaviour, IPrefabComponent, IPictureCompone
     public Image FirstImage;
     public Image SecondImage;
 
+    public string[] Paths { get; set; }
+
+    public void FillImages()
+    {
+        int count = 0;
+        if (_parentContainer == null)
+        {
+            _parentContainer = FirstImage.transform.parent.parent.GetComponent<RectTransform>();
+        }
+
+        foreach (var path in Paths)
+        {
+            if (string.IsNullOrEmpty(path) == false)
+            {
+                if (count == 0)
+                {
+                    CancelSecondImage();
+                }
+                else
+                {
+                    ShowSecondImage();
+                }
+                OnPictureLoaded(GameService.Instance.ReadPicture(path));
+            }
+        }
+    }
+
     public void AutoSelect()
     {
         if (_parentContainer == null)
@@ -33,29 +60,39 @@ public class PictureComponent : MonoBehaviour, IPrefabComponent, IPictureCompone
         }
         else
         {
-            SecondImage.transform.parent.gameObject.SetActive(true);
-            FirstImage.transform.parent.GetComponent<RectTransform>().sizeDelta = new Vector2(_parentContainer.sizeDelta.x / 2, _parentContainer.sizeDelta.y);
-            SecondImage.transform.parent.GetComponent<RectTransform>().sizeDelta = new Vector2(_parentContainer.sizeDelta.x / 2, _parentContainer.sizeDelta.y);
+            ShowSecondImage();
         }
         OnFocus();
     }
 
-    private void OnPictureLoaded(Texture2D texture)
+    private void OnPictureLoaded(Texture2D texture, string path = null)
     {
         if (texture == null)
         {
             Debug.Log("Couldn't load texture");
             return;
         }
+        if (Paths == null)
+        {
+            Paths = new string[2];
+        }
 
         Rect rec = new Rect(0, 0, texture.width, texture.height);
         if (_imagesCount == 0)
         {
             FirstImage.sprite = Sprite.Create(texture, rec, new Vector2(0, 0), .01f);
+            if (path != null)
+            {
+                Paths[0] = path;
+            }
         }
         else
         {
             SecondImage.sprite = Sprite.Create(texture, rec, new Vector2(0, 0), .01f);
+            if (path != null)
+            {
+                Paths[1] = path;
+            }
         }
         _imagesCount++;
         GameService.Instance.InternalWait(HotkeyController.Instance.EscapeKey, 0.5f);
@@ -65,6 +102,13 @@ public class PictureComponent : MonoBehaviour, IPrefabComponent, IPictureCompone
     {
         SecondImage.transform.parent.gameObject.SetActive(false);
         FirstImage.transform.parent.GetComponent<RectTransform>().sizeDelta = new Vector2(_parentContainer.sizeDelta.x, _parentContainer.sizeDelta.y);
+    }
+
+    private void ShowSecondImage()
+    {
+        SecondImage.transform.parent.gameObject.SetActive(true);
+        FirstImage.transform.parent.GetComponent<RectTransform>().sizeDelta = new Vector2(_parentContainer.sizeDelta.x / 2, _parentContainer.sizeDelta.y);
+        SecondImage.transform.parent.GetComponent<RectTransform>().sizeDelta = new Vector2(_parentContainer.sizeDelta.x / 2, _parentContainer.sizeDelta.y);
     }
 
     public void OnFocus()

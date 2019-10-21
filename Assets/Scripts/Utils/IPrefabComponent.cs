@@ -20,6 +20,8 @@ public interface ITextComponent
 public interface IPictureComponent
 {
     void AutoSelect();
+    string[] Paths { get; set; }
+    void FillImages();
 }
 
 public interface IElementComponent

@@ -297,6 +297,11 @@ public class ElementsController : MonoBehaviour
             var elementComponent = (el as ITextComponent);
             elementComponent.SetText(element.Text);
         }
+        else
+        {
+            (el as IPictureComponent).Paths = element.Paths;
+            (el as IPictureComponent).FillImages();
+        }
 
         (el as IElementComponent).TypeId = element.TypeId;
 
@@ -324,7 +329,14 @@ public class ElementsController : MonoBehaviour
 
             UsefullUtils.DumpToConsole(element);
 
-            element.Text = (el as ITextComponent).GetText();
+            if ((el as IElementComponent).TypeId == (int)ElementType.Picture)
+            {
+                element.Paths = (el as IPictureComponent).Paths;
+            }
+            else
+            {
+                element.Text = (el as ITextComponent).GetText();
+            }
 
             element.Id = ElementData.Instance.SaveElement(element);
             el.UniqueId = element.UniqueId();
