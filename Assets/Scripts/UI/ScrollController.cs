@@ -29,6 +29,8 @@ public class ScrollController : MonoBehaviour
     public RectTransform ElementsPanel;
 
     private float scrollTime = 1f;
+    private const float scrollTimeSlow = 2f;
+    private const float scrollTimeFast = 0.7f;
     private int? _scrollAnimationId;
 
     public void OnScrollChange()
@@ -68,13 +70,28 @@ public class ScrollController : MonoBehaviour
     {
         var initialSetting = ScrollRect.verticalNormalizedPosition;
 
+        // Debug.Log("initialSetting: " + initialSetting + ", value: " + value);
+        var distance = (Mathf.Abs(Mathf.Abs(value) - Mathf.Abs(initialSetting)) * 100) + 50;
+        distance = distance > 100 ? 100 : distance;
+        LeanTweenType easing = LeanTweenType.linear;
+        // scrollTime = (distance / 100);
+        // Debug.Log("scrollTime: " + scrollTime);
+        scrollTime = scrollTimeSlow;
+        if (distance > 60)
+        {
+            easing = LeanTweenType.easeOutCirc;
+            scrollTime = scrollTimeFast;
+        }
+        
+        // Debug.Log("distance: " + distance);
+
         if (_scrollAnimationId.HasValue)
         {
             LeanTween.cancel(_scrollAnimationId.Value);
             _scrollAnimationId = null;
         }
         _scrollAnimationId = LeanTween.value(gameObject, initialSetting, value, scrollTime).id;
-        LeanTween.descr(_scrollAnimationId.Value).setEase(LeanTweenType.easeOutCirc);
+        LeanTween.descr(_scrollAnimationId.Value).setEase(easing);
         LeanTween.descr(_scrollAnimationId.Value).setOnUpdate((float val) =>
         {
             ScrollRect.verticalNormalizedPosition = val;

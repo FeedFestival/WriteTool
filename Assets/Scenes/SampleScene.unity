@@ -2188,8 +2188,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 330366649}
   m_HandleRect: {fileID: 330366648}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 1
+  m_Value: 1.0000002
+  m_Size: 0.7531382
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2705,6 +2705,7 @@ MonoBehaviour:
     type: 3}
   PicturePrefab: {fileID: 1737226055923765822, guid: c6bac5d2eb4c22f489930cd05a57526f,
     type: 3}
+  AddImageSprite: {fileID: 21300000, guid: 6c269d5c8d6df8248923624455e4511d, type: 3}
   CanvasScaler: {fileID: 0}
 --- !u!4 &1966502722
 Transform:

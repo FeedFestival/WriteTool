@@ -48,6 +48,8 @@ public class GameHiddenOptions : MonoBehaviour
     public GameObject DialogPrefab;
     public GameObject PicturePrefab;
 
+    public Sprite AddImageSprite;
+
     [Header("Miscs")]
     public CanvasScaler CanvasScaler;
 

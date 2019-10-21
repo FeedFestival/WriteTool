@@ -41,6 +41,7 @@ public class PictureComponent : MonoBehaviour, IPrefabComponent, IPictureCompone
                 {
                     ShowSecondImage();
                 }
+                count++;
                 OnPictureLoaded(GameService.Instance.ReadPicture(path));
             }
         }
@@ -122,6 +123,10 @@ public class PictureComponent : MonoBehaviour, IPrefabComponent, IPictureCompone
 
         HotkeyController.Instance.RegisterForEnterKey(() =>
         {
+            GameService.Instance.TakePic(OnPictureLoaded);
+        });
+        HotkeyController.Instance.RegisterForForcedEnterKey(() =>
+        {
             ElementsController.Instance.OnAddNewElement();
             OnBlur();
         });
@@ -140,10 +145,19 @@ public class PictureComponent : MonoBehaviour, IPrefabComponent, IPictureCompone
                     OnBlur();
                     ElementsController.Instance.DeleteElement(UniqueId);
                 }
-                else
+                else if (_imagesCount == 1)
                 {
+                    Paths[0] = null;
+                    FirstImage.sprite = GameHiddenOptions.Instance.AddImageSprite;
                     SecondImage.transform.parent.gameObject.SetActive(false);
                 }
+                else
+                {
+                    Paths[1] = null;
+                    SecondImage.sprite = GameHiddenOptions.Instance.AddImageSprite;
+                    SecondImage.transform.parent.gameObject.SetActive(false);
+                }
+                _imagesCount--;
             }
         });
     }
@@ -167,7 +181,7 @@ public class PictureComponent : MonoBehaviour, IPrefabComponent, IPictureCompone
 
     private void Blurred()
     {
-        if (_imagesCount > 0)
+        if (_imagesCount != 2)
         {
             CancelSecondImage();
         }

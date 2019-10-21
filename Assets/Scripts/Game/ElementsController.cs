@@ -325,6 +325,8 @@ public class ElementsController : MonoBehaviour
 
     public void SaveElements()
     {
+        ElementsService.RecalculateIndexes(_elementsPool, Elements);
+
         foreach (Element element in Elements)
         {
             element.StoryId = StoryService.Instance.Story.Id;
@@ -352,6 +354,8 @@ public class ElementsController : MonoBehaviour
 
     public void DeleteElement(int uniqueId)
     {
+        ElementsService.RecalculateIndexes(_elementsPool, Elements);
+
         int index = Elements.FindIndex(e => e.UniqueId() == uniqueId);
         if (Elements[index].IsNew == false)
         {
