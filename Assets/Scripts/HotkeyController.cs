@@ -16,12 +16,25 @@ public class HotkeyController : MonoBehaviour
     private OnHotkeyPress _backspaceOnHotkeyPress;
     private OnHotkeyPress _tabEditOnHotkeyPress;
 
+    public bool ShowOptions;
+
     [SerializeField]
     public AppState AppState;
+
+    public InLineSelection InLineSelection;
+    public GameObject FileOptionsSelection;
+    public GameObject FileMainButtons;
 
     private void Awake()
     {
         _hotkeyController = this;
+
+        if (ShowOptions)
+        {
+            FileMainButtons.SetActive(true);
+            FileOptionsSelection.SetActive(false);
+            InLineSelection.gameObject.SetActive(false);
+        }
     }
 
     void Start()
@@ -161,9 +174,12 @@ public class HotkeyController : MonoBehaviour
 
     private void MainEdit()
     {
-        ElementsController.Instance.FileMainButtons.SetActive(true);
-        ElementsController.Instance.InLineSelection.gameObject.SetActive(false);
-        ElementsController.Instance.FileOptionsSelection.gameObject.SetActive(false);
+        if (ShowOptions)
+        {
+            FileMainButtons.SetActive(true);
+            InLineSelection.gameObject.SetActive(false);
+            FileOptionsSelection.gameObject.SetActive(false);
+        }
         AppState = AppState.MainEdit;
     }
 
@@ -240,6 +256,8 @@ public class HotkeyController : MonoBehaviour
 
     public void OnArrowKeys(bool goDown = true)
     {
+        Debug.Log(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject);
+
         if (AppState == AppState.NewElement)
         {
             return;

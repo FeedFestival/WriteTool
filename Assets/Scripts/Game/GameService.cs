@@ -136,6 +136,7 @@ public class GameService : MonoBehaviour
     public void TakePic(OnPictureLoaded onPictureLoaded)
     {
         _onPictureLoaded = onPictureLoaded;
+
         System.Windows.Forms.OpenFileDialog openFileDialog;
         openFileDialog = new System.Windows.Forms.OpenFileDialog()
         {
@@ -161,8 +162,11 @@ public class GameService : MonoBehaviour
             _currentLoadedPicture = new Texture2D(2, 2);
             _currentLoadedPicture.LoadImage(fileData); //..this will auto-resize the texture dimensions.
             _fileName = openFileDialog.SafeFileName;
+            _onPictureLoaded(_currentLoadedPicture);
         }
-
-        _onPictureLoaded(_currentLoadedPicture);
+        else
+        {
+            _onPictureLoaded(null);
+        }
     }
 }

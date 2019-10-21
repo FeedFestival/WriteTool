@@ -11,16 +11,10 @@ public class ElementsController : MonoBehaviour
 {
     private static ElementsController _elementsController;
     public static ElementsController Instance { get { return _elementsController; } }
-    public GameObject Carret;
+    public RectTransform Carret;
     private int _editableIndex;
     public List<Element> Elements;
     public List<IPrefabComponent> _elementsPool;
-    public GameObject FileMainButtons;
-    public GameObject FileOptionsButton;
-    public GameObject AddNewButton;
-    public GameObject FileOptionsSelection;
-    public InLineSelection InLineSelection;
-
     public Image CarretImage;
 
     // Start is called before the first frame update
@@ -37,12 +31,6 @@ public class ElementsController : MonoBehaviour
         }
 
         Carret.gameObject.SetActive(true);
-
-        FileMainButtons.SetActive(true);
-        AddNewButton.SetActive(true);
-        FileOptionsButton.SetActive(true);
-        FileOptionsSelection.SetActive(false);
-        InLineSelection.gameObject.SetActive(false);
     }
 
     public void Init()
@@ -55,12 +43,15 @@ public class ElementsController : MonoBehaviour
     {
         HotkeyController.Instance.AppState = AppState.NewElement;
 
-        FileMainButtons.SetActive(false);
-        FileOptionsSelection.SetActive(false);
-        InLineSelection.gameObject.SetActive(true);
+        if (HotkeyController.Instance.ShowOptions)
+        {
+            HotkeyController.Instance.FileMainButtons.SetActive(false);
+            HotkeyController.Instance.FileOptionsSelection.SetActive(false);
+            HotkeyController.Instance.InLineSelection.gameObject.SetActive(true);
 
-        var options = FilterElementTypes();
-        InLineSelection.Filter(options);
+            var options = FilterElementTypes();
+            HotkeyController.Instance.InLineSelection.Filter(options);
+        }
     }
 
     public void ToggleFileOptions()
@@ -68,17 +59,20 @@ public class ElementsController : MonoBehaviour
         HotkeyController.Instance.AppState = HotkeyController.Instance.AppState == AppState.FileOptions
             ? AppState.MainEdit : AppState.FileOptions;
 
-        if (HotkeyController.Instance.AppState == AppState.FileOptions)
+        if (HotkeyController.Instance.ShowOptions)
         {
-            FileMainButtons.SetActive(false);
-            FileOptionsSelection.SetActive(true);
+            if (HotkeyController.Instance.AppState == AppState.FileOptions)
+            {
+                HotkeyController.Instance.FileMainButtons.SetActive(false);
+                HotkeyController.Instance.FileOptionsSelection.SetActive(true);
+            }
+            else
+            {
+                HotkeyController.Instance.FileMainButtons.SetActive(true);
+                HotkeyController.Instance.FileOptionsSelection.SetActive(false);
+            }
+            HotkeyController.Instance.InLineSelection.gameObject.SetActive(false);
         }
-        else
-        {
-            FileMainButtons.SetActive(true);
-            FileOptionsSelection.SetActive(false);
-        }
-        InLineSelection.gameObject.SetActive(false);
     }
 
     private List<int> FilterElementTypes()
@@ -158,11 +152,20 @@ public class ElementsController : MonoBehaviour
         _editableIndex = (newIndex - 1);
         Carret.transform.SetSiblingIndex(newIndex);
         Carret.name = newIndex + "_Carret";
+        ScrollController.Instance.KeepElementInView(Carret);
     }
 
     internal void EditElement()
     {
-        (_elementsPool[_editableIndex] as ITextComponent).AutoSelect();
+        GetCarretIndex();
+        if ((_elementsPool[_editableIndex] as IElementComponent).TypeId == (int)ElementType.Picture)
+        {
+            (_elementsPool[_editableIndex] as IPictureComponent).AutoSelect();
+        }
+        else
+        {
+            (_elementsPool[_editableIndex] as ITextComponent).AutoSelect();
+        }
     }
 
     public void AddNewElement(ElementType elementType)
@@ -179,8 +182,11 @@ public class ElementsController : MonoBehaviour
             return;
         }
 
-        FileMainButtons.SetActive(true);
-        InLineSelection.gameObject.SetActive(false);
+        if (HotkeyController.Instance.ShowOptions)
+        {
+            HotkeyController.Instance.FileMainButtons.SetActive(true);
+            HotkeyController.Instance.InLineSelection.gameObject.SetActive(false);
+        }
 
         var element = new Element()
         {
@@ -342,7 +348,7 @@ public class ElementsController : MonoBehaviour
             var buttonName = elementType.ToString() + ElementsService.GetButtonHotkey(elementType);
             options.Add(buttonName);
         }
-        InLineSelection.Init(options, OnElementTypeSelected);
+        HotkeyController.Instance.InLineSelection.Init(options, OnElementTypeSelected);
     }
 
     public void OnElementTypeSelected(int value)

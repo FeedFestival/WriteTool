@@ -61,7 +61,7 @@ namespace Assets.Scripts.Utils
         public static GameObject CreateUiObject(GameObject go, string name = "UiObject", Transform parent = null)
         {
             go.name = name;
-            go.transform.SetParent(parent);
+            go.transform.SetParent(parent, false);
             go.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
             return go;
         }
