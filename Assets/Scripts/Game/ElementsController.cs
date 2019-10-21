@@ -152,7 +152,7 @@ public class ElementsController : MonoBehaviour
         _editableIndex = (newIndex - 1);
         Carret.transform.SetSiblingIndex(newIndex);
         Carret.name = newIndex + "_Carret";
-        ScrollController.Instance.KeepElementInView(Carret);
+        // ScrollController.Instance.KeepElementInView(Carret);
     }
 
     internal void EditElement()
@@ -221,8 +221,8 @@ public class ElementsController : MonoBehaviour
                 }
                 HotkeyController.Instance.AppState = AppState.Editing;
 
-                LayoutRebuilder.ForceRebuildLayoutImmediate(transform.GetComponent<RectTransform>());
-                LayoutRebuilder.ForceRebuildLayoutImmediate(transform.parent.GetComponent<RectTransform>());
+                // LayoutRebuilder.ForceRebuildLayoutImmediate(transform.GetComponent<RectTransform>());
+                // LayoutRebuilder.ForceRebuildLayoutImmediate(transform.parent.GetComponent<RectTransform>());
             });
     }
 
@@ -253,8 +253,8 @@ public class ElementsController : MonoBehaviour
             {
                 GameService.Instance.InternalWait(() =>
                 {
-                    LayoutRebuilder.ForceRebuildLayoutImmediate(transform.GetComponent<RectTransform>());
-                    LayoutRebuilder.ForceRebuildLayoutImmediate(transform.parent.GetComponent<RectTransform>());
+                    // LayoutRebuilder.ForceRebuildLayoutImmediate(transform.GetComponent<RectTransform>());
+                    // LayoutRebuilder.ForceRebuildLayoutImmediate(transform.parent.GetComponent<RectTransform>());
                 });
             }
         });
