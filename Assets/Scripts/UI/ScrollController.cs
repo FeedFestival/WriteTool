@@ -28,6 +28,9 @@ public class ScrollController : MonoBehaviour
     public RectTransform Content;
     public RectTransform ElementsPanel;
 
+    private float scrollTime = 1f;
+    private int? _scrollAnimationId;
+
     public void OnScrollChange()
     {
         // Debug.Log(ScrollRect.content.sizeDelta.y);
@@ -37,7 +40,8 @@ public class ScrollController : MonoBehaviour
     public void ScrollToBottom()
     {
         Assets.Scripts.Utils.UIX.UpdateLayout(ScrollRect.transform); // This canvas contains the scroll rect
-        ScrollRect.verticalNormalizedPosition = 0f;
+
+        Scroll(0f);
     }
 
     public void KeepElementInView(RectTransform toGameObject)
@@ -57,18 +61,28 @@ public class ScrollController : MonoBehaviour
         // Debug.Log("percent: " + percent);
         // Debug.Log("scrollValue: " + scrollValue);
 
-        ScrollRect.verticalNormalizedPosition = scrollValue;
+        Scroll(scrollValue);
     }
 
-    public Vector2 GetSnapToPositionToBringChildIntoView(RectTransform child)
+    private void Scroll(float value)
     {
-        Canvas.ForceUpdateCanvases();
-        Vector2 viewportLocalPosition = ScrollRect.viewport.localPosition;
-        Vector2 childLocalPosition = child.localPosition;
-        Vector2 result = new Vector2(
-            0 - (viewportLocalPosition.x + childLocalPosition.x),
-            0 - (viewportLocalPosition.y + childLocalPosition.y)
-        );
-        return result;
+        var initialSetting = ScrollRect.verticalNormalizedPosition;
+
+        if (_scrollAnimationId.HasValue)
+        {
+            LeanTween.cancel(_scrollAnimationId.Value);
+            _scrollAnimationId = null;
+        }
+        _scrollAnimationId = LeanTween.value(gameObject, initialSetting, value, scrollTime).id;
+        LeanTween.descr(_scrollAnimationId.Value).setEase(LeanTweenType.easeOutCirc);
+        LeanTween.descr(_scrollAnimationId.Value).setOnUpdate((float val) =>
+        {
+            ScrollRect.verticalNormalizedPosition = val;
+        });
+        LeanTween.descr(_scrollAnimationId.Value).setOnComplete(() =>
+        {
+            LeanTween.cancel(_scrollAnimationId.Value);
+            _scrollAnimationId = null;
+        });
     }
 }
