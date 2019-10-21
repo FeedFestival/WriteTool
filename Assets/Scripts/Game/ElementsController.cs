@@ -211,12 +211,12 @@ public class ElementsController : MonoBehaviour
         {
             var newIndex = (_editableIndex + 1);
             el.GameObject.transform.SetSiblingIndex(newIndex);
-            ElementsService.RecalculateIndexes(_elementsPool, Elements);
         }
         else
         {
             MoveCarret(true);
         }
+        ElementsService.RecalculateIndexes(_elementsPool, Elements);
 
         GameService.Instance.InternalWait(() =>
             {
@@ -299,8 +299,11 @@ public class ElementsController : MonoBehaviour
         }
         else
         {
-            (el as IPictureComponent).Paths = element.Paths;
-            (el as IPictureComponent).FillImages();
+            if (element.Paths != null)
+            {
+                (el as IPictureComponent).Paths = element.Paths;
+                (el as IPictureComponent).FillImages();
+            }
         }
 
         (el as IElementComponent).TypeId = element.TypeId;
