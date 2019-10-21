@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,22 +25,39 @@ public class ScrollController : MonoBehaviour
     public ScrollRect ScrollRect;
     public Scrollbar Scrollbar;
 
+    public RectTransform Content;
+    public RectTransform ElementsPanel;
+
     public void OnScrollChange()
     {
         // Debug.Log(ScrollRect.content.sizeDelta.y);
         Debug.Log(Scrollbar.value);
     }
 
+    public void ScrollToBottom()
+    {
+        Assets.Scripts.Utils.UIX.UpdateLayout(ScrollRect.transform); // This canvas contains the scroll rect
+        ScrollRect.verticalNormalizedPosition = 0f;
+    }
+
     public void KeepElementInView(RectTransform toGameObject)
     {
-        // Debug.Log(ScrollRect.content.sizeDelta.y);
-        // Debug.Log(Scrollbar.value);
+        Assets.Scripts.Utils.UIX.UpdateLayout(ScrollRect.transform);
 
-        ScrollRect.content.anchoredPosition =
-                (Vector2)ScrollRect.transform.InverseTransformPoint(ScrollRect.content.position)
-                - (Vector2)ScrollRect.transform.InverseTransformPoint(toGameObject.position);
+        var topSpace = 150f;
+        var height = Mathf.Abs(toGameObject.anchoredPosition.y) + topSpace;
 
-        // ScrollRect.content.localPosition = GetSnapToPositionToBringChildIntoView(toGameObject);
+        // Debug.Log("height: " + height);
+        // Debug.Log("Content.sizeDelta: " + Content.sizeDelta);
+
+        var percent = UsefullUtils.GetValuePercent(height, Content.sizeDelta.y);
+        // var diff = UsefullUtils.GetPercent((100 - percent), 50);
+        // Debug.Log("diff: " + diff);
+        var scrollValue = ((100 - percent)) / 100;
+        // Debug.Log("percent: " + percent);
+        // Debug.Log("scrollValue: " + scrollValue);
+
+        ScrollRect.verticalNormalizedPosition = scrollValue;
     }
 
     public Vector2 GetSnapToPositionToBringChildIntoView(RectTransform child)

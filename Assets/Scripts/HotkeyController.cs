@@ -256,8 +256,6 @@ public class HotkeyController : MonoBehaviour
 
     public void OnArrowKeys(bool goDown = true)
     {
-        Debug.Log(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject);
-
         if (AppState == AppState.NewElement)
         {
             return;

@@ -152,7 +152,16 @@ public class ElementsController : MonoBehaviour
         _editableIndex = (newIndex - 1);
         Carret.transform.SetSiblingIndex(newIndex);
         Carret.name = newIndex + "_Carret";
-        // ScrollController.Instance.KeepElementInView(Carret);
+
+        var isLastElement = _editableIndex == (_elementsPool.Count - 1);
+        if (isLastElement)
+        {
+            ScrollController.Instance.ScrollToBottom();
+        }
+        else
+        {
+            ScrollController.Instance.KeepElementInView(Carret);
+        }
     }
 
     internal void EditElement()
@@ -221,8 +230,14 @@ public class ElementsController : MonoBehaviour
                 }
                 HotkeyController.Instance.AppState = AppState.Editing;
 
-                // LayoutRebuilder.ForceRebuildLayoutImmediate(transform.GetComponent<RectTransform>());
-                // LayoutRebuilder.ForceRebuildLayoutImmediate(transform.parent.GetComponent<RectTransform>());
+                if (isLastElement)
+                {
+                    ScrollController.Instance.ScrollToBottom();
+                }
+                else
+                {
+                    ScrollController.Instance.KeepElementInView(el.GameObject.GetComponent<RectTransform>());
+                }
             });
     }
 
@@ -243,8 +258,6 @@ public class ElementsController : MonoBehaviour
 
         GameService.Instance.AsyncForEach(Elements.Count, (int i) =>
         {
-            // Debug.Log("Index: " + Elements[i].Index + ", i: " + i);
-
             AddElementInPool(Elements[i], true);
 
             MoveCarret(true, Elements.Count - 1);
@@ -253,8 +266,7 @@ public class ElementsController : MonoBehaviour
             {
                 GameService.Instance.InternalWait(() =>
                 {
-                    // LayoutRebuilder.ForceRebuildLayoutImmediate(transform.GetComponent<RectTransform>());
-                    // LayoutRebuilder.ForceRebuildLayoutImmediate(transform.parent.GetComponent<RectTransform>());
+                    ScrollController.Instance.ScrollToBottom();
                 });
             }
         });
