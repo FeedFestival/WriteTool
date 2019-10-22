@@ -150,6 +150,13 @@ namespace Assets.Scripts.Utils
             var output = JsonUtility.ToJson(obj, true);
             Debug.Log(output);
         }
+
+        public static string RemoveWhitespace(this string input)
+        {
+            return new string(input.ToCharArray()
+                .Where(c => !Char.IsWhiteSpace(c))
+                .ToArray());
+        }
     }
 
     public enum NavbarButton

@@ -97,6 +97,11 @@ public class ElementData : MonoBehaviour
     internal void ExportToHtml(List<Element> elements)
     {
         var mainPath = UsefullUtils.GetPathToStreamingAssetsFile("");
+        var storyName = StoryService.Instance.Story.Id + "_" + UsefullUtils.RemoveWhitespace(StoryService.Instance.Story.Name);
+        mainPath += storyName;
+        Directory.CreateDirectory(mainPath);
+        mainPath += "/";
+
         string html = HtmlExportUtils.GetBaseStart();
 
         html += HtmlExportUtils.PageStart();
@@ -133,8 +138,7 @@ public class ElementData : MonoBehaviour
         html += HtmlExportUtils.DivTagEnd();
         html += HtmlExportUtils.GetBaseEnd();
 
-        var path = mainPath + "test.html";
-
+        var path = mainPath + "/" + DateTime.Now.ToString("MM-yy-dd-hh-mm") + ".html";
         using (FileStream fs = new FileStream(path, FileMode.Create))
         {
             using (StreamWriter w = new StreamWriter(fs, System.Text.Encoding.UTF8))
