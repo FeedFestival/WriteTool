@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Utils;
 using System;
+using System.IO;
 
 public class ElementData : MonoBehaviour
 {
@@ -91,5 +92,55 @@ public class ElementData : MonoBehaviour
     internal void DeleteElement(int elementId)
     {
         DomainLogic.DB.SqlConn().Delete<Element>(elementId);
+    }
+
+    internal void ExportToHtml(List<Element> elements)
+    {
+        var mainPath = UsefullUtils.GetPathToStreamingAssetsFile("");
+        string html = HtmlExportUtils.GetBaseStart();
+
+        html += HtmlExportUtils.PageStart();
+
+        foreach (var element in elements)
+        {
+            switch (element.ElementType)
+            {
+                case ElementType.SceneHeading:
+                case ElementType.Action:
+                case ElementType.Character:
+                case ElementType.Dialog:
+                    html += HtmlExportUtils.Element(element);
+                    break;
+                default:
+                    var fileNames = new List<string>();
+
+                    fileNames.Add("img_" + element.Id + "_0_" + ".jpg");
+                    var newPath = mainPath + fileNames[0];
+                    File.Copy(element.Paths[0], newPath, true);
+
+                    if (string.IsNullOrEmpty(element.Paths[1]) == false)
+                    {
+                        fileNames.Add("img_" + element.Id + "_1_" + ".jpg");
+                        newPath = mainPath + fileNames[1];
+                        File.Copy(element.Paths[1], newPath, true);
+                    }
+
+                    html += HtmlExportUtils.Picture(element, fileNames);
+                    break;
+            }
+        }
+
+        html += HtmlExportUtils.DivTagEnd();
+        html += HtmlExportUtils.GetBaseEnd();
+
+        var path = mainPath + "test.html";
+
+        using (FileStream fs = new FileStream(path, FileMode.Create))
+        {
+            using (StreamWriter w = new StreamWriter(fs, System.Text.Encoding.UTF8))
+            {
+                w.Write(html);
+            }
+        }
     }
 }

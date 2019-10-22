@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html>
+                <html lang="en/">
+                <head>
+                    <meta charset="utf-8">
+                    <title>title</title>
+                    <style>
+                body {
+                    width: 100vw;
+                    min-height: 100vh;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+
+                * {
+                    box-sizing: border-box;
+                    -moz-box-sizing: border-box;
+                }
+
+                .page {
+                    width: 210mm;
+                    /* min-height: 297mm; */
+                    padding: 20mm;
+                    margin: 10mm auto;
+                    border: 1px #D3D3D3 solid;
+                    border-radius: 5px;
+                    background: white;
+                    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+                }
+
+                .subpage {
+                    padding: 1cm;
+                    border: 5px red solid;
+                    height: 257mm;
+                    outline: 2cm #FFEAEA solid;
+                }
+
+                @page {
+                    size: A4;
+                    margin: 0;
+                }
+
+                @media print {
+
+                    html,
+                    body {
+                        width: 210mm;
+                        height: 297mm;
+                    }
+
+                    .page {
+                        margin: 0;
+                        border: initial;
+                        border-radius: initial;
+                        width: initial;
+                        min-height: initial;
+                        box-shadow: initial;
+                        background: initial;
+                        page-break-after: always;
+                    }
+                }
+
+                .element {
+                    display: block;
+                }
+
+                .element.scene-heading {
+                    background-color: lightgray;
+                    padding: 0 1mm;
+                }
+
+                .element.action {
+                    padding: 5mm 20mm;
+                }
+
+                .element.character {
+                    padding: 1mm 50mm;
+                    text-align: center;
+                    text-transform: uppercase;
+                    font-weight: 700;
+                }
+
+                .element.dialog {
+                    padding: 1mm 50mm;
+                    text-align: center;
+                    text-transform: capitalize;
+                    font-size: 4mm;
+                }
+
+                .element.picture {
+                    padding: 5mm 20mm;
+                    min-height: 70mm;
+                    width: 170mm;
+                }
+
+                .element.picture img {
+                    width: 100%;
+                    height: auto !important;
+                    /* background: url(http://mehararts.com/category_image/demo.png); */
+                }
+
+                .picture.many {
+                    padding: 5mm 5mm !important;
+                    display: inline-block !important;
+                }
+
+                .picture.many img {
+                    width: 48% !important;
+                    padding: 0 1% !important;
+                }
+            </style>
+            
+                    <script src="script.js"></script>
+                </head>
+                <body><div class="page"><div class="element scene-heading" id="3">
+                INT. MY ROOM
+            </div><div class="element action" id="4">
+                Test asdasd a asd asd asa das as d
+            </div><div class="element character" id="14">
+                DANI
+            </div><div class="element dialog" id="15">
+                Ce faci?
+            </div><div class="element action" id="16">
+                Action action
+            </div><div class="element character" id="9">
+                ERIKA
+            </div><div class="element dialog" id="10">
+                Salut
+            </div><div class="element action" id="11">
+                Ce mai faceti?
+            </div><div class="element action" id="21">
+                Actiune scrisa.
+            </div><div class="element scene-heading" id="26">
+                INT. NOUA SCENA
+            </div><div class="element action" id="27">
+                Hai sa vedem cum se vede pe HTML.
+            </div><div class="element character" id="28">
+                DANI
+            </div><div class="element dialog" id="29">
+                Tot eu. testeste testetestete.
+            </div><div class="element action" id="30">
+                Actiune in mai multe randuri
+            </div><div class="element picture " id="31"><img src="img_31_0_.jpg"></div><div class="element action" id="32">
+                Action to fill this.
+            </div><div class="element character" id="34">
+                DANI
+            </div><div class="element dialog" id="35">
+                Ok. Image work too.
+            </div><div class="element picture many" id="33"><img src="img_33_0_.jpg"><img src="img_33_1_.jpg"></div></div></body>
+            </html>>

@@ -80,7 +80,12 @@ namespace Assets.Scripts.Data
                     if (elementType == ElementType.Dialog)
                         return false;
                     return true;
+                case ElementType.Picture:
+                    if (elementType == ElementType.Picture)
+                        return false;
+                    return true;
                 default:
+                    Debug.LogError("Unknown ElementType");
                     return false;
             }
         }

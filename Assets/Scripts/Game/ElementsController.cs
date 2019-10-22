@@ -371,6 +371,11 @@ public class ElementsController : MonoBehaviour
         // ShowCarret();
     }
 
+    public void ExportToHtml()
+    {
+        ElementData.Instance.ExportToHtml(Elements);
+    }
+
     private void InitInlineSelection()
     {
         List<string> options = new List<string>();

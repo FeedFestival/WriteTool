@@ -116,6 +116,10 @@ public class HotkeyController : MonoBehaviour
         {
             OnTabEdit();
         }
+
+        if (Input.GetKeyUp(KeyCode.M)) {
+            ElementsController.Instance.ExportToHtml();
+        }
     }
 
     internal void RegisterForEnterKey(OnHotkeyPress enterOnHotkeyPress)
