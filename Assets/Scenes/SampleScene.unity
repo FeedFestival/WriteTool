@@ -1274,7 +1274,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Carret: {fileID: 5147068553081394087}
-  CarretImage: {fileID: 5147068553175168804}
 --- !u!224 &724750659 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1425692967227044159, guid: 854ff0365469b624da97f76d1a23a9a0,
@@ -1431,6 +1430,7 @@ MonoBehaviour:
   InLineSelection: {fileID: 37796228}
   FileOptionsSelection: {fileID: 1200332479}
   FileMainButtons: {fileID: 894996916}
+  CarretImage: {fileID: 5147068553175168804}
 --- !u!4 &996978180
 Transform:
   m_ObjectHideFlags: 0
@@ -1718,7 +1718,7 @@ GameObject:
   - component: {fileID: 1200332482}
   - component: {fileID: 1200332481}
   m_Layer: 5
-  m_Name: FileActionSelection
+  m_Name: _FileOptionsSelection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2268,8 +2268,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 330366649}
   m_HandleRect: {fileID: 330366648}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 0.99999964
+  m_Size: 0.68052936
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3696,7 +3696,7 @@ GameObject:
   - component: {fileID: 5147068553175168804}
   - component: {fileID: 5147068553175168805}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: _CarretImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine.UI;
+using Assets.Scripts.Data;
 
 public class HotkeyController : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class HotkeyController : MonoBehaviour
     public InLineSelection InLineSelection;
     public GameObject FileOptionsSelection;
     public GameObject FileMainButtons;
+    public Image CarretImage;
 
     private void Awake()
     {
@@ -128,7 +130,7 @@ public class HotkeyController : MonoBehaviour
         AppState = enterOnHotkeyPress != null ? AppState.Editing : AppState;
         _enterOnHotkeyPress = enterOnHotkeyPress;
 
-        ElementsController.Instance.ShowCarret();
+        ShowCarret();
     }
 
     internal void RegisterForForcedEnterKey(OnHotkeyPress enterOnHotkeyPress)
@@ -136,7 +138,7 @@ public class HotkeyController : MonoBehaviour
         AppState = enterOnHotkeyPress != null ? AppState.Editing : AppState;
         _forcedEnterOnHotkeyPress = enterOnHotkeyPress;
 
-        ElementsController.Instance.ShowCarret();
+        ShowCarret();
     }
 
     internal void RegisterForEscapeKey(OnHotkeyPress escapeOnHotkeyPress)
@@ -162,14 +164,14 @@ public class HotkeyController : MonoBehaviour
         }
         else if (AppState == AppState.FileOptions)
         {
-            ElementsController.Instance.ToggleFileOptions();
+            ToggleFileOptions();
         }
         else if (AppState == AppState.Editing)
         {
             _escapeOnHotkeyPress?.Invoke();
 
             MainEdit();
-            ElementsController.Instance.ShowCarret();
+            ShowCarret();
         }
         else
         {
@@ -190,10 +192,10 @@ public class HotkeyController : MonoBehaviour
 
     public void OnTabEdit()
     {
-        HotkeyController.Instance.AppState = AppState.Editing;
+        AppState = AppState.Editing;
 
         ElementsController.Instance.EditElement();
-        ElementsController.Instance.ShowCarret();
+        ShowCarret();
     }
 
     public void EnterKey(bool isForced = false)
@@ -221,7 +223,7 @@ public class HotkeyController : MonoBehaviour
         {
             return;
         }
-        ElementsController.Instance.ToggleFileOptions();
+        ToggleFileOptions();
     }
 
     public void CloseKey()
@@ -291,6 +293,82 @@ public class HotkeyController : MonoBehaviour
         if (HotkeyComponents.ContainsKey(key) == false)
         {
             HotkeyComponents.Add(key, value);
+        }
+    }
+
+    public void OnAddNewElement()
+    {
+        AppState = AppState.NewElement;
+
+        if (ShowOptions)
+        {
+            FileMainButtons.SetActive(false);
+            FileOptionsSelection.SetActive(false);
+            InLineSelection.gameObject.SetActive(true);
+
+            var options = FilterElementTypes();
+            InLineSelection.Filter(options);
+        }
+    }
+
+    private List<int> FilterElementTypes()
+    {
+        if (ElementsController.Instance.Elements == null)
+        {
+            ElementsController.Instance.InitElements(new List<Element>());
+        }
+        if (ElementsController.Instance.Elements.Count == 0)
+        {
+            return new List<int>() { 0 };
+        }
+
+        var previousElementType = ElementsController.Instance.GetElementAtCarretPosition();
+
+        var options = new List<int>();
+        int i = 0;
+        foreach (ElementType elementType in (ElementType[])System.Enum.GetValues(typeof(ElementType)))
+        {
+            if (ElementsService.FilterNewElements(elementType, previousElementType))
+            {
+                options.Add(i);
+            }
+            i++;
+        }
+        return options;
+    }
+
+    public void ToggleFileOptions()
+    {
+        AppState = AppState == AppState.FileOptions
+            ? AppState.MainEdit : AppState.FileOptions;
+
+        if (ShowOptions)
+        {
+            if (AppState == AppState.FileOptions)
+            {
+                FileMainButtons.SetActive(false);
+                FileOptionsSelection.SetActive(true);
+            }
+            else
+            {
+                FileMainButtons.SetActive(true);
+                FileOptionsSelection.SetActive(false);
+            }
+            InLineSelection.gameObject.SetActive(false);
+        }
+    }
+
+    public void ShowCarret()
+    {
+        if (AppState == AppState.MainEdit
+            || AppState == AppState.FileOptions
+            || AppState == AppState.NewElement)
+        {
+            CarretImage.color = GameHiddenOptions.Instance.CarretColor;
+        }
+        else
+        {
+            CarretImage.color = GameHiddenOptions.Instance.TransparentColor;
         }
     }
 }

@@ -15,8 +15,7 @@ public class ElementsController : MonoBehaviour
     private int _editableIndex;
     public List<Element> Elements;
     public List<IPrefabComponent> _elementsPool;
-    public Image CarretImage;
-
+    
     // Start is called before the first frame update
     void Awake()
     {
@@ -39,84 +38,13 @@ public class ElementsController : MonoBehaviour
         InitInlineSelection();
     }
 
-    public void OnAddNewElement()
+    public ElementType GetElementAtCarretPosition()
     {
-        HotkeyController.Instance.AppState = AppState.NewElement;
-
-        if (HotkeyController.Instance.ShowOptions)
-        {
-            HotkeyController.Instance.FileMainButtons.SetActive(false);
-            HotkeyController.Instance.FileOptionsSelection.SetActive(false);
-            HotkeyController.Instance.InLineSelection.gameObject.SetActive(true);
-
-            var options = FilterElementTypes();
-            HotkeyController.Instance.InLineSelection.Filter(options);
-        }
-    }
-
-    public void ToggleFileOptions()
-    {
-        HotkeyController.Instance.AppState = HotkeyController.Instance.AppState == AppState.FileOptions
-            ? AppState.MainEdit : AppState.FileOptions;
-
-        if (HotkeyController.Instance.ShowOptions)
-        {
-            if (HotkeyController.Instance.AppState == AppState.FileOptions)
-            {
-                HotkeyController.Instance.FileMainButtons.SetActive(false);
-                HotkeyController.Instance.FileOptionsSelection.SetActive(true);
-            }
-            else
-            {
-                HotkeyController.Instance.FileMainButtons.SetActive(true);
-                HotkeyController.Instance.FileOptionsSelection.SetActive(false);
-            }
-            HotkeyController.Instance.InLineSelection.gameObject.SetActive(false);
-        }
-    }
-
-    private List<int> FilterElementTypes()
-    {
-        if (Elements == null)
-        {
-            InitElements(new List<Element>());
-        }
-        if (Elements.Count == 0)
-        {
-            return new List<int>() { 0 };
-        }
-
         var isLastElement = GetCarretIndex() == _elementsPool.Count;
-        var previousElementType = ElementsService.GetPreviousElementType(
+        return ElementsService.GetPreviousElementType(
             _elementsPool, Elements,
             _editableIndex, isLastElement
         );
-
-        var options = new List<int>();
-        int i = 0;
-        foreach (ElementType elementType in (ElementType[])System.Enum.GetValues(typeof(ElementType)))
-        {
-            if (ElementsService.FilterNewElements(elementType, previousElementType))
-            {
-                options.Add(i);
-            }
-            i++;
-        }
-        return options;
-    }
-
-    internal void ShowCarret()
-    {
-        if (HotkeyController.Instance.AppState == AppState.MainEdit
-            || HotkeyController.Instance.AppState == AppState.FileOptions
-            || HotkeyController.Instance.AppState == AppState.NewElement)
-        {
-            CarretImage.color = GameHiddenOptions.Instance.CarretColor;
-        }
-        else
-        {
-            CarretImage.color = GameHiddenOptions.Instance.TransparentColor;
-        }
     }
 
     private int GetCarretIndex()
@@ -349,7 +277,7 @@ public class ElementsController : MonoBehaviour
             element.IsNew = false;
         }
 
-        ToggleFileOptions();
+        HotkeyController.Instance.ToggleFileOptions();
     }
 
     public void DeleteElement(int uniqueId)
@@ -394,7 +322,7 @@ public class ElementsController : MonoBehaviour
 
     private void InitHotkeys()
     {
-        HotkeyController.Instance.AddAsComponent("NewWrite", OnAddNewElement);
+        HotkeyController.Instance.AddAsComponent("NewWrite", HotkeyController.Instance.OnAddNewElement);
         HotkeyController.Instance.AddAsComponent("NewWrite_SceneHeading", () =>
         {
             AddNewElement(ElementType.SceneHeading);

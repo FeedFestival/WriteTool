@@ -127,7 +127,7 @@ public class PictureComponent : MonoBehaviour, IPrefabComponent, IPictureCompone
         });
         HotkeyController.Instance.RegisterForForcedEnterKey(() =>
         {
-            ElementsController.Instance.OnAddNewElement();
+            HotkeyController.Instance.OnAddNewElement();
             OnBlur();
         });
         HotkeyController.Instance.RegisterForEscapeKey(() =>

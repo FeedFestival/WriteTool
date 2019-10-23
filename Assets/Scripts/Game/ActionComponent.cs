@@ -47,7 +47,7 @@ public class ActionComponent : MonoBehaviour, IPrefabComponent, ITextComponent, 
 
         HotkeyController.Instance.RegisterForForcedEnterKey(() =>
         {
-            ElementsController.Instance.OnAddNewElement();
+            HotkeyController.Instance.OnAddNewElement();
             ScalableText.InputField.DeactivateInputField();
             SetText(_text.TrimEnd());
             OnBlur();
