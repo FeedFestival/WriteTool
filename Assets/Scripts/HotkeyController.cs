@@ -158,7 +158,7 @@ public class HotkeyController : MonoBehaviour
     {
         if (AppState == AppState.MainEdit)
         {
-            Debug.Log("Can't do shit");
+            // Debug.Log("Can't do shit");
         }
         else if (AppState == AppState.FileOptions)
         {

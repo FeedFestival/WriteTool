@@ -20,6 +20,8 @@ public class GameService : MonoBehaviour
     private int _lenght;
     private int _index;
     private bool _waitOneFrame;
+    private bool _waitOneFrameDebounce;
+    private bool _waitOneFrameIteration;
     private Texture2D _currentLoadedPicture;
     private string _fileName;
 
@@ -51,22 +53,25 @@ public class GameService : MonoBehaviour
         _internalWait();
     }
 
-    public void Debounce(InternalWaitCallback debounceWait, float seconds)
+    public void Debounce(InternalWaitCallback debounceWait, float? seconds = null)
     {
+        if (seconds == null) {
+            _waitOneFrameDebounce = true;
+        }
         _debounceWait = debounceWait;
         StartCoroutine(DebounceFunction(seconds));
     }
 
-    private IEnumerator DebounceFunction(float seconds)
+    private IEnumerator DebounceFunction(float? seconds)
     {
-        if (_waitOneFrame)
+        if (_waitOneFrameDebounce)
         {
-            _waitOneFrame = false;
+            _waitOneFrameDebounce = false;
             yield return 0;
         }
         else
         {
-            yield return new WaitForSeconds(seconds);
+            yield return new WaitForSeconds(seconds.Value);
         }
         _debounceWait();
     }
@@ -75,7 +80,7 @@ public class GameService : MonoBehaviour
     {
         if (seconds == null)
         {
-            _waitOneFrame = true;
+            _waitOneFrameIteration = true;
         }
         else
         {
@@ -89,9 +94,8 @@ public class GameService : MonoBehaviour
 
     IEnumerator DoAsyncIteration()
     {
-        if (_waitOneFrame)
+        if (_waitOneFrameIteration)
         {
-            _waitOneFrame = false;
             yield return 0;
         }
         else
@@ -104,6 +108,10 @@ public class GameService : MonoBehaviour
         {
             _index++;
             StartCoroutine(DoAsyncIteration());
+        }
+        else
+        {
+            _waitOneFrameIteration = false;
         }
     }
 

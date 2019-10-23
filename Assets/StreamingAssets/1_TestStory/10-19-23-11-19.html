@@ -1,77 +1,9 @@
-
-using System.Collections.Generic;
-
-namespace Assets.Scripts.Utils
-{
-    public static class HtmlExportUtils
-    {
-        public static string GetBaseStart()
-        {
-            return @"<!DOCTYPE html>
-                <html lang=""en/"">
+﻿<!DOCTYPE html>
+                <html lang="en/">
                 <head>
-                    <meta charset=""utf-8"">
+                    <meta charset="utf-8">
                     <title>title</title>
-                    " + Css() + @"
-                    <script src=""https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js""></script>
-                </head>
-                <body>";
-        }
-
-        public static string GetBaseEnd()
-        {
-            return @"</body>
-            </html>";
-        }
-
-        public static string PageStart()
-        {
-            return @"<div class=""page"">";
-        }
-
-        public static string Element(Element element)
-        {
-            return @"<div class=""element " + GetElementClass(element.ElementType) + @""" id=""" + element.Id + @""">
-                " + element.Text + @"
-            </div>";
-        }
-
-        public static string Picture(Element element, List<string> fileNames)
-        {
-            string elementHtml = @"<div class=""element picture " + (fileNames.Count > 1 ? "many" : "") + @""" id=""" + element.Id + @""">";
-            foreach (var fileName in fileNames)
-            {
-                elementHtml += @"<img src=""" + fileName + @""">";
-            }
-            elementHtml += "</div>";
-            return elementHtml;
-        }
-
-        private static string GetElementClass(ElementType elementType)
-        {
-            switch (elementType)
-            {
-                case ElementType.SceneHeading:
-                    return "scene-heading";
-                case ElementType.Action:
-                    return "action";
-                case ElementType.Character:
-                    return "character";
-                case ElementType.Dialog:
-                    return "dialog";
-                default:
-                    return "picture";
-            }
-        }
-
-        public static string DivTagEnd()
-        {
-            return "</div>";
-        }
-
-        private static string Css()
-        {
-            return @"<style>
+                    <style>
                 body {
                     width: 100vw;
                     min-height: 100vh;
@@ -185,12 +117,48 @@ namespace Assets.Scripts.Utils
                     display: block;
                 }
             </style>
-            ";
-        }
-
-        public static string PageScript()
-        {
-            return @"
+            
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                </head>
+                <body><div class="page"><div class="element scene-heading" id="3">
+                INT. MY ROOM
+            </div><div class="element action" id="4">
+                Test asdasd a asd asd asa das as d
+            </div><div class="element character" id="14">
+                DANI
+            </div><div class="element dialog" id="15">
+                Ce faci?
+            </div><div class="element action" id="16">
+                Action action
+            </div><div class="element character" id="9">
+                ERIKA
+            </div><div class="element dialog" id="10">
+                Salut
+            </div><div class="element action" id="11">
+                Ce mai faceti?
+            </div><div class="element action" id="21">
+                Actiune scrisa.
+            </div><div class="element scene-heading" id="26">
+                INT. NOUA SCENA
+            </div><div class="element action" id="27">
+                Hai sa vedem cum se vede pe HTML.
+            </div><div class="element character" id="28">
+                DANI
+            </div><div class="element dialog" id="29">
+                Tot eu. testeste testetestete.
+            </div><div class="element action" id="30">
+                Actiune in mai multe randuri
+            </div><div class="element picture " id="31"><img src="img_31_0_.jpg"></div><div class="element action" id="32">
+                Action to fill this.
+            </div><div class="element character" id="34">
+                DANI
+            </div><div class="element dialog" id="35">
+                Ok. Image work too.
+            </div><div class="element picture many" id="33"><img src="img_33_0_.jpg"><img src="img_33_1_.jpg"></div><div class="element character" id="36">
+                DANI
+            </div><div class="element dialog" id="37">
+                Ce faci?
+            </div></div>
             <script>
                 setTimeout(() => {
 
@@ -249,13 +217,13 @@ namespace Assets.Scripts.Utils
 
                 function addPageNr(pageElement, pageNr, margin) {
                     pageElement.append(
-                        '<div class=""page-nr"" style=""margin-top: ' + (margin <= 0 ? 0 : margin) + 'mm;"">'
+                        '<div class="page-nr" style="margin-top: ' + (margin <= 0 ? 0 : margin) + 'mm;">'
                             + pageNr +
                         '</div>');
                 }
 
                 function createPage(body, pageNr) {
-                    body.append('<div class=""page"" id=""page_' + pageNr + '""></div>');
+                    body.append('<div class="page" id="page_' + pageNr + '"></div>');
                     var pageElement = $('#page_' + pageNr);
                     pageElement.css('min-height', '297mm');
                     return pageElement;
@@ -269,7 +237,5 @@ namespace Assets.Scripts.Utils
                     return pixels * 0.264583333;
                 }
             </script>
-            ";
-        }
-    }
-}
+            </body>
+            </html>
