@@ -76,6 +76,11 @@ public class HotkeyController : MonoBehaviour
             CloseKey();
         }
 
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            ExportKey();
+        }
+
         if (Input.GetKeyDown(KeyCode.W))
         {
             HotkeyComponents["NewWrite"]();
@@ -115,10 +120,6 @@ public class HotkeyController : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Tab))
         {
             OnTabEdit();
-        }
-
-        if (Input.GetKeyUp(KeyCode.M)) {
-            ElementsController.Instance.ExportToHtml();
         }
     }
 
@@ -232,6 +233,14 @@ public class HotkeyController : MonoBehaviour
 #else
          Application.Quit();
 #endif
+        }
+    }
+
+    public void ExportKey()
+    {
+        if (AppState == AppState.FileOptions)
+        {
+            ElementsController.Instance.ExportToHtml();
         }
     }
 

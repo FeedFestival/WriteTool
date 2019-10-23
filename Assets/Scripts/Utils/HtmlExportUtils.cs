@@ -21,7 +21,7 @@ namespace Assets.Scripts.Utils
         public static string GetBaseEnd()
         {
             return @"</body>
-            </html>>";
+            </html>";
         }
 
         public static string PageStart()
