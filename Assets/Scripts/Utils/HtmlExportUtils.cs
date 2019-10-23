@@ -175,7 +175,100 @@ namespace Assets.Scripts.Utils
                     width: 48% !important;
                     padding: 0 1% !important;
                 }
+
+                .page-nr {
+                    text-align: center; 
+                    height: 7px; 
+                    font-size: 10px;
+                    position: relative; 
+                    bottom: 0; 
+                    display: block;
+                }
             </style>
+            ";
+        }
+
+        public static string PageScript()
+        {
+            return @"
+            <script>
+                setTimeout(() => {
+
+                    $('.page').attr('id', 'old');
+                    var body = $('body');
+
+                    // add new page
+                    var pageNr = 1;
+                    var pageElement = createPage(body, pageNr);
+
+                    // get elements
+                    var elements = $('.element');
+
+                    // determine page settings
+                    const pageDescrSize = 7;
+                    // const maxMm = 297;
+                    const maxMm = (297 - 7);
+                    let currentPageMm = 0;
+                    let addPreviousElement = false;
+
+                    for (let i = 0; i < elements.length; i++) {
+                        const element = $(elements[i]);
+                        const previousElement = $(elements[i - 1]);
+
+                        const widthMm = convertToMm(element.height()) + convertToMm(element.css('padding-top'), true) + convertToMm(element.css('padding-bottom'), true);
+                        const wouldBeMm = (currentPageMm + widthMm);
+
+                        if (addPreviousElement) {
+                            addPreviousElement = false;
+                        } else if (wouldBeMm > maxMm) {
+
+                            addPageNr(pageElement, pageNr, maxMm - wouldBeMm);
+
+                            // add new page
+                            currentPageMm = 0;
+                            pageNr++;
+                            pageElement = createPage(body, pageNr);
+
+                            // start with scene heading if possible
+                            if (previousElement.hasClass('scene-heading') || previousElement.hasClass('character')) {
+                                i -= 2;
+                                addPreviousElement = true;
+                                continue;
+                            }
+                        }
+
+                        currentPageMm += widthMm;
+                        pageElement.append(element);
+
+                        if (i === elements.length - 1) {
+                            addPageNr(pageElement, pageNr, maxMm - wouldBeMm);
+                        }
+                    }
+                    $('#old').remove();
+                }, 10);
+
+                function addPageNr(pageElement, pageNr, margin) {
+                    pageElement.append(
+                        '<div class=""page-nr"" style=""margin-top: ' + (margin <= 0 ? 0 : margin) + 'mm;"">'
+                            + pageNr +
+                        '</div>');
+                }
+
+                function createPage(body, pageNr) {
+                    body.append('<div class=""page"" id=""page_' + pageNr + '""></div>');
+                    var pageElement = $('#page_' + pageNr);
+                    pageElement.css('min-height', '297mm');
+                    return pageElement;
+                }
+
+                function convertToMm(pixels, asPx) {
+                    if (asPx) {
+                        pixels = parseFloat(pixels.replace('px', ''));
+                    }
+                    // 1 px = 0.264583333;
+                    return pixels * 0.264583333;
+                }
+            </script>
             ";
         }
     }

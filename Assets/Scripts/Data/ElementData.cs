@@ -131,6 +131,7 @@ public class ElementData : MonoBehaviour
         }
 
         html += HtmlExportUtils.DivTagEnd();
+        html += HtmlExportUtils.PageScript();
         html += HtmlExportUtils.GetBaseEnd();
 
         var path = mainPath + "test.html";
