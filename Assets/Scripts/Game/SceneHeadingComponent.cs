@@ -51,6 +51,7 @@ public class SceneHeadingComponent : MonoBehaviour, IPrefabComponent, ITextCompo
         TextEditorHotkeyController.Instance.RegisterForEnterKey(() =>
         {
             ElementsController.Instance.AddNewElement(ElementType.Action);
+            Blurred();
         });
         TextEditorHotkeyController.Instance.RegisterForEscapeKey(() =>
         {
@@ -87,11 +88,25 @@ public class SceneHeadingComponent : MonoBehaviour, IPrefabComponent, ITextCompo
         {
             InputField.text = _text;
         }
+        if (Input.GetMouseButtonDown(0))
+        {
+            InputField.DeactivateInputField();
+            TextEditorHotkeyController.Instance.MainEdit();
+        }
         GameService.Instance.Debounce(Blurred, 0.1f);
     }
 
     private void Blurred()
     {
+        if (string.IsNullOrWhiteSpace(InputField.text)) {
+            InputField.text = _text = "EXT. UNKNOWN LOCATION";
+        } else if (InputField.text.IndexOf("INT.") >= 0 || InputField.text.IndexOf("EXT.") >= 0) {
+            InputField.text = _text = "INT. UNKNOWN LOCATION";
+        } else {
+            if (InputField.text.IndexOf("INT.") < 0 || InputField.text.IndexOf("EXT.") < 0) {
+                InputField.text = _text = "INT. " + InputField.text;
+            }
+        }
         TextEditorHotkeyController.Instance.RegisterForEnterKey(null);
     }
 }

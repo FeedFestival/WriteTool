@@ -45,6 +45,7 @@ public class CharacterComponent : MonoBehaviour, IPrefabComponent, ITextComponen
         TextEditorHotkeyController.Instance.RegisterForEnterKey(() =>
         {
             ElementsController.Instance.AddNewElement(ElementType.Dialog);
+            Blurred();
         });
         TextEditorHotkeyController.Instance.RegisterForEscapeKey(() =>
         {
@@ -81,11 +82,19 @@ public class CharacterComponent : MonoBehaviour, IPrefabComponent, ITextComponen
         {
             InputField.text = _text;
         }
+        if (Input.GetMouseButtonDown(0))
+        {
+            InputField.DeactivateInputField();
+            TextEditorHotkeyController.Instance.MainEdit();
+        }
         GameService.Instance.Debounce(Blurred, 0.1f);
     }
 
     private void Blurred()
     {
+        if (string.IsNullOrWhiteSpace(InputField.text)) {
+            InputField.text = _text = "UNKNOWN";
+        }
         TextEditorHotkeyController.Instance.RegisterForEnterKey(null);
     }
 }

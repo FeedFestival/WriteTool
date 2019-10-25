@@ -105,18 +105,23 @@ public class ElementsController : MonoBehaviour
         }
     }
 
-    public void AddNewElement(ElementType elementType)
+    public bool AddNewElement(ElementType elementType)
     {
         var currentIndex = GetCarretIndex();
         var isLastElement = currentIndex == _elementsPool.Count;
-        var previousElementType = ElementsService.GetPreviousElementType(
+
+        if ((Elements == null || Elements.Count == 0) && elementType != ElementType.SceneHeading) {
+            return false;
+        }
+
+        ElementType previousElementType = ElementsService.GetPreviousElementType(
             _elementsPool, Elements,
             _editableIndex, isLastElement
         );
 
         if (ElementsService.FilterNewElements(elementType, previousElementType) == false)
         {
-            return;
+            return false;
         }
 
         if (TextEditorHotkeyController.Instance.ShowOptions)
@@ -167,6 +172,7 @@ public class ElementsController : MonoBehaviour
                     ScrollController.Instance.KeepElementInView(el.GameObject.GetComponent<RectTransform>());
                 }
             });
+        return true;
     }
 
     public void InitElements(List<Element> elements)
@@ -287,9 +293,12 @@ public class ElementsController : MonoBehaviour
 
     public void DeleteElement(int uniqueId)
     {
-        ElementsService.RecalculateIndexes(_elementsPool, Elements);
-
         int index = Elements.FindIndex(e => e.UniqueId() == uniqueId);
+        if (index < 0) {
+            Debug.LogWarning("Element you are tring to delete doesn't exists. (" + uniqueId + ")");
+            return;
+        }
+        ElementsService.RecalculateIndexes(_elementsPool, Elements);
         if (Elements[index].IsNew == false)
         {
             ElementData.Instance.DeleteElement(Elements[index].Id);
@@ -330,23 +339,23 @@ public class ElementsController : MonoBehaviour
         TextEditorHotkeyController.Instance.AddAsComponent("NewWrite", TextEditorHotkeyController.Instance.OnAddNewElement);
         TextEditorHotkeyController.Instance.AddAsComponent("NewWrite_SceneHeading", () =>
         {
-            AddNewElement(ElementType.SceneHeading);
+            return AddNewElement(ElementType.SceneHeading);
         });
         TextEditorHotkeyController.Instance.AddAsComponent("NewWrite_Action", () =>
         {
-            AddNewElement(ElementType.Action);
+            return AddNewElement(ElementType.Action);
         });
         TextEditorHotkeyController.Instance.AddAsComponent("NewWrite_Character", () =>
         {
-            AddNewElement(ElementType.Character);
+            return AddNewElement(ElementType.Character);
         });
         TextEditorHotkeyController.Instance.AddAsComponent("NewWrite_Dialog", () =>
         {
-            AddNewElement(ElementType.Dialog);
+            return AddNewElement(ElementType.Dialog);
         });
         TextEditorHotkeyController.Instance.AddAsComponent("NewWrite_Picture", () =>
         {
-            AddNewElement(ElementType.Picture);
+            return AddNewElement(ElementType.Picture);
         });
     }
 }

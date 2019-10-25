@@ -10,7 +10,8 @@ public class TextEditorHotkeyController : MonoBehaviour
     public static TextEditorHotkeyController _hotkeyController;
     public static TextEditorHotkeyController Instance { get { return _hotkeyController; } }
     public delegate void OnHotkeyPress();
-    private Dictionary<string, OnHotkeyPress> HotkeyComponents;
+    public delegate bool OnReturnHotkeyPress();
+    private Dictionary<string, OnReturnHotkeyPress> HotkeyComponents;
     private OnHotkeyPress _enterOnHotkeyPress;
     private OnHotkeyPress _forcedEnterOnHotkeyPress;
     private OnHotkeyPress _escapeOnHotkeyPress;
@@ -85,7 +86,7 @@ public class TextEditorHotkeyController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.W))
         {
-            HotkeyComponents["NewWrite"]();
+            Write();
         }
 
         if (Input.GetKeyDown(KeyCode.S))
@@ -179,7 +180,7 @@ public class TextEditorHotkeyController : MonoBehaviour
         }
     }
 
-    private void MainEdit()
+    public void MainEdit()
     {
         if (ShowOptions)
         {
@@ -219,7 +220,7 @@ public class TextEditorHotkeyController : MonoBehaviour
 
     public void FileKey()
     {
-        if (AppState == AppState.Editing)
+        if (AppState == AppState.Editing || AppState == AppState.NewElement)
         {
             return;
         }
@@ -258,6 +259,15 @@ public class TextEditorHotkeyController : MonoBehaviour
         }
     }
 
+    public void Write()
+    {
+        if (AppState == AppState.Editing)
+        {
+            return;
+        }
+        HotkeyComponents["NewWrite"]();
+    }
+
     public void NewWrite(string key)
     {
         if (AppState == AppState.Editing)
@@ -265,8 +275,7 @@ public class TextEditorHotkeyController : MonoBehaviour
             return;
         }
 
-        HotkeyComponents[key]();
-        AppState = AppState.MainEdit;
+        AppState = HotkeyComponents[key]() == true ? AppState.MainEdit : AppState.NewElement;
     }
 
     public void OnArrowKeys(bool goDown = true)
@@ -283,11 +292,11 @@ public class TextEditorHotkeyController : MonoBehaviour
         ElementsController.Instance.MoveCarret(goDown);
     }
 
-    public void AddAsComponent(string key, OnHotkeyPress value)
+    public void AddAsComponent(string key, OnReturnHotkeyPress value)
     {
         if (HotkeyComponents == null)
         {
-            HotkeyComponents = new Dictionary<string, OnHotkeyPress>();
+            HotkeyComponents = new Dictionary<string, OnReturnHotkeyPress>();
         }
 
         if (HotkeyComponents.ContainsKey(key) == false)
@@ -296,7 +305,7 @@ public class TextEditorHotkeyController : MonoBehaviour
         }
     }
 
-    public void OnAddNewElement()
+    public bool OnAddNewElement()
     {
         AppState = AppState.NewElement;
 
@@ -309,6 +318,7 @@ public class TextEditorHotkeyController : MonoBehaviour
             var options = FilterElementTypes();
             InLineSelection.Filter(options);
         }
+        return true;
     }
 
     private List<int> FilterElementTypes()
@@ -379,4 +389,12 @@ public enum AppState
     Editing,
     FileOptions,
     NewElement
+}
+
+public enum ProjectViewState
+{
+    MainMenu,
+    // N,
+    // FileOptions,
+    // NewElement
 }

@@ -71,6 +71,7 @@ public class PictureComponent : MonoBehaviour, IPrefabComponent, IPictureCompone
         if (texture == null)
         {
             Debug.Log("Couldn't load texture");
+            OnBlur();
             return;
         }
         if (Paths == null)
@@ -181,10 +182,18 @@ public class PictureComponent : MonoBehaviour, IPrefabComponent, IPictureCompone
 
     private void Blurred()
     {
-        if (_imagesCount != 2)
+        SimpleFileBrowser.FileBrowser.HideDialog();
+
+        if (_imagesCount == 0) {
+            ElementsController.Instance.DeleteElement(UniqueId);
+        }
+        else if (_imagesCount != 2)
         {
             CancelSecondImage();
         }
         TextEditorHotkeyController.Instance.RegisterForForcedEnterKey(null);
+        TextEditorHotkeyController.Instance.RegisterForEnterKey(null);
+        TextEditorHotkeyController.Instance.RegisterBackspaceKey(null);
+        TextEditorHotkeyController.Instance.RegisterForEscapeKey(null);
     }
 }

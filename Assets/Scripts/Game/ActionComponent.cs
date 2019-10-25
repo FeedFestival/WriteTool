@@ -86,11 +86,20 @@ public class ActionComponent : MonoBehaviour, IPrefabComponent, ITextComponent, 
         {
             ScalableText.InputField.text = _text;
         }
+        if (Input.GetMouseButtonDown(0))
+        {
+            ScalableText.InputField.DeactivateInputField();
+            TextEditorHotkeyController.Instance.MainEdit();
+        }
         GameService.Instance.Debounce(Blurred, 0.1f);
     }
 
     private void Blurred()
     {
+        if (string.IsNullOrWhiteSpace(ScalableText.InputField.text))
+        {
+            ScalableText.InputField.text = _text = "Silence...";
+        }
         TextEditorHotkeyController.Instance.RegisterForForcedEnterKey(null);
     }
 }

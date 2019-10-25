@@ -2306,6 +2306,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07f556d1710ec2e4da786a3750846f87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AutoOpen: 1
 --- !u!224 &1536193715 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6002706973013987588, guid: b55db6819e14e1240885d28d2f9532bf,

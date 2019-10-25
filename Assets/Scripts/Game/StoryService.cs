@@ -7,6 +7,8 @@ public class StoryService : MonoBehaviour
     private static StoryService _storyService;
     public static StoryService Instance { get { return _storyService; } }
 
+    public bool AutoOpen;
+
     public Story Story;
 
     private void Awake()
@@ -17,20 +19,31 @@ public class StoryService : MonoBehaviour
 
     void Start()
     {
-        //EventSystemManager.currentSystem.currentInputModule.DeactivateModule();
-        Init();
+        GameHiddenOptions.Instance.FileBrowser.Hide();
+
+        if (AutoOpen)
+        {
+            Story = new Story()
+            {
+                Id = 2,
+                Name = "Lavinia Story"
+            };
+            OpenAutomatically();
+        }
+    }
+
+    public void NewStory()
+    {
+        
     }
 
     public void Init()
     {
         GameHiddenOptions.Instance.FileBrowser.Hide();
+    }
 
-        Story = new Story()
-        {
-            Id = 2,
-            Name = "Lavinia Story"
-        };
-
+    public void OpenAutomatically()
+    {
         ElementsController.Instance.Init();
 
         ElementData.Instance.GetElementsByStory(Story.Id, (List<Element> elements) =>
