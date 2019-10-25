@@ -179,6 +179,11 @@ public class ElementsController : MonoBehaviour
             {
                 ipc.GameObject.SetActive(false);
             }
+        } else {
+            _elementsPool = new List<IPrefabComponent>();
+            GameService.Instance.InternalWait(() => {
+                AddNewElement(ElementType.SceneHeading);
+            });
         }
 
         if (Elements.Count == 0)

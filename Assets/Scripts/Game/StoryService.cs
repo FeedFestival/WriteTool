@@ -23,10 +23,12 @@ public class StoryService : MonoBehaviour
 
     public void Init()
     {
+        GameHiddenOptions.Instance.FileBrowser.Hide();
+
         Story = new Story()
         {
-            Id = 1,
-            Name = "Test Story"
+            Id = 2,
+            Name = "Lavinia Story"
         };
 
         ElementsController.Instance.Init();

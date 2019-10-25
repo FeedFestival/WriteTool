@@ -19,6 +19,8 @@ public class GameHiddenOptions : MonoBehaviour
     }
 
     public bool InstantDebug;
+
+    public SimpleFileBrowser.FileBrowser FileBrowser;
     public string ServerURL = "http://127.0.0.1:8080";
 
     //[Header("Execution Timers")]

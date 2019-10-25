@@ -24,6 +24,11 @@ namespace Assets.Scripts.Utils
             return (value * 100f) / maxValue;
         }
 
+        public static float InvertPercent(float percent)
+        {
+            return (100 - percent);
+        }
+
         public static string ConvertNumberToKs(int num)
         {
             if (num >= 1000)

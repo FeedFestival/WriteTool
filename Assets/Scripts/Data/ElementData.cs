@@ -35,6 +35,8 @@ public class ElementData : MonoBehaviour
             List<Element> elements = result.ToList();
             elements.ForEach((el) => { SetupElement(ref el); });
             _onElementsLoadedCallback(elements);
+        } else {
+            _onElementsLoadedCallback(new List<Element>());
         }
     }
 

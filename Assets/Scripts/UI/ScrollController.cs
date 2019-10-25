@@ -50,20 +50,39 @@ public class ScrollController : MonoBehaviour
     {
         Assets.Scripts.Utils.UIX.UpdateLayout(ScrollRect.transform);
 
-        var topSpace = 150f;
-        var height = Mathf.Abs(toGameObject.anchoredPosition.y) + topSpace;
+        // Debug.Log("----------------------------------------------------------------------");
 
-        // Debug.Log("height: " + height);
-        // Debug.Log("Content.sizeDelta: " + Content.sizeDelta);
-
-        var percent = UsefullUtils.GetValuePercent(height, Content.sizeDelta.y);
-        // var diff = UsefullUtils.GetPercent((100 - percent), 50);
-        // Debug.Log("diff: " + diff);
-        var scrollValue = ((100 - percent)) / 100;
+        var byWhatPercent = 0f;
+        var topSpace = 250f;
+        var percent = GetCarretPositionPercent(Mathf.Abs(toGameObject.anchoredPosition.y) + topSpace);
         // Debug.Log("percent: " + percent);
+        if (percent > 50) {
+            // Debug.Log("Lower part of the document");
+            byWhatPercent = Mathf.Abs(100 - (percent - 50));
+            // Debug.Log(percent + ", " + byWhatPercent);
+            topSpace = UsefullUtils.GetPercent(550, byWhatPercent);
+            // Debug.Log(topSpace);
+            percent = GetCarretPositionPercent(Mathf.Abs(toGameObject.anchoredPosition.y) + topSpace);
+        } else {
+            byWhatPercent = Mathf.Abs(100 - (50 - percent));
+            // Debug.Log(percent + ", " + byWhatPercent);
+            topSpace = UsefullUtils.GetPercent(250f, byWhatPercent);
+            // Debug.Log(topSpace);
+            percent = GetCarretPositionPercent(Mathf.Abs(toGameObject.anchoredPosition.y) + topSpace);
+            // Debug.Log("Upper part of the document");
+        }
+        // Debug.Log("percent: " + percent);
+
+        var scrollValue = UsefullUtils.InvertPercent(percent) / 100;
         // Debug.Log("scrollValue: " + scrollValue);
 
         Scroll(scrollValue);
+    }
+
+    private float GetCarretPositionPercent(float heightOfCarretFromTopOfPage) {
+        // Debug.Log("heightOfCarretFromTopOfPage: " + heightOfCarretFromTopOfPage);
+        // Debug.Log("Content.sizeDelta.y: " + Content.sizeDelta.y);
+        return UsefullUtils.GetValuePercent(heightOfCarretFromTopOfPage, Content.sizeDelta.y);
     }
 
     private void Scroll(float value)

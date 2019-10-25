@@ -56,7 +56,8 @@ public class GameService : MonoBehaviour
 
     public void Debounce(InternalWaitCallback debounceWait, float? seconds = null)
     {
-        if (seconds == null) {
+        if (seconds == null)
+        {
             _waitOneFrameDebounce = true;
         }
         _debounceWait = debounceWait;
@@ -145,37 +146,51 @@ public class GameService : MonoBehaviour
     public void TakePic(OnPictureLoaded onPictureLoaded)
     {
         _onPictureLoaded = onPictureLoaded;
+        SimpleFileBrowser.FileBrowser.ShowLoadDialog(OnSuccess, OnCancel);
 
-        System.Windows.Forms.OpenFileDialog openFileDialog;
-        openFileDialog = new System.Windows.Forms.OpenFileDialog()
-        {
-            InitialDirectory = @"D:\",
-            Title = "Browse Text Files",
+        // System.Windows.Forms.OpenFileDialog openFileDialog;
+        // openFileDialog = new System.Windows.Forms.OpenFileDialog()
+        // {
+        //     InitialDirectory = @"D:\",
+        //     Title = "Browse Text Files",
 
-            CheckFileExists = true,
-            CheckPathExists = true,
+        //     CheckFileExists = true,
+        //     CheckPathExists = true,
 
-            DefaultExt = "png",
-            Filter = "png files (*.png)|*.jpg",
-            FilterIndex = 2,
-            RestoreDirectory = true,
+        //     DefaultExt = "png",
+        //     Filter = "png files (*.png)|*.jpg",
+        //     FilterIndex = 2,
+        //     RestoreDirectory = true,
 
-            ReadOnlyChecked = true,
-            ShowReadOnly = true
-        };
+        //     ReadOnlyChecked = true,
+        //     ShowReadOnly = true
+        // };
 
-        if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-        {
-            _fileName = openFileDialog.SafeFileName;
-            Debug.Log("openFileDialog.FileName: " + openFileDialog.FileName + ", _fileName: " + _fileName);
+        // if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+        // {
+        //     _fileName = openFileDialog.SafeFileName;
+        //     Debug.Log("openFileDialog.FileName: " + openFileDialog.FileName + ", _fileName: " + _fileName);
 
-            ReadPicture(openFileDialog.FileName);
-            _onPictureLoaded(_currentLoadedPicture, openFileDialog.FileName);
-        }
-        else
-        {
-            _onPictureLoaded(null);
-        }
+        //     ReadPicture(openFileDialog.FileName);
+        //     _onPictureLoaded(_currentLoadedPicture, openFileDialog.FileName);
+        // }
+        // else
+        // {
+        //     _onPictureLoaded(null);
+        // }
+    }
+
+    public void OnSuccess(string path)
+    {
+        _fileName = path.Substring(path.LastIndexOf('\\') + 2);
+        Debug.Log("openFileDialog.FileName: " + path + ", _fileName: " + _fileName);
+        ReadPicture(path);
+        _onPictureLoaded(_currentLoadedPicture, path);
+    }
+
+    public void OnCancel()
+    {
+        _onPictureLoaded(null);
     }
 
     public Texture2D ReadPicture(string fileName)
