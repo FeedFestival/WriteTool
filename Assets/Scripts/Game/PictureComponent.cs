@@ -96,7 +96,7 @@ public class PictureComponent : MonoBehaviour, IPrefabComponent, IPictureCompone
             }
         }
         _imagesCount++;
-        GameService.Instance.InternalWait(HotkeyController.Instance.EscapeKey, 0.5f);
+        GameService.Instance.InternalWait(TextEditorHotkeyController.Instance.EscapeKey, 0.5f);
     }
 
     private void CancelSecondImage()
@@ -121,20 +121,20 @@ public class PictureComponent : MonoBehaviour, IPrefabComponent, IPictureCompone
     {
         _backspaceClick = 0;
 
-        HotkeyController.Instance.RegisterForEnterKey(() =>
+        TextEditorHotkeyController.Instance.RegisterForEnterKey(() =>
         {
             GameService.Instance.TakePic(OnPictureLoaded);
         });
-        HotkeyController.Instance.RegisterForForcedEnterKey(() =>
+        TextEditorHotkeyController.Instance.RegisterForForcedEnterKey(() =>
         {
-            HotkeyController.Instance.OnAddNewElement();
+            TextEditorHotkeyController.Instance.OnAddNewElement();
             OnBlur();
         });
-        HotkeyController.Instance.RegisterForEscapeKey(() =>
+        TextEditorHotkeyController.Instance.RegisterForEscapeKey(() =>
         {
             OnBlur();
         });
-        HotkeyController.Instance.RegisterBackspaceKey(() =>
+        TextEditorHotkeyController.Instance.RegisterBackspaceKey(() =>
         {
             _backspaceClick++;
             if (_backspaceClick > 1)
@@ -185,6 +185,6 @@ public class PictureComponent : MonoBehaviour, IPrefabComponent, IPictureCompone
         {
             CancelSecondImage();
         }
-        HotkeyController.Instance.RegisterForForcedEnterKey(null);
+        TextEditorHotkeyController.Instance.RegisterForForcedEnterKey(null);
     }
 }

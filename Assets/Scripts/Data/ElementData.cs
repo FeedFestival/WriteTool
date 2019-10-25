@@ -14,6 +14,7 @@ public class ElementData : MonoBehaviour
     private void Awake()
     {
         _elementData = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     public delegate void OnElementsLoaded(List<Element> elements);

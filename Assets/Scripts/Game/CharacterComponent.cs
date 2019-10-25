@@ -42,16 +42,16 @@ public class CharacterComponent : MonoBehaviour, IPrefabComponent, ITextComponen
     public void OnFocus()
     {
         _backspaceClick = 0;
-        HotkeyController.Instance.RegisterForEnterKey(() =>
+        TextEditorHotkeyController.Instance.RegisterForEnterKey(() =>
         {
             ElementsController.Instance.AddNewElement(ElementType.Dialog);
         });
-        HotkeyController.Instance.RegisterForEscapeKey(() =>
+        TextEditorHotkeyController.Instance.RegisterForEscapeKey(() =>
         {
             InputField.DeactivateInputField();
             OnBlur();
         });
-        HotkeyController.Instance.RegisterBackspaceKey(() =>
+        TextEditorHotkeyController.Instance.RegisterBackspaceKey(() =>
         {
             if (string.IsNullOrEmpty(InputField.text))
             {
@@ -86,6 +86,6 @@ public class CharacterComponent : MonoBehaviour, IPrefabComponent, ITextComponen
 
     private void Blurred()
     {
-        HotkeyController.Instance.RegisterForEnterKey(null);
+        TextEditorHotkeyController.Instance.RegisterForEnterKey(null);
     }
 }

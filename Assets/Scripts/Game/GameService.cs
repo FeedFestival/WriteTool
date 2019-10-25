@@ -9,6 +9,7 @@ public class GameService : MonoBehaviour
     private void Awake()
     {
         _GameService = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     public delegate void InternalWaitCallback();

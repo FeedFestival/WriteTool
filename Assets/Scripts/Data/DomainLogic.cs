@@ -27,6 +27,7 @@ public class DomainLogic : MonoBehaviour
     private void Awake()
     {
         _db = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     public SQLite4Unity3d.SQLiteConnection SqlConn()

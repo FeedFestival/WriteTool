@@ -119,10 +119,10 @@ public class ElementsController : MonoBehaviour
             return;
         }
 
-        if (HotkeyController.Instance.ShowOptions)
+        if (TextEditorHotkeyController.Instance.ShowOptions)
         {
-            HotkeyController.Instance.FileMainButtons.SetActive(true);
-            HotkeyController.Instance.InLineSelection.gameObject.SetActive(false);
+            TextEditorHotkeyController.Instance.FileMainButtons.SetActive(true);
+            TextEditorHotkeyController.Instance.InLineSelection.gameObject.SetActive(false);
         }
 
         var element = new Element()
@@ -156,7 +156,7 @@ public class ElementsController : MonoBehaviour
                 {
                     (el as ITextComponent).AutoSelect();
                 }
-                HotkeyController.Instance.AppState = AppState.Editing;
+                TextEditorHotkeyController.Instance.AppState = AppState.Editing;
 
                 if (isLastElement)
                 {
@@ -277,7 +277,7 @@ public class ElementsController : MonoBehaviour
             element.IsNew = false;
         }
 
-        HotkeyController.Instance.ToggleFileOptions();
+        TextEditorHotkeyController.Instance.ToggleFileOptions();
     }
 
     public void DeleteElement(int uniqueId)
@@ -295,7 +295,7 @@ public class ElementsController : MonoBehaviour
         _elementsPool.RemoveAt(index);
 
         MoveCarret(true, index - 1);
-        HotkeyController.Instance.EscapeKey();
+        TextEditorHotkeyController.Instance.EscapeKey();
         // ShowCarret();
     }
 
@@ -312,7 +312,7 @@ public class ElementsController : MonoBehaviour
             var buttonName = elementType.ToString() + ElementsService.GetButtonHotkey(elementType);
             options.Add(buttonName);
         }
-        HotkeyController.Instance.InLineSelection.Init(options, OnElementTypeSelected);
+        TextEditorHotkeyController.Instance.InLineSelection.Init(options, OnElementTypeSelected);
     }
 
     public void OnElementTypeSelected(int value)
@@ -322,24 +322,24 @@ public class ElementsController : MonoBehaviour
 
     private void InitHotkeys()
     {
-        HotkeyController.Instance.AddAsComponent("NewWrite", HotkeyController.Instance.OnAddNewElement);
-        HotkeyController.Instance.AddAsComponent("NewWrite_SceneHeading", () =>
+        TextEditorHotkeyController.Instance.AddAsComponent("NewWrite", TextEditorHotkeyController.Instance.OnAddNewElement);
+        TextEditorHotkeyController.Instance.AddAsComponent("NewWrite_SceneHeading", () =>
         {
             AddNewElement(ElementType.SceneHeading);
         });
-        HotkeyController.Instance.AddAsComponent("NewWrite_Action", () =>
+        TextEditorHotkeyController.Instance.AddAsComponent("NewWrite_Action", () =>
         {
             AddNewElement(ElementType.Action);
         });
-        HotkeyController.Instance.AddAsComponent("NewWrite_Character", () =>
+        TextEditorHotkeyController.Instance.AddAsComponent("NewWrite_Character", () =>
         {
             AddNewElement(ElementType.Character);
         });
-        HotkeyController.Instance.AddAsComponent("NewWrite_Dialog", () =>
+        TextEditorHotkeyController.Instance.AddAsComponent("NewWrite_Dialog", () =>
         {
             AddNewElement(ElementType.Dialog);
         });
-        HotkeyController.Instance.AddAsComponent("NewWrite_Picture", () =>
+        TextEditorHotkeyController.Instance.AddAsComponent("NewWrite_Picture", () =>
         {
             AddNewElement(ElementType.Picture);
         });

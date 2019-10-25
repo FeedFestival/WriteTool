@@ -48,16 +48,16 @@ public class SceneHeadingComponent : MonoBehaviour, IPrefabComponent, ITextCompo
     private void Focussed()
     {
         _backspaceClick = 0;
-        HotkeyController.Instance.RegisterForEnterKey(() =>
+        TextEditorHotkeyController.Instance.RegisterForEnterKey(() =>
         {
             ElementsController.Instance.AddNewElement(ElementType.Action);
         });
-        HotkeyController.Instance.RegisterForEscapeKey(() =>
+        TextEditorHotkeyController.Instance.RegisterForEscapeKey(() =>
         {
             InputField.DeactivateInputField();
             OnBlur();
         });
-        HotkeyController.Instance.RegisterBackspaceKey(() =>
+        TextEditorHotkeyController.Instance.RegisterBackspaceKey(() =>
         {
             if (string.IsNullOrEmpty(InputField.text))
             {
@@ -92,6 +92,6 @@ public class SceneHeadingComponent : MonoBehaviour, IPrefabComponent, ITextCompo
 
     private void Blurred()
     {
-        HotkeyController.Instance.RegisterForEnterKey(null);
+        TextEditorHotkeyController.Instance.RegisterForEnterKey(null);
     }
 }

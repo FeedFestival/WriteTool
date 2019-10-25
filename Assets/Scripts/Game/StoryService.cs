@@ -12,6 +12,7 @@ public class StoryService : MonoBehaviour
     private void Awake()
     {
         _storyService = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     void Start()

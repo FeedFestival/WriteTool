@@ -5,10 +5,10 @@ using System;
 using UnityEngine.UI;
 using Assets.Scripts.Data;
 
-public class HotkeyController : MonoBehaviour
+public class TextEditorHotkeyController : MonoBehaviour
 {
-    public static HotkeyController _hotkeyController;
-    public static HotkeyController Instance { get { return _hotkeyController; } }
+    public static TextEditorHotkeyController _hotkeyController;
+    public static TextEditorHotkeyController Instance { get { return _hotkeyController; } }
     public delegate void OnHotkeyPress();
     private Dictionary<string, OnHotkeyPress> HotkeyComponents;
     private OnHotkeyPress _enterOnHotkeyPress;

@@ -45,19 +45,19 @@ public class DialogComponent : MonoBehaviour, IPrefabComponent, ITextComponent, 
     {
         _backspaceClick = 0;
 
-        HotkeyController.Instance.RegisterForForcedEnterKey(() =>
+        TextEditorHotkeyController.Instance.RegisterForForcedEnterKey(() =>
         {
-            HotkeyController.Instance.OnAddNewElement();
+            TextEditorHotkeyController.Instance.OnAddNewElement();
             ScalableText.InputField.DeactivateInputField();
             SetText(_text.TrimEnd());
             OnBlur();
         });
-        HotkeyController.Instance.RegisterForEscapeKey(() =>
+        TextEditorHotkeyController.Instance.RegisterForEscapeKey(() =>
         {
             ScalableText.InputField.DeactivateInputField();
             OnBlur();
         });
-        HotkeyController.Instance.RegisterBackspaceKey(() =>
+        TextEditorHotkeyController.Instance.RegisterBackspaceKey(() =>
         {
             if (string.IsNullOrEmpty(ScalableText.InputField.text))
             {
@@ -91,6 +91,6 @@ public class DialogComponent : MonoBehaviour, IPrefabComponent, ITextComponent, 
 
     private void Blurred()
     {
-        HotkeyController.Instance.RegisterForForcedEnterKey(null);
+        TextEditorHotkeyController.Instance.RegisterForForcedEnterKey(null);
     }
 }
