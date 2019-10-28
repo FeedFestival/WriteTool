@@ -32,9 +32,9 @@ public class StoryService : MonoBehaviour
         }
     }
 
-    public void NewStory()
+    public void CreateNewStory()
     {
-        
+        Story story = StoryController.Instance.GetNewStory();
     }
 
     public void Init()

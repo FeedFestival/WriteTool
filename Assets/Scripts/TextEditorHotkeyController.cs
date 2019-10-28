@@ -76,7 +76,7 @@ public class TextEditorHotkeyController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.C))
         {
-            CloseKey();
+            CKey();
         }
 
         if (Input.GetKeyDown(KeyCode.E))
@@ -98,10 +98,10 @@ public class TextEditorHotkeyController : MonoBehaviour
         {
             NewWrite("NewWrite_Action");
         }
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            NewWrite("NewWrite_Character");
-        }
+        // if (Input.GetKeyDown(KeyCode.C))
+        // {
+        //     NewWrite("NewWrite_Character");
+        // }
         if (Input.GetKeyDown(KeyCode.D))
         {
             NewWrite("NewWrite_Dialog");
@@ -227,15 +227,20 @@ public class TextEditorHotkeyController : MonoBehaviour
         ToggleFileOptions();
     }
 
-    public void CloseKey()
+    public void CKey()
     {
-        if (AppState == AppState.FileOptions)
+        if (AppState == AppState.NewElement)
         {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-         Application.Quit();
-#endif
+            NewWrite("NewWrite_Character");
+        }
+        else if (AppState == AppState.FileOptions)
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene("ProjectView");
+// #if UNITY_EDITOR
+//             UnityEditor.EditorApplication.isPlaying = false;
+// #else
+//          Application.Quit();
+// #endif
         }
     }
 
@@ -394,7 +399,7 @@ public enum AppState
 public enum ProjectViewState
 {
     MainMenu,
-    // N,
+    NewStory,
     // FileOptions,
     // NewElement
 }

@@ -11,6 +11,13 @@ public class ProjectHotkeyEditor : MonoBehaviour
     [SerializeField]
     public ProjectViewState ProjectViewState;
 
+    public GameObject MainMenuButtons;
+    public GameObject NewStoryButtons;
+
+    void Start() {
+        ShowMainMenu();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -33,11 +40,19 @@ public class ProjectHotkeyEditor : MonoBehaviour
         {
             CloseKey();
         }
+        if (Input.GetKeyUp(KeyCode.S))
+        {
+            SaveKey();
+        }
     }
 
     private void NewKey()
     {
-        StoryService.Instance.NewStory();
+        if (ProjectViewState == ProjectViewState.MainMenu)
+        {
+            StoryController.Instance.ShowNewStoryFields();
+            ProjectViewState = ProjectViewState.NewStory;
+        }
     }
 
     private void OpenKey()
@@ -50,7 +65,36 @@ public class ProjectHotkeyEditor : MonoBehaviour
         throw new NotImplementedException();
     }
 
-    private void CloseKey() {
+    public void SaveKey()
+    {
+        if (ProjectViewState == ProjectViewState.NewStory)
+        {
+            StoryService.Instance.CreateNewStory();
+            ShowMainMenu();
+        }
+    }
 
+    private void CloseKey()
+    {
+        if (ProjectViewState == ProjectViewState.NewStory)
+        {
+            StoryController.Instance.HideNewStoryFields();
+            ShowMainMenu();
+        }
+        else
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+         Application.Quit();
+#endif
+        }
+    }
+
+    private void ShowMainMenu()
+    {
+        ProjectViewState = ProjectViewState.MainMenu;
+        MainMenuButtons.SetActive(true);
+        MainMenuButtons.SetActive(false);
     }
 }
