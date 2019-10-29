@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StoryController : MonoBehaviour
 {
@@ -10,11 +11,16 @@ public class StoryController : MonoBehaviour
 
     public GameObject NewStoryPanel;
 
+    public InputField StoryNameInputField;
+    public InputField StoryDescInputField;
+
     // Start is called before the first frame update
     void Awake()
     {
         _storyController = this;
         NewStoryPanel.SetActive(false);
+
+        // StoryNameInputField.OnSelect();
     }
 
     public void ShowNewStoryFields()
@@ -27,10 +33,23 @@ public class StoryController : MonoBehaviour
         NewStoryPanel.SetActive(false);
     }
 
+    public void OnInputSelect()
+    {
+        Debug.Log("selected");
+        ProjectHotkeyEditor.Instance.ProjectViewState = ProjectViewState.Editing;
+    }
+
+    public void OnInputDeselect()
+    {
+        Debug.Log("de - selected");
+        ProjectHotkeyEditor.Instance.ProjectViewState = ProjectViewState.NewStory;
+    }
+
     public Story GetNewStory()
     {
-        var story = new Story() {
-
+        var story = new Story()
+        {
+            Name = StoryNameInputField.text
         };
         NewStoryPanel.SetActive(false);
         return story;

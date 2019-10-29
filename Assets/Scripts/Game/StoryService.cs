@@ -34,7 +34,10 @@ public class StoryService : MonoBehaviour
 
     public void CreateNewStory()
     {
-        Story story = StoryController.Instance.GetNewStory();
+        Story = StoryController.Instance.GetNewStory();
+        DomainLogic.DB.SqlConn().Insert(Story);
+        AutoOpen = false;
+        UnityEngine.SceneManagement.SceneManager.LoadScene("SampleScene");
     }
 
     public void Init()

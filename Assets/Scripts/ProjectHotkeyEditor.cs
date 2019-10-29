@@ -14,7 +14,12 @@ public class ProjectHotkeyEditor : MonoBehaviour
     public GameObject MainMenuButtons;
     public GameObject NewStoryButtons;
 
-    void Start() {
+    void Awake()
+    {
+        _hotkeyController = this;
+    }
+    void Start()
+    {
         ShowMainMenu();
     }
 
@@ -51,18 +56,25 @@ public class ProjectHotkeyEditor : MonoBehaviour
         if (ProjectViewState == ProjectViewState.MainMenu)
         {
             StoryController.Instance.ShowNewStoryFields();
-            ProjectViewState = ProjectViewState.NewStory;
+            ShowNewStoryMenu();
         }
     }
 
     private void OpenKey()
     {
-        throw new NotImplementedException();
+        if (ProjectViewState == ProjectViewState.MainMenu)
+        {
+            
+        }
     }
 
     private void EscapeKey()
     {
-        throw new NotImplementedException();
+        if (ProjectViewState == ProjectViewState.NewStory)
+        {
+            StoryController.Instance.HideNewStoryFields();
+            ShowMainMenu();
+        }
     }
 
     public void SaveKey()
@@ -78,10 +90,9 @@ public class ProjectHotkeyEditor : MonoBehaviour
     {
         if (ProjectViewState == ProjectViewState.NewStory)
         {
-            StoryController.Instance.HideNewStoryFields();
-            ShowMainMenu();
+            EscapeKey();
         }
-        else
+        else if (ProjectViewState == ProjectViewState.MainMenu)
         {
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
@@ -95,6 +106,13 @@ public class ProjectHotkeyEditor : MonoBehaviour
     {
         ProjectViewState = ProjectViewState.MainMenu;
         MainMenuButtons.SetActive(true);
+        NewStoryButtons.SetActive(false);
+    }
+
+    private void ShowNewStoryMenu()
+    {
+        ProjectViewState = ProjectViewState.NewStory;
+        NewStoryButtons.SetActive(true);
         MainMenuButtons.SetActive(false);
     }
 }

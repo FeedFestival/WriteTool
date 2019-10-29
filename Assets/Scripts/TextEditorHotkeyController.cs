@@ -400,6 +400,5 @@ public enum ProjectViewState
 {
     MainMenu,
     NewStory,
-    // FileOptions,
-    // NewElement
+    Editing
 }
