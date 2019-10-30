@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using SQLite4Unity3d;
+using System.Collections.Generic;
 
 public class Element
 {
@@ -31,6 +32,7 @@ public class Element
     public bool IsNew;
     public bool ToDelete;
     public string[] Paths;
+    public List<string> FileNames;
 
     public int UniqueId()
     {

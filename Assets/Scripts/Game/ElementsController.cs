@@ -6,8 +6,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Assets.Scripts.Data;
+using System.IO;
 
-public class ElementsController : MonoBehaviour
+public class ElementsController : MonoBehaviour, ISceneStarter
 {
     private static ElementsController _elementsController;
     public static ElementsController Instance { get { return _elementsController; } }
@@ -15,7 +16,7 @@ public class ElementsController : MonoBehaviour
     private int _editableIndex;
     public List<Element> Elements;
     public List<IPrefabComponent> _elementsPool;
-    
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -30,6 +31,11 @@ public class ElementsController : MonoBehaviour
         }
 
         Carret.gameObject.SetActive(true);
+    }
+
+    public void InitScene()
+    {
+        StoryService.Instance.Init();
     }
 
     public void Init()
@@ -110,7 +116,8 @@ public class ElementsController : MonoBehaviour
         var currentIndex = GetCarretIndex();
         var isLastElement = currentIndex == _elementsPool.Count;
 
-        if ((Elements == null || Elements.Count == 0) && elementType != ElementType.SceneHeading) {
+        if ((Elements == null || Elements.Count == 0) && elementType != ElementType.SceneHeading)
+        {
             return false;
         }
 
@@ -185,15 +192,20 @@ public class ElementsController : MonoBehaviour
             {
                 ipc.GameObject.SetActive(false);
             }
-        } else {
+        }
+        else
+        {
             _elementsPool = new List<IPrefabComponent>();
-            GameService.Instance.InternalWait(() => {
-                AddNewElement(ElementType.SceneHeading);
-            });
         }
 
         if (Elements.Count == 0)
+        {
+            GameService.Instance.InternalWait(() =>
+            {
+                AddNewElement(ElementType.SceneHeading);
+            });
             return;
+        }
 
         GameService.Instance.AsyncForEach(Elements.Count, (int i) =>
         {
@@ -271,21 +283,42 @@ public class ElementsController : MonoBehaviour
             element.StoryId = StoryService.Instance.Story.Id;
             var el = _elementsPool.FirstOrDefault(e => e.UniqueId == element.UniqueId());
 
-            UsefullUtils.DumpToConsole(element);
+            // UsefullUtils.DumpToConsole(element);
 
-            if ((el as IElementComponent).TypeId == (int)ElementType.Picture)
+            var isPicture = (el as IElementComponent).TypeId == (int)ElementType.Picture;
+            if (isPicture)
             {
                 element.Paths = (el as IPictureComponent).Paths;
+                element.FileNames = new List<string>();
             }
             else
             {
                 element.Text = (el as ITextComponent).GetText();
             }
 
-            element.Id = ElementData.Instance.SaveElement(element);
+            ElementData.Instance.SaveElement(element);
             el.UniqueId = element.UniqueId();
-
             element.IsNew = false;
+
+            if (isPicture)
+            {
+                int index = 0;
+                foreach (var path in element.Paths)
+                {
+                    if (string.IsNullOrWhiteSpace(path)) {
+                        continue;
+                    }
+                    element.FileNames.Add("img_" + element.Id + "_0_" + ".jpg");
+                    var newPath = StoryService.Instance.Story.GetActivePath() + element.FileNames[index];
+                    if (path == newPath) {
+                        continue;
+                    }
+                    File.Copy(path, newPath, true);
+                    element.Paths[index] = newPath;
+                    index++;
+                }
+                ElementData.Instance.SaveElement(element);
+            }
         }
 
         TextEditorHotkeyController.Instance.ToggleFileOptions();
@@ -294,7 +327,8 @@ public class ElementsController : MonoBehaviour
     public void DeleteElement(int uniqueId)
     {
         int index = Elements.FindIndex(e => e.UniqueId() == uniqueId);
-        if (index < 0) {
+        if (index < 0)
+        {
             Debug.LogWarning("Element you are tring to delete doesn't exists. (" + uniqueId + ")");
             return;
         }
@@ -315,6 +349,7 @@ public class ElementsController : MonoBehaviour
 
     public void ExportToHtml()
     {
+        SaveElements();
         ElementData.Instance.ExportToHtml(Elements);
     }
 

@@ -1,77 +1,9 @@
-
-using System.Collections.Generic;
-
-namespace Assets.Scripts.Utils
-{
-    public static class HtmlExportUtils
-    {
-        public static string GetBaseStart()
-        {
-            return @"<!DOCTYPE html>
-                <html lang=""en/"">
+﻿<!DOCTYPE html>
+                <html lang="en/">
                 <head>
-                    <meta charset=""utf-8"">
+                    <meta charset="utf-8">
                     <title>title</title>
-                    " + Css() + @"
-                    <script src=""https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js""></script>
-                </head>
-                <body>";
-        }
-
-        public static string GetBaseEnd()
-        {
-            return @"</body>
-            </html>";
-        }
-
-        public static string PageStart()
-        {
-            return @"<div class=""page"">";
-        }
-
-        public static string Element(Element element)
-        {
-            return @"<div class=""element " + GetElementClass(element.ElementType) + @""" id=""" + element.Id + @""">
-                " + element.Text + @"
-            </div>";
-        }
-
-        public static string Picture(Element element)
-        {
-            string elementHtml = @"<div class=""element picture " + (element.FileNames.Count > 1 ? "many" : "") + @""" id=""" + element.Id + @""">";
-            foreach (var fileName in element.FileNames)
-            {
-                elementHtml += @"<img src=""" + fileName + @""">";
-            }
-            elementHtml += "</div>";
-            return elementHtml;
-        }
-
-        private static string GetElementClass(ElementType elementType)
-        {
-            switch (elementType)
-            {
-                case ElementType.SceneHeading:
-                    return "scene-heading";
-                case ElementType.Action:
-                    return "action";
-                case ElementType.Character:
-                    return "character";
-                case ElementType.Dialog:
-                    return "dialog";
-                default:
-                    return "picture";
-            }
-        }
-
-        public static string DivTagEnd()
-        {
-            return "</div>";
-        }
-
-        private static string Css()
-        {
-            return @"<style>
+                    <style>
                 body {
                     width: 100vw;
                     min-height: 100vh;
@@ -158,11 +90,11 @@ namespace Assets.Scripts.Utils
                     padding: 5mm 20mm;
                     min-height: 70mm;
                     width: 170mm;
-                    text-align: center;
                 }
 
                 .element.picture img {
-                    max-height: 250px;
+                    width: 100%;
+                    height: auto !important;
                     /* background: url(http://mehararts.com/category_image/demo.png); */
                 }
 
@@ -172,7 +104,7 @@ namespace Assets.Scripts.Utils
                 }
 
                 .picture.many img {
-                    // width: 48% !important;
+                    width: 48% !important;
                     padding: 0 1% !important;
                 }
 
@@ -185,12 +117,46 @@ namespace Assets.Scripts.Utils
                     display: block;
                 }
             </style>
-            ";
-        }
-
-        public static string PageScript()
-        {
-            return @"
+            
+                    <script src="script.js"></script>
+                </head>
+                <body><div class="page"><div class="element scene-heading" id="1">
+                INT. MY ROOM
+            </div><div class="element action" id="1">
+                Asta e o actiune.
+            </div><div class="element character" id="1">
+                LAVINIA
+            </div><div class="element dialog" id="1">
+                Buna Dani, arati foarte vine azi.
+            </div><div class="element character" id="1">
+                DANI
+            </div><div class="element dialog" id="1">
+                Buna Lavi, si tu arati foarte bine azi. Hai ca esti simpatica!
+            </div><div class="element action" id="1">
+                Dani face o actiune  catre LAVINIA.
+            </div><div class="element character" id="1">
+                ALT PERSONAJ
+            </div><div class="element dialog" id="1">
+                Da, ce faceti mai?
+            </div><div class="element character" id="1">
+                DANI
+            </div><div class="element character" id="1">
+                DOBRE SI FII
+            </div><div class="element dialog" id="1">
+                Facem foarte bine, multumim de intrebare.
+            </div><div class="element dialog" id="1">
+                Pepene aveeem.
+            </div><div class="element picture " id="1"><img src="img_1_0_.jpg"></div><div class="element character" id="1">
+                DANI
+            </div><div class="element dialog" id="1">
+                Buna Lavi, si tu arati foarte bine azi. Hai ca esti simpatica!
+            </div><div class="element action" id="1">
+                Dani face o actiune  catre LAVINIA.
+            </div><div class="element character" id="1">
+                ALT PERSONAJ
+            </div><div class="element dialog" id="1">
+                Da, ce faceti mai?
+            </div></div>
             <script>
                 setTimeout(() => {
 
@@ -207,7 +173,7 @@ namespace Assets.Scripts.Utils
                     // determine page settings
                     const pageDescrSize = 7;
                     // const maxMm = 297;
-                    const maxMm = ((297 - 40) - 7);
+                    const maxMm = (297 - 7);
                     let currentPageMm = 0;
                     let addPreviousElement = false;
 
@@ -222,7 +188,7 @@ namespace Assets.Scripts.Utils
                             addPreviousElement = false;
                         } else if (wouldBeMm > maxMm) {
 
-                            addPageNr(pageElement, pageNr, maxMm - currentPageMm);
+                            addPageNr(pageElement, pageNr, maxMm - wouldBeMm);
 
                             // add new page
                             currentPageMm = 0;
@@ -241,7 +207,7 @@ namespace Assets.Scripts.Utils
                         pageElement.append(element);
 
                         if (i === elements.length - 1) {
-                            addPageNr(pageElement, pageNr, maxMm - currentPageMm);
+                            addPageNr(pageElement, pageNr, maxMm - wouldBeMm);
                         }
                     }
                     $('#old').remove();
@@ -249,13 +215,13 @@ namespace Assets.Scripts.Utils
 
                 function addPageNr(pageElement, pageNr, margin) {
                     pageElement.append(
-                        '<div class=""page-nr"" style=""margin-top: ' + (margin <= 0 ? 0 : margin) + 'mm;"">'
+                        '<div class="page-nr" style="margin-top: ' + (margin <= 0 ? 0 : margin) + 'mm;">'
                             + pageNr +
                         '</div>');
                 }
 
                 function createPage(body, pageNr) {
-                    body.append('<div class=""page"" id=""page_' + pageNr + '""></div>');
+                    body.append('<div class="page" id="page_' + pageNr + '"></div>');
                     var pageElement = $('#page_' + pageNr);
                     pageElement.css('min-height', '297mm');
                     return pageElement;
@@ -269,7 +235,5 @@ namespace Assets.Scripts.Utils
                     return pixels * 0.264583333;
                 }
             </script>
-            ";
-        }
-    }
-}
+            </body>
+            </html>

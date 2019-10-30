@@ -12,7 +12,7 @@ public class StoryController : MonoBehaviour
     public GameObject NewStoryPanel;
 
     public InputField StoryNameInputField;
-    public InputField StoryDescInputField;
+    public InputField StoryPathInputField;
 
     // Start is called before the first frame update
     void Awake()
@@ -26,6 +26,8 @@ public class StoryController : MonoBehaviour
     public void ShowNewStoryFields()
     {
         NewStoryPanel.SetActive(true);
+        StoryNameInputField.text = string.Empty;
+        StoryPathInputField.text = Assets.Scripts.Utils.UsefullUtils.GetPathToStreamingAssetsFile("");
     }
 
     public void HideNewStoryFields()
@@ -49,7 +51,8 @@ public class StoryController : MonoBehaviour
     {
         var story = new Story()
         {
-            Name = StoryNameInputField.text
+            Name = StoryNameInputField.text,
+            Path = StoryPathInputField.text
         };
         NewStoryPanel.SetActive(false);
         return story;

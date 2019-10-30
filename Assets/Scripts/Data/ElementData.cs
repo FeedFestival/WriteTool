@@ -62,7 +62,7 @@ public class ElementData : MonoBehaviour
         }
     }
 
-    public int SaveElement(Element element)
+    public void SaveElement(Element element)
     {
         if (element.ElementType == ElementType.Picture)
         {
@@ -75,11 +75,11 @@ public class ElementData : MonoBehaviour
 
         if (element.IsNew == false)
         {
-            return DomainLogic.DB.SqlConn().Update(element);
+            DomainLogic.DB.SqlConn().Update(element);
         }
         else
         {
-            return DomainLogic.DB.SqlConn().Insert(element);
+            DomainLogic.DB.SqlConn().Insert(element);
         }
     }
 
@@ -99,11 +99,7 @@ public class ElementData : MonoBehaviour
 
     internal void ExportToHtml(List<Element> elements)
     {
-        var mainPath = UsefullUtils.GetPathToStreamingAssetsFile("");
-        var storyName = StoryService.Instance.Story.Id + "_" + UsefullUtils.RemoveWhitespace(StoryService.Instance.Story.Name);
-        mainPath += storyName;
-        Directory.CreateDirectory(mainPath);
-        mainPath += "/";
+        var mainPath = StoryService.Instance.Story.GetActivePath();
 
         string html = HtmlExportUtils.GetBaseStart();
 
@@ -120,20 +116,7 @@ public class ElementData : MonoBehaviour
                     html += HtmlExportUtils.Element(element);
                     break;
                 default:
-                    var fileNames = new List<string>();
-
-                    fileNames.Add("img_" + element.Id + "_0_" + ".jpg");
-                    var newPath = mainPath + fileNames[0];
-                    File.Copy(element.Paths[0], newPath, true);
-
-                    if (string.IsNullOrEmpty(element.Paths[1]) == false)
-                    {
-                        fileNames.Add("img_" + element.Id + "_1_" + ".jpg");
-                        newPath = mainPath + fileNames[1];
-                        File.Copy(element.Paths[1], newPath, true);
-                    }
-
-                    html += HtmlExportUtils.Picture(element, fileNames);
+                    html += HtmlExportUtils.Picture(element);
                     break;
             }
         }
@@ -142,8 +125,17 @@ public class ElementData : MonoBehaviour
         html += HtmlExportUtils.PageScript();
         html += HtmlExportUtils.GetBaseEnd();
 
-        var path = mainPath + "/" + DateTime.Now.ToString("MM-yy-dd-hh-mm") + ".html";
+
+        var path = mainPath + "/_" + StoryService.Instance.Story.Name.Trim() + ".html";
         using (FileStream fs = new FileStream(path, FileMode.Create))
+        {
+            using (StreamWriter w = new StreamWriter(fs, System.Text.Encoding.UTF8))
+            {
+                w.Write(html);
+            }
+        }
+        var copy_path = mainPath + "/copy_" + DateTime.Now.ToString("MM-yy-dd-hh-mm") + ".html";
+        using (FileStream fs = new FileStream(copy_path, FileMode.OpenOrCreate))
         {
             using (StreamWriter w = new StreamWriter(fs, System.Text.Encoding.UTF8))
             {

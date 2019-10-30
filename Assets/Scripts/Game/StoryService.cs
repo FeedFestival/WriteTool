@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Utils;
 using UnityEngine;
+using UnityEngine.Windows;
 
 public class StoryService : MonoBehaviour
 {
     private static StoryService _storyService;
     public static StoryService Instance { get { return _storyService; } }
-
-    public bool AutoOpen;
 
     public Story Story;
 
@@ -17,32 +17,28 @@ public class StoryService : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    void Start()
+    public void CreateNewStory()
     {
-        GameHiddenOptions.Instance.FileBrowser.Hide();
+        Story = StoryController.Instance.GetNewStory();
+        DomainLogic.DB.SqlConn().Insert(Story);
+        Story.Path += StoryService.Instance.Story.GetStoryNamePath();
+        Directory.CreateDirectory(Story.Path);
+        DomainLogic.DB.SqlConn().Update(Story);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("TextView");
+    }
 
-        if (AutoOpen)
+    public void Init()
+    {
+        if (Story == null)
         {
             Story = new Story()
             {
                 Id = 2,
                 Name = "Lavinia Story"
             };
-            OpenAutomatically();
+            Story.Path = UsefullUtils.GetPathToStreamingAssetsFile("") + Story.GetStoryNamePath();
         }
-    }
-
-    public void CreateNewStory()
-    {
-        Story = StoryController.Instance.GetNewStory();
-        DomainLogic.DB.SqlConn().Insert(Story);
-        AutoOpen = false;
-        UnityEngine.SceneManagement.SceneManager.LoadScene("SampleScene");
-    }
-
-    public void Init()
-    {
-        GameHiddenOptions.Instance.FileBrowser.Hide();
+        OpenAutomatically();
     }
 
     public void OpenAutomatically()
