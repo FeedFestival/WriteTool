@@ -402,3 +402,9 @@ public enum ProjectViewState
     NewStory,
     Editing
 }
+
+public enum ArrowDirection
+{
+    Up,
+    Down
+}

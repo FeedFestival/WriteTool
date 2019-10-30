@@ -118,6 +118,7 @@ namespace Assets.Scripts.Utils
         public static string GetPathToStreamingAssetsFile(string fileName)
         {
             string filePath = string.Empty;
+            
 #if UNITY_EDITOR
             filePath = string.Format(@"Assets/StreamingAssets/{0}", fileName);
 #else

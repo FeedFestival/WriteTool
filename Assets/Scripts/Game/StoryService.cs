@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Assets.Scripts.Utils;
 using UnityEngine;
-using UnityEngine.Windows;
+using System.Linq;
 
 public class StoryService : MonoBehaviour
 {
@@ -17,16 +16,6 @@ public class StoryService : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void CreateNewStory()
-    {
-        Story = StoryController.Instance.GetNewStory();
-        DomainLogic.DB.SqlConn().Insert(Story);
-        Story.Path += StoryService.Instance.Story.GetStoryNamePath();
-        Directory.CreateDirectory(Story.Path);
-        DomainLogic.DB.SqlConn().Update(Story);
-        UnityEngine.SceneManagement.SceneManager.LoadScene("TextView");
-    }
-
     public void Init()
     {
         if (Story == null)
@@ -36,9 +25,43 @@ public class StoryService : MonoBehaviour
                 Id = 2,
                 Name = "Lavinia Story"
             };
-            Story.Path = UsefullUtils.GetPathToStreamingAssetsFile("") + Story.GetStoryNamePath();
+            Story.Path = Application.streamingAssetsPath + Story.GetStoryNamePath();
         }
         OpenAutomatically();
+    }
+
+    public void CreateNewStory()
+    {
+        Story = StoryController.Instance.GetNewStory();
+        DomainLogic.DB.SqlConn().Insert(Story);
+        Story.Path += StoryService.Instance.Story.GetStoryNamePath();
+        System.IO.Directory.CreateDirectory(Story.Path);
+        DomainLogic.DB.SqlConn().Update(Story);
+        
+        OpenStory();
+    }
+
+    public void OpenStory(Story story = null)
+    {
+        if (story != null)
+        {
+            Story = story;
+        }
+        UnityEngine.SceneManagement.SceneManager.LoadScene("TextView");
+    }
+
+    public List<Story> GetStories()
+    {
+        var result = DomainLogic.DB.SqlConn().Table<Story>().Where(s => true).OrderByDescending(s => s.Id);
+        if (result != null && result.Count() > 0)
+        {
+            List<Story> stories = result.ToList();
+            return stories;
+        }
+        else
+        {
+            return new List<Story>();
+        }
     }
 
     public void OpenAutomatically()

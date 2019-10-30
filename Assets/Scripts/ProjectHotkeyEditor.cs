@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static TextEditorHotkeyController;
 
 public class ProjectHotkeyEditor : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class ProjectHotkeyEditor : MonoBehaviour
 
     [SerializeField]
     public ProjectViewState ProjectViewState;
-
+    private OnHotkeyPress _enterOnHotkeyPress;
     public GameObject MainMenuButtons;
     public GameObject NewStoryButtons;
 
@@ -29,6 +30,10 @@ public class ProjectHotkeyEditor : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             EscapeKey();
+        }
+        if (Input.GetKeyUp(KeyCode.KeypadEnter) || Input.GetKeyUp(KeyCode.Return))
+        {
+            EnterKey();
         }
 
         if (Input.GetKeyUp(KeyCode.O))
@@ -49,6 +54,26 @@ public class ProjectHotkeyEditor : MonoBehaviour
         {
             SaveKey();
         }
+
+        if (Input.GetKeyUp(KeyCode.UpArrow))
+        {
+            if (ProjectViewState == ProjectViewState.MainMenu)
+            {
+                StoryController.Instance.SelectStory(ArrowDirection.Up);
+            }
+        }
+        if (Input.GetKeyUp(KeyCode.DownArrow))
+        {
+            if (ProjectViewState == ProjectViewState.MainMenu)
+            {
+                StoryController.Instance.SelectStory(ArrowDirection.Down);
+            }
+        }
+    }
+
+    internal void RegisterForEnterKey(OnHotkeyPress enterOnHotkeyPress)
+    {
+        _enterOnHotkeyPress = enterOnHotkeyPress;
     }
 
     private void NewKey()
@@ -64,7 +89,7 @@ public class ProjectHotkeyEditor : MonoBehaviour
     {
         if (ProjectViewState == ProjectViewState.MainMenu)
         {
-            
+            EnterKey();
         }
     }
 
@@ -74,6 +99,14 @@ public class ProjectHotkeyEditor : MonoBehaviour
         {
             StoryController.Instance.HideNewStoryFields();
             ShowMainMenu();
+        }
+    }
+
+    public void EnterKey()
+    {
+        if (ProjectViewState == ProjectViewState.MainMenu)
+        {
+            _enterOnHotkeyPress.Invoke();
         }
     }
 

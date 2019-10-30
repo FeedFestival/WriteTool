@@ -47,7 +47,7 @@ public class GameHiddenOptions : MonoBehaviour
     public GameObject CharacterPrefab;
     public GameObject DialogPrefab;
     public GameObject PicturePrefab;
-
+    public GameObject StoryComponentPrefab;
     public Sprite AddImageSprite;
 
     [Header("Miscs")]
@@ -57,7 +57,8 @@ public class GameHiddenOptions : MonoBehaviour
 
     public static int MAX_BYTE_SIZE = 1024;
 
-    public GameObject GetPrefabElement(ElementType elementType) {
+    public GameObject GetPrefabElement(ElementType elementType)
+    {
         switch (elementType)
         {
             case ElementType.SceneHeading:
