@@ -111,10 +111,15 @@ public class ElementsController : MonoBehaviour, ISceneStarter
         }
     }
 
-    public bool AddNewElement(ElementType elementType)
+    public bool AddNewElement(ElementType elementType, bool autoCreate = false)
     {
         var currentIndex = GetCarretIndex();
         var isLastElement = currentIndex == _elementsPool.Count;
+
+        if (autoCreate && isLastElement == false) {
+            TextEditorHotkeyController.Instance.MainEdit();
+            return false;
+        }
 
         if ((Elements == null || Elements.Count == 0) && elementType != ElementType.SceneHeading)
         {

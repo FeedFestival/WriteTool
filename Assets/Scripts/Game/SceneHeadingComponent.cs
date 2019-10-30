@@ -50,7 +50,7 @@ public class SceneHeadingComponent : MonoBehaviour, IPrefabComponent, ITextCompo
         _backspaceClick = 0;
         TextEditorHotkeyController.Instance.RegisterForEnterKey(() =>
         {
-            ElementsController.Instance.AddNewElement(ElementType.Action);
+            ElementsController.Instance.AddNewElement(ElementType.Action, autoCreate: true);
             Blurred();
         });
         TextEditorHotkeyController.Instance.RegisterForEscapeKey(() =>
@@ -98,12 +98,14 @@ public class SceneHeadingComponent : MonoBehaviour, IPrefabComponent, ITextCompo
 
     private void Blurred()
     {
-        if (string.IsNullOrWhiteSpace(InputField.text)) {
-            InputField.text = _text = "EXT. UNKNOWN LOCATION";
-        } else if (InputField.text.IndexOf("INT.") >= 0 || InputField.text.IndexOf("EXT.") >= 0) {
+        if (string.IsNullOrWhiteSpace(InputField.text))
+        {
             InputField.text = _text = "INT. UNKNOWN LOCATION";
-        } else {
-            if (InputField.text.IndexOf("INT.") < 0 || InputField.text.IndexOf("EXT.") < 0) {
+        }
+        else
+        {
+            if (InputField.text.IndexOf("INT.") < 0 && InputField.text.IndexOf("EXT.") < 0)
+            {
                 InputField.text = _text = "INT. " + InputField.text;
             }
         }

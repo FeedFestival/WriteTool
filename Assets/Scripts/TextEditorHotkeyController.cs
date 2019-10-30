@@ -287,6 +287,8 @@ public class TextEditorHotkeyController : MonoBehaviour
     {
         if (AppState == AppState.NewElement)
         {
+            MainEdit();
+            ElementsController.Instance.MoveCarret(goDown);
             return;
         }
 
