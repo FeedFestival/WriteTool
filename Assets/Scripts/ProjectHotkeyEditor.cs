@@ -18,6 +18,7 @@ public class ProjectHotkeyEditor : MonoBehaviour
     void Awake()
     {
         _hotkeyController = this;
+        // Screen.SetResolution(Screen.width, Screen.height, true);
     }
     void Start()
     {
@@ -36,9 +37,9 @@ public class ProjectHotkeyEditor : MonoBehaviour
             EnterKey();
         }
 
-        if (Input.GetKeyUp(KeyCode.O))
+        if (Input.GetKeyUp(KeyCode.W))
         {
-            OpenKey();
+            ToggleWindowed();
         }
 
         if (Input.GetKeyUp(KeyCode.N))
@@ -85,12 +86,22 @@ public class ProjectHotkeyEditor : MonoBehaviour
         }
     }
 
-    private void OpenKey()
+    private void ToggleWindowed()
     {
-        if (ProjectViewState == ProjectViewState.MainMenu)
-        {
-            EnterKey();
-        }
+        // if (ProjectViewState == ProjectViewState.MainMenu)
+        // {
+        //     Screen.fullScreen = !Screen.fullScreen;
+        //     if (Screen.fullScreen == true)
+        //     {
+        //         Screen.SetResolution(Screen.width, Screen.height, true);
+        //         // Screen.SetResolution(794, 1122, true);
+        //     }
+        //     else
+        //     {
+        //         // Screen.SetResolution(Screen.width, Screen.height, true);
+        //         Screen.SetResolution(794, 1122, false);
+        //     }
+        // }
     }
 
     private void EscapeKey()
@@ -135,14 +146,14 @@ public class ProjectHotkeyEditor : MonoBehaviour
         }
     }
 
-    private void ShowMainMenu()
+    public void ShowMainMenu()
     {
         ProjectViewState = ProjectViewState.MainMenu;
         MainMenuButtons.SetActive(true);
         NewStoryButtons.SetActive(false);
     }
 
-    private void ShowNewStoryMenu()
+    public void ShowNewStoryMenu()
     {
         ProjectViewState = ProjectViewState.NewStory;
         NewStoryButtons.SetActive(true);

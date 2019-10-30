@@ -67,7 +67,27 @@ public class DataService
 
         _connection = new SQLiteConnection(dbPath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create);
         Debug.Log("Final PATH: " + dbPath);
+    }
 
+    public DataService(string DatabaseName, bool forWindows)
+    {
+        var dbPath = string.Format(Application.streamingAssetsPath + "/{0}", DatabaseName);
+        Debug.Log("dbPath: " + dbPath);
+        // check if file exists in Application.persistentDataPath
+        var filepath = string.Format("{0}/{1}", Application.streamingAssetsPath, DatabaseName);
+        Debug.Log("filepath: " + filepath);
+        if (!File.Exists(filepath))
+        {
+            Debug.Log("Database not in Persistent path");
+
+	        var loadDb = Application.dataPath + "/StreamingAssets/" + DatabaseName;  // this is the path to your StreamingAssets in iOS
+	        // then save to Application.persistentDataPath
+	        File.Copy(loadDb, filepath);
+            Debug.Log("Database written");
+        }
+
+        _connection = new SQLiteConnection(dbPath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create);
+        Debug.Log("Final PATH: " + dbPath);
     }
 
     public SQLiteConnection SqlConnection()

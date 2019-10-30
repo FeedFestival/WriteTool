@@ -3,6 +3,12 @@ using System.Collections;
 
 namespace Assets.Scripts.Utils
 {
+
+    public interface IJsonConsole
+    {
+        string ToJsonString();
+    }
+
     public static class JsonHelper
     {
         public static T[] FromJson<T>(string json)
@@ -19,6 +25,13 @@ namespace Assets.Scripts.Utils
             return JsonUtility.ToJson(wrapper);
         }
 
+        public static string ToJson<T>(T array)
+        {
+            Wrapper<T> wrapper = new Wrapper<T>();
+            wrapper.ItemsObj = array;
+            return JsonUtility.ToJson(wrapper);
+        }
+
         public static string ToJson<T>(T[] array, bool prettyPrint)
         {
             Wrapper<T> wrapper = new Wrapper<T>();
@@ -30,6 +43,7 @@ namespace Assets.Scripts.Utils
         private class Wrapper<T>
         {
             public T[] Items;
+            public T ItemsObj;
         }
 
         private static string FixJson(string value)

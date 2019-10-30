@@ -19,7 +19,7 @@ public class DomainLogic : MonoBehaviour
         get
         {
             if (_dataService == null)
-                _dataService = new DataService("Database.db");
+                _dataService = new DataService("Database.db", true);
             return _dataService;
         }
     }

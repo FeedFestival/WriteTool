@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Assets.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,12 +35,13 @@ public class StoryController : MonoBehaviour
     {
         _stories = StoryService.Instance.GetStories();
 
-        if (_stories == null && _stories.Count == 0)
+        if (_stories == null || _stories.Count == 0)
         {
             ShowNewStoryFields();
+            ProjectHotkeyEditor.Instance.ShowNewStoryMenu();
             return;
         }
-        UsefullUtils.DumpToConsole(_stories);
+        UsefullUtils.DumpToJsonConsole(_stories.Cast<IJsonConsole>().ToArray());
         foreach (Story story in _stories)
         {
             var prefab = GameHiddenOptions.Instance.StoryComponentPrefab;

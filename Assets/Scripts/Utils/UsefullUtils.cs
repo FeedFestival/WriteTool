@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 #if !UNITY_EDITOR
 using System.Collections;
 using System.IO;
@@ -6,6 +7,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using UnityEngine;
 
@@ -118,7 +120,7 @@ namespace Assets.Scripts.Utils
         public static string GetPathToStreamingAssetsFile(string fileName)
         {
             string filePath = string.Empty;
-            
+
 #if UNITY_EDITOR
             filePath = string.Format(@"Assets/StreamingAssets/{0}", fileName);
 #else
@@ -159,10 +161,26 @@ namespace Assets.Scripts.Utils
             return filePath;
         }
 
-        public static void DumpToConsole(object obj)
+        public static void DumpToConsole(object obj, bool isArray = false)
         {
-            var output = JsonUtility.ToJson(obj, true);
+            string output = string.Empty;
+            if (isArray)
+            {
+                output = JsonHelper.ToJson<object>(obj);
+            }
+            else
+            {
+                output = JsonUtility.ToJson(obj, true);
+            }
             Debug.Log(output);
+        }
+
+        public static void DumpToJsonConsole(IJsonConsole[] jsonConsoles)
+        {
+            foreach (var json in jsonConsoles)
+            {
+                Debug.Log(json.ToJsonString());
+            }
         }
 
         public static string RemoveWhitespace(this string input)
