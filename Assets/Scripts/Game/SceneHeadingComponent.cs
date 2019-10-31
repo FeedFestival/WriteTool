@@ -102,6 +102,20 @@ public class SceneHeadingComponent : MonoBehaviour, IPrefabComponent, ITextCompo
         {
             InputField.text = _text = "INT. UNKNOWN LOCATION";
         }
+        else if (InputField.text.IndexOf("INT.") >= 0)
+        {
+            if (string.IsNullOrWhiteSpace(InputField.text.Substring(4)))
+            {
+                InputField.text = _text = "INT. UNKNOWN LOCATION";
+            }
+        }
+        else if (InputField.text.IndexOf("EXT.") >= 0)
+        {
+            if (string.IsNullOrWhiteSpace(InputField.text.Substring(4)))
+            {
+                InputField.text = _text = "EXT. UNKNOWN LOCATION";
+            }
+        }
         else
         {
             if (InputField.text.IndexOf("INT.") < 0 && InputField.text.IndexOf("EXT.") < 0)

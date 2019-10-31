@@ -88,7 +88,7 @@ public class ProjectHotkeyEditor : MonoBehaviour
 
     private void ToggleWindowed()
     {
-        Screen.SetResolution(Screen.width, Screen.height, true);
+        // Screen.SetResolution(Screen.width, Screen.height, true);
 
         // if (ProjectViewState == ProjectViewState.MainMenu)
         // {

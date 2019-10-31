@@ -90,11 +90,11 @@
                     padding: 5mm 20mm;
                     min-height: 70mm;
                     width: 170mm;
+                    text-align: center;
                 }
 
                 .element.picture img {
-                    width: 100%;
-                    height: auto !important;
+                    max-height: 250px;
                     /* background: url(http://mehararts.com/category_image/demo.png); */
                 }
 
@@ -104,7 +104,7 @@
                 }
 
                 .picture.many img {
-                    width: 48% !important;
+                    // width: 48% !important;
                     padding: 0 1% !important;
                 }
 
@@ -118,44 +118,10 @@
                 }
             </style>
             
-                    <script src="script.js"></script>
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
                 </head>
-                <body><div class="page"><div class="element scene-heading" id="1">
-                INT. MY ROOM
-            </div><div class="element action" id="1">
-                Asta e o actiune.
-            </div><div class="element character" id="1">
-                LAVINIA
-            </div><div class="element dialog" id="1">
-                Buna Dani, arati foarte vine azi.
-            </div><div class="element character" id="1">
-                DANI
-            </div><div class="element dialog" id="1">
-                Buna Lavi, si tu arati foarte bine azi. Hai ca esti simpatica!
-            </div><div class="element action" id="1">
-                Dani face o actiune  catre LAVINIA.
-            </div><div class="element character" id="1">
-                ALT PERSONAJ
-            </div><div class="element dialog" id="1">
-                Da, ce faceti mai?
-            </div><div class="element character" id="1">
-                DANI
-            </div><div class="element character" id="1">
-                DOBRE SI FII
-            </div><div class="element dialog" id="1">
-                Facem foarte bine, multumim de intrebare.
-            </div><div class="element dialog" id="1">
-                Pepene aveeem.
-            </div><div class="element picture " id="1"><img src="img_1_0_.jpg"></div><div class="element character" id="1">
-                DANI
-            </div><div class="element dialog" id="1">
-                Buna Lavi, si tu arati foarte bine azi. Hai ca esti simpatica!
-            </div><div class="element action" id="1">
-                Dani face o actiune  catre LAVINIA.
-            </div><div class="element character" id="1">
-                ALT PERSONAJ
-            </div><div class="element dialog" id="1">
-                Da, ce faceti mai?
+                <body><div class="page"><div class="element scene-heading" id="3">
+                INT. UNKNOWN LOCATION
             </div></div>
             <script>
                 setTimeout(() => {
@@ -173,7 +139,7 @@
                     // determine page settings
                     const pageDescrSize = 7;
                     // const maxMm = 297;
-                    const maxMm = (297 - 7);
+                    const maxMm = ((297 - 40) - 7);
                     let currentPageMm = 0;
                     let addPreviousElement = false;
 
@@ -188,7 +154,7 @@
                             addPreviousElement = false;
                         } else if (wouldBeMm > maxMm) {
 
-                            addPageNr(pageElement, pageNr, maxMm - wouldBeMm);
+                            addPageNr(pageElement, pageNr, maxMm - currentPageMm);
 
                             // add new page
                             currentPageMm = 0;
@@ -207,7 +173,7 @@
                         pageElement.append(element);
 
                         if (i === elements.length - 1) {
-                            addPageNr(pageElement, pageNr, maxMm - wouldBeMm);
+                            addPageNr(pageElement, pageNr, maxMm - currentPageMm);
                         }
                     }
                     $('#old').remove();

@@ -1730,7 +1730,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Windowed [<b><color=red>W</color></b>]
+  m_Text: Enter [<b><color=red>Enter</color></b>]
 --- !u!222 &1227778204
 CanvasRenderer:
   m_ObjectHideFlags: 0

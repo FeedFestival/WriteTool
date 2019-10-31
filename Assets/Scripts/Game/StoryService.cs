@@ -25,7 +25,7 @@ public class StoryService : MonoBehaviour
                 Id = 2,
                 Name = "Lavinia Story"
             };
-            Story.Path = Application.streamingAssetsPath + Story.GetStoryNamePath();
+            Story.Path = Application.streamingAssetsPath + "/" + Story.GetStoryNamePath();
         }
         OpenAutomatically();
     }
@@ -34,7 +34,7 @@ public class StoryService : MonoBehaviour
     {
         Story = StoryController.Instance.GetNewStory();
         DomainLogic.DB.SqlConn().Insert(Story);
-        Story.Path += StoryService.Instance.Story.GetStoryNamePath();
+        Story.Path += "/" + StoryService.Instance.Story.GetStoryNamePath();
         System.IO.Directory.CreateDirectory(Story.Path);
         DomainLogic.DB.SqlConn().Update(Story);
         

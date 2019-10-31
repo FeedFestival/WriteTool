@@ -90,11 +90,11 @@
                     padding: 5mm 20mm;
                     min-height: 70mm;
                     width: 170mm;
+                    text-align: center;
                 }
 
                 .element.picture img {
-                    width: 100%;
-                    height: auto !important;
+                    max-height: 250px;
                     /* background: url(http://mehararts.com/category_image/demo.png); */
                 }
 
@@ -104,7 +104,7 @@
                 }
 
                 .picture.many img {
-                    width: 48% !important;
+                    // width: 48% !important;
                     padding: 0 1% !important;
                 }
 
@@ -121,40 +121,8 @@
                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
                 </head>
                 <body><div class="page"><div class="element scene-heading" id="3">
-                INT. MY ROOM
-            </div><div class="element action" id="4">
-                Test asdasd a asd asd asa das as d
-            </div><div class="element character" id="14">
-                DANI
-            </div><div class="element dialog" id="15">
-                Ce faci?
-            </div><div class="element action" id="16">
-                Action action
-            </div><div class="element character" id="9">
-                ERIKA
-            </div><div class="element dialog" id="10">
-                Salut
-            </div><div class="element action" id="11">
-                Ce mai faceti?
-            </div><div class="element action" id="21">
-                Actiune scrisa.
-            </div><div class="element scene-heading" id="26">
-                INT. NOUA SCENA
-            </div><div class="element action" id="27">
-                Hai sa vedem cum se vede pe HTML.
-            </div><div class="element character" id="28">
-                DANI
-            </div><div class="element dialog" id="29">
-                Tot eu. testeste testetestete.
-            </div><div class="element action" id="30">
-                Actiune in mai multe randuri
-            </div><div class="element picture " id="31"><img src="img_31_0_.jpg"></div><div class="element action" id="32">
-                Action to fill this.
-            </div><div class="element character" id="34">
-                DANI
-            </div><div class="element dialog" id="35">
-                Ok. Image work too.
-            </div><div class="element picture many" id="33"><img src="img_33_0_.jpg"><img src="img_33_1_.jpg"></div></div>
+                INT. UNKNOWN LOCATION
+            </div></div>
             <script>
                 setTimeout(() => {
 
@@ -171,7 +139,7 @@
                     // determine page settings
                     const pageDescrSize = 7;
                     // const maxMm = 297;
-                    const maxMm = (297 - 7);
+                    const maxMm = ((297 - 40) - 7);
                     let currentPageMm = 0;
                     let addPreviousElement = false;
 
