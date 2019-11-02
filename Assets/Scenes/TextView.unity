@@ -2344,7 +2344,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 330366648}
   m_Direction: 2
   m_Value: 1
-  m_Size: 1
+  m_Size: 0.6805293
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3078,6 +3078,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3278340451033295272, guid: 12595ab968405424ba2097ded2ee0543,
+        type: 3}
+      propertyPath: m_Text
+      value: INT. SOMETHING
+      objectReference: {fileID: 0}
+    - target: {fileID: 7728464712077805411, guid: 12595ab968405424ba2097ded2ee0543,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 338.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7728464712077805411, guid: 12595ab968405424ba2097ded2ee0543,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.0000038147
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12595ab968405424ba2097ded2ee0543, type: 3}

@@ -117,7 +117,7 @@ namespace Assets.Scripts.Utils
             return wasNull;
         }
 
-        public static string GetPathToStreamingAssetsFile(string fileName)
+        public static string GetPathToStreamingAssetsFile(string fileName = "")
         {
             string filePath = string.Empty;
 

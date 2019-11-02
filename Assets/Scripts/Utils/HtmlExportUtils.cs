@@ -1,10 +1,13 @@
 
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Assets.Scripts.Utils
 {
     public static class HtmlExportUtils
     {
+        private static Regex newLineRegex = new Regex(@"(\r\n|\r|\n)+");
+
         public static string GetBaseStart()
         {
             return @"<!DOCTYPE html>
@@ -31,8 +34,9 @@ namespace Assets.Scripts.Utils
 
         public static string Element(Element element)
         {
+            string newText = newLineRegex.Replace(element.Text, "<br /> <br />");
             return @"<div class=""element " + GetElementClass(element.ElementType) + @""" id=""" + element.Id + @""">
-                " + element.Text + @"
+                " + newText + @"
             </div>";
         }
 
@@ -72,6 +76,30 @@ namespace Assets.Scripts.Utils
         private static string Css()
         {
             return @"<style>
+
+                @font-face {
+                    src: url(../GraphikRegular.otf);
+                    font-family: graphikRegular;
+                }
+                @font-face {
+                    src: url('../robotoslab-regular.woff2') format('woff2'),
+                        url('../robotoslab-regular.woff') format('woff');
+                    font-weight: normal;
+                    font-style: normal;
+                    font-family: robotoSlabRegular;
+                }
+
+                .element.action,
+                .element.dialog {
+                    font-family: graphikRegular;
+                    font-size: 15px;
+                }
+                .element.scene-heading,
+                .element.character {
+                    font-family: robotoSlabRegular;
+                    font-size: 14px;
+                }
+
                 body {
                     width: 100vw;
                     min-height: 100vh;

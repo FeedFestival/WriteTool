@@ -125,6 +125,9 @@ public class ElementData : MonoBehaviour
         html += HtmlExportUtils.PageScript();
         html += HtmlExportUtils.GetBaseEnd();
 
+        // Copy the font to the location to be used in the .hmtl
+        Debug.Log(Application.streamingAssetsPath + "/Fonts/");
+        Debug.Log(mainPath);
 
         var path = mainPath + "/_" + StoryService.Instance.Story.Name.Trim() + ".html";
         using (FileStream fs = new FileStream(path, FileMode.Create))
