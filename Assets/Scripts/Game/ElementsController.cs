@@ -342,14 +342,53 @@ public class ElementsController : MonoBehaviour, ISceneStarter
         {
             ElementData.Instance.DeleteElement(Elements[index].Id);
         }
+
+        if (Elements[index].ElementType == ElementType.Character) {
+            // Debug.Log("Element is Character");
+            int indexOfDialog = index + 1;
+            if (indexOfDialog <= Elements.Count - 1 
+                && Elements[indexOfDialog].ElementType == ElementType.Dialog) {
+                // Debug.Log("Element " + Elements[indexOfDialog].ElementType + " can also be removed.");
+                if (Elements[indexOfDialog].IsNew == false)
+                {
+                    ElementData.Instance.DeleteElement(Elements[indexOfDialog].Id);
+                }
+                RemoveElement(indexOfDialog, Elements[indexOfDialog].UniqueId());
+            }
+        } else if (Elements[index].ElementType == ElementType.Dialog) {
+            int indexOfCharacter = index - 1;
+            Debug.Log(Elements[indexOfCharacter].ElementType);
+            if (indexOfCharacter>= 0
+                && Elements[indexOfCharacter].ElementType == ElementType.Character) {
+                Debug.Log("Element " + Elements[indexOfCharacter].ElementType + " can also be removed.");
+                if (Elements[indexOfCharacter].IsNew == false)
+                {
+                    ElementData.Instance.DeleteElement(Elements[indexOfCharacter].Id);
+                }
+                RemoveElement(indexOfCharacter, Elements[indexOfCharacter].UniqueId());
+
+                // we need to get the new uniqueId somehow
+                ElementsService.RecalculateIndexes(_elementsPool, Elements);
+
+                DeleteElement(uniqueId);
+                return;
+            }
+        }
+
+        RemoveElement(index, uniqueId);
+
+        MoveCarret(true, index - 1);
+        TextEditorHotkeyController.Instance.EscapeKey();
+        
+        // recalculate indexes again in case the order is screwed
+        ElementsService.RecalculateIndexes(_elementsPool, Elements);
+    }
+
+    private void RemoveElement(int index, int uniqueId) {
         Elements.RemoveAt(index);
         index = _elementsPool.FindIndex(e => e.UniqueId == uniqueId);
         Destroy(_elementsPool[index].GameObject);
         _elementsPool.RemoveAt(index);
-
-        MoveCarret(true, index - 1);
-        TextEditorHotkeyController.Instance.EscapeKey();
-        // ShowCarret();
     }
 
     public void ExportToHtml()
