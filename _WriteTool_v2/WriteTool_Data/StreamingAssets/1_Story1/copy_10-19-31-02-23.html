@@ -1,0 +1,447 @@
+﻿<!DOCTYPE html>
+                <html lang="en/">
+                <head>
+                    <meta charset="utf-8">
+                    <title>title</title>
+                    <style>
+                body {
+                    width: 100vw;
+                    min-height: 100vh;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+
+                * {
+                    box-sizing: border-box;
+                    -moz-box-sizing: border-box;
+                }
+
+                .page {
+                    width: 210mm;
+                    /* min-height: 297mm; */
+                    padding: 20mm;
+                    margin: 10mm auto;
+                    border: 1px #D3D3D3 solid;
+                    border-radius: 5px;
+                    background: white;
+                    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+                }
+
+                .subpage {
+                    padding: 1cm;
+                    border: 5px red solid;
+                    height: 257mm;
+                    outline: 2cm #FFEAEA solid;
+                }
+
+                @page {
+                    size: A4;
+                    margin: 0;
+                }
+
+                @media print {
+
+                    html,
+                    body {
+                        width: 210mm;
+                        height: 297mm;
+                    }
+
+                    .page {
+                        margin: 0;
+                        border: initial;
+                        border-radius: initial;
+                        width: initial;
+                        min-height: initial;
+                        box-shadow: initial;
+                        background: initial;
+                        page-break-after: always;
+                    }
+                }
+
+                .element {
+                    display: block;
+                }
+
+                .element.scene-heading {
+                    background-color: lightgray;
+                    padding: 0 1mm;
+                }
+
+                .element.action {
+                    padding: 5mm 20mm;
+                }
+
+                .element.character {
+                    padding: 1mm 50mm;
+                    text-align: center;
+                    text-transform: uppercase;
+                    font-weight: 700;
+                }
+
+                .element.dialog {
+                    padding: 1mm 50mm;
+                    text-align: center;
+                    text-transform: capitalize;
+                    font-size: 4mm;
+                }
+
+                .element.picture {
+                    padding: 5mm 20mm;
+                    min-height: 70mm;
+                    width: 170mm;
+                    text-align: center;
+                }
+
+                .element.picture img {
+                    max-height: 250px;
+                    /* background: url(http://mehararts.com/category_image/demo.png); */
+                }
+
+                .picture.many {
+                    padding: 5mm 5mm !important;
+                    display: inline-block !important;
+                }
+
+                .picture.many img {
+                    // width: 48% !important;
+                    padding: 0 1% !important;
+                }
+
+                .page-nr {
+                    text-align: center; 
+                    height: 7px; 
+                    font-size: 10px;
+                    position: relative; 
+                    bottom: 0; 
+                    display: block;
+                }
+            </style>
+            
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                </head>
+                <body><div class="page"><div class="element scene-heading" id="3">
+                INT. UNKNOWN LOCATION
+            </div><div class="element action" id="4">
+                Some kids are going to camping.
+            </div><div class="element character" id="5">
+                UNKNOWN
+            </div><div class="element dialog" id="6">
+                ...
+            </div><div class="element character" id="7">
+                UNKNOWN
+            </div><div class="element dialog" id="8">
+                ...
+            </div><div class="element character" id="9">
+                UNKNOWN
+            </div><div class="element dialog" id="10">
+                ...
+            </div><div class="element character" id="11">
+                UNKNOWN
+            </div><div class="element dialog" id="12">
+                ...
+            </div><div class="element character" id="13">
+                UNKNOWN
+            </div><div class="element dialog" id="14">
+                ...
+            </div><div class="element character" id="15">
+                UNKNOWN
+            </div><div class="element dialog" id="16">
+                ...
+            </div><div class="element character" id="17">
+                UNKNOWN
+            </div><div class="element dialog" id="18">
+                ...
+            </div><div class="element character" id="19">
+                UNKNOWN
+            </div><div class="element dialog" id="20">
+                ...
+            </div><div class="element character" id="21">
+                UNKNOWN
+            </div><div class="element dialog" id="22">
+                ...
+            </div><div class="element character" id="23">
+                UNKNOWN
+            </div><div class="element dialog" id="24">
+                ...
+            </div><div class="element character" id="25">
+                UNKNOWN
+            </div><div class="element dialog" id="26">
+                ...
+            </div><div class="element character" id="27">
+                UNKNOWN
+            </div><div class="element dialog" id="28">
+                ...
+            </div><div class="element character" id="29">
+                UNKNOWN
+            </div><div class="element dialog" id="30">
+                ...
+            </div><div class="element character" id="31">
+                UNKNOWN
+            </div><div class="element dialog" id="32">
+                ...
+            </div><div class="element character" id="33">
+                UNKNOWN
+            </div><div class="element dialog" id="34">
+                ...
+            </div><div class="element character" id="35">
+                UNKNOWN
+            </div><div class="element dialog" id="36">
+                ...
+            </div><div class="element character" id="37">
+                UNKNOWN
+            </div><div class="element dialog" id="38">
+                ...
+            </div><div class="element character" id="39">
+                UNKNOWN
+            </div><div class="element dialog" id="40">
+                ...
+            </div><div class="element character" id="41">
+                UNKNOWN
+            </div><div class="element dialog" id="42">
+                ...
+            </div><div class="element character" id="43">
+                UNKNOWN
+            </div><div class="element dialog" id="44">
+                ...
+            </div><div class="element character" id="45">
+                UNKNOWN
+            </div><div class="element dialog" id="46">
+                ...
+            </div><div class="element character" id="47">
+                UNKNOWN
+            </div><div class="element dialog" id="48">
+                ...
+            </div><div class="element character" id="49">
+                UNKNOWN
+            </div><div class="element dialog" id="50">
+                ...
+            </div><div class="element character" id="51">
+                UNKNOWN
+            </div><div class="element dialog" id="52">
+                ...
+            </div><div class="element character" id="53">
+                UNKNOWN
+            </div><div class="element dialog" id="54">
+                ...
+            </div><div class="element character" id="55">
+                UNKNOWN
+            </div><div class="element dialog" id="56">
+                ...
+            </div><div class="element character" id="57">
+                UNKNOWN
+            </div><div class="element dialog" id="58">
+                ...
+            </div><div class="element character" id="59">
+                UNKNOWN
+            </div><div class="element dialog" id="60">
+                ...
+            </div><div class="element character" id="61">
+                UNKNOWN
+            </div><div class="element dialog" id="62">
+                ...
+            </div><div class="element character" id="63">
+                UNKNOWN
+            </div><div class="element dialog" id="64">
+                ...
+            </div><div class="element character" id="65">
+                UNKNOWN
+            </div><div class="element dialog" id="66">
+                ...
+            </div><div class="element character" id="67">
+                UNKNOWN
+            </div><div class="element dialog" id="68">
+                ...
+            </div><div class="element character" id="69">
+                UNKNOWN
+            </div><div class="element dialog" id="70">
+                ...
+            </div><div class="element character" id="71">
+                UNKNOWN
+            </div><div class="element dialog" id="72">
+                ...
+            </div><div class="element character" id="73">
+                UNKNOWN
+            </div><div class="element dialog" id="74">
+                ...
+            </div><div class="element character" id="75">
+                UNKNOWN
+            </div><div class="element dialog" id="76">
+                ...
+            </div><div class="element character" id="77">
+                UNKNOWN
+            </div><div class="element dialog" id="78">
+                ...
+            </div><div class="element character" id="79">
+                UNKNOWN
+            </div><div class="element dialog" id="80">
+                ...
+            </div><div class="element character" id="81">
+                UNKNOWN
+            </div><div class="element dialog" id="82">
+                ...
+            </div><div class="element character" id="83">
+                UNKNOWN
+            </div><div class="element dialog" id="84">
+                ...
+            </div><div class="element character" id="85">
+                UNKNOWN
+            </div><div class="element dialog" id="86">
+                ...
+            </div><div class="element character" id="87">
+                UNKNOWN
+            </div><div class="element dialog" id="88">
+                ...
+            </div><div class="element character" id="89">
+                UNKNOWN
+            </div><div class="element dialog" id="90">
+                ...
+            </div><div class="element character" id="91">
+                UNKNOWN
+            </div><div class="element dialog" id="92">
+                ...
+            </div><div class="element character" id="93">
+                UNKNOWN
+            </div><div class="element dialog" id="94">
+                ...
+            </div><div class="element character" id="95">
+                UNKNOWN
+            </div><div class="element dialog" id="96">
+                ...
+            </div><div class="element character" id="97">
+                UNKNOWN
+            </div><div class="element dialog" id="98">
+                ...
+            </div><div class="element character" id="99">
+                UNKNOWN
+            </div><div class="element dialog" id="100">
+                ...
+            </div><div class="element character" id="101">
+                UNKNOWN
+            </div><div class="element dialog" id="102">
+                ...
+            </div><div class="element character" id="103">
+                UNKNOWN
+            </div><div class="element dialog" id="104">
+                ...
+            </div><div class="element character" id="105">
+                UNKNOWN
+            </div><div class="element dialog" id="106">
+                ...
+            </div><div class="element character" id="107">
+                UNKNOWN
+            </div><div class="element dialog" id="108">
+                ...
+            </div><div class="element character" id="109">
+                UNKNOWN
+            </div><div class="element dialog" id="110">
+                ...
+            </div><div class="element character" id="111">
+                UNKNOWN
+            </div><div class="element dialog" id="112">
+                ...
+            </div><div class="element character" id="113">
+                UNKNOWN
+            </div><div class="element dialog" id="114">
+                ...
+            </div><div class="element character" id="115">
+                UNKNOWN
+            </div><div class="element dialog" id="116">
+                ...
+            </div><div class="element character" id="117">
+                UNKNOWN
+            </div><div class="element dialog" id="118">
+                ...
+            </div><div class="element character" id="119">
+                UNKNOWN
+            </div><div class="element dialog" id="120">
+                ...
+            </div><div class="element character" id="121">
+                UNKNOWN
+            </div><div class="element dialog" id="122">
+                ...
+            </div><div class="element character" id="123">
+                UNKNOWN
+            </div><div class="element dialog" id="124">
+                ...
+            </div></div>
+            <script>
+                setTimeout(() => {
+
+                    $('.page').attr('id', 'old');
+                    var body = $('body');
+
+                    // add new page
+                    var pageNr = 1;
+                    var pageElement = createPage(body, pageNr);
+
+                    // get elements
+                    var elements = $('.element');
+
+                    // determine page settings
+                    const pageDescrSize = 7;
+                    // const maxMm = 297;
+                    const maxMm = ((297 - 40) - 7);
+                    let currentPageMm = 0;
+                    let addPreviousElement = false;
+
+                    for (let i = 0; i < elements.length; i++) {
+                        const element = $(elements[i]);
+                        const previousElement = $(elements[i - 1]);
+
+                        const widthMm = convertToMm(element.height()) + convertToMm(element.css('padding-top'), true) + convertToMm(element.css('padding-bottom'), true);
+                        const wouldBeMm = (currentPageMm + widthMm);
+
+                        if (addPreviousElement) {
+                            addPreviousElement = false;
+                        } else if (wouldBeMm > maxMm) {
+
+                            addPageNr(pageElement, pageNr, maxMm - currentPageMm);
+
+                            // add new page
+                            currentPageMm = 0;
+                            pageNr++;
+                            pageElement = createPage(body, pageNr);
+
+                            // start with scene heading if possible
+                            if (previousElement.hasClass('scene-heading') || previousElement.hasClass('character')) {
+                                i -= 2;
+                                addPreviousElement = true;
+                                continue;
+                            }
+                        }
+
+                        currentPageMm += widthMm;
+                        pageElement.append(element);
+
+                        if (i === elements.length - 1) {
+                            addPageNr(pageElement, pageNr, maxMm - currentPageMm);
+                        }
+                    }
+                    $('#old').remove();
+                }, 10);
+
+                function addPageNr(pageElement, pageNr, margin) {
+                    pageElement.append(
+                        '<div class="page-nr" style="margin-top: ' + (margin <= 0 ? 0 : margin) + 'mm;">'
+                            + pageNr +
+                        '</div>');
+                }
+
+                function createPage(body, pageNr) {
+                    body.append('<div class="page" id="page_' + pageNr + '"></div>');
+                    var pageElement = $('#page_' + pageNr);
+                    pageElement.css('min-height', '297mm');
+                    return pageElement;
+                }
+
+                function convertToMm(pixels, asPx) {
+                    if (asPx) {
+                        pixels = parseFloat(pixels.replace('px', ''));
+                    }
+                    // 1 px = 0.264583333;
+                    return pixels * 0.264583333;
+                }
+            </script>
+            </body>
+            </html>
